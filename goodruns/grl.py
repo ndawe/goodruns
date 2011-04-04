@@ -93,7 +93,10 @@ class GRL(object):
             output += "RUN: %i\n"%run
             output += "LUMIBLOCKS:\n"
             for lbrange in lbranges:
-                output += ("  %%-%ds"%maxlength+" --> %i\n")% lbrange
+                if lbrange[0] == lbrange[1]:
+                    output += ("  %%-%ds"%maxlength+"\n")% lbrange[0]
+                else:
+                    output += ("  %%-%ds"%maxlength+" --> %i\n")% lbrange
         return output
 
     def __getitem__(self, run):
