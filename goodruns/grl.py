@@ -3,7 +3,7 @@ import copy
 from pprint import pprint
 from operator import add, sub, or_, and_, xor, itemgetter
 try:
-    from rootpy.tree.cut import Cut
+    from rootpy.tree import Cut
 except: pass
 
 use_yaml = True
@@ -279,12 +279,15 @@ class GRL(object):
     
     def cut(self, runname = 'RunNumber', lbname = 'lbn'):
 
-        cut = Cut()
-        for run in self.iterruns():
-            lbcut = Cut()
-            for lbrange in self[run]:
-                lbcut |= (lbname+">=%i&&"+lbname+"<=%i")% lbrange
-            cut |= "(%s==%i)&&(%s)"% (runname, run, lbcut)
+        try:
+            cut = Cut()
+            for run in self.iterruns():
+                lbcut = Cut()
+                for lbrange in self[run]:
+                    lbcut |= (lbname+">=%i&&"+lbname+"<=%i")% lbrange
+                cut |= "(%s==%i)&&(%s)"% (runname, run, lbcut)
+        except:
+            cut = "install rootpy to enable conversion to a cut expression"
         return cut
     
     def write(self, filehandle, format = 'xml'):
