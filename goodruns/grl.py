@@ -3,7 +3,7 @@ import copy
 from pprint import pprint
 from operator import add, sub, or_, and_, xor, itemgetter
 try:
-    from rootpy.cut import Cut
+    from rootpy.tree.cut import Cut
 except: pass
 
 use_yaml = True
