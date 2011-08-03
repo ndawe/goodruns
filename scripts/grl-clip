@@ -24,9 +24,13 @@ if len(args) > 1:
 
 from goodruns.grl import GRL, clipped
 
-clippedgrl = clipped(GRL(args[0]),
-                     startrun = options.startrun, startlb = options.startlb,
-                     endrun = options.endrun, endlb = options.endlb)
+try:
+    clippedgrl = clipped(GRL(args[0]),
+                         startrun = options.startrun, startlb = options.startlb,
+                         endrun = options.endrun, endlb = options.endlb)
+except:
+    print "not a valid grl"
+    sys.exit(1)
 
 if options.output is None:
     clippedgrl.write(sys.stdout, format = 'xml')

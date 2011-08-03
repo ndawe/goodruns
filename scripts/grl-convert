@@ -18,7 +18,11 @@ if len(args) > 1:
 
 from goodruns.grl import GRL
 
-grl = GRL(args[0])
+try:
+    grl = GRL(args[0])
+except:
+    print "not a valid grl"
+    sys.exit(1)
 
 if options.output is None:
     grl.write(sys.stdout, format = options.format)

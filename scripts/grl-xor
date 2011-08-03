@@ -16,7 +16,11 @@ if len(args) < 2:
 
 from goodruns.grl import GRL, xored
 
-xoredgrl = xored(*[GRL(arg) for arg in args])
+try:
+    xoredgrl = xored(*[GRL(arg) for arg in args])
+except:
+    print "could not parse one or more grls"
+    sys.exit(1)
 
 if options.output is None:
     xoredgrl.write(sys.stdout, format = 'xml')
