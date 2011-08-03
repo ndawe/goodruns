@@ -1,5 +1,6 @@
 import lxml.etree as ET
 import copy
+import urllib2
 from pprint import pprint
 from operator import add, sub, or_, and_, xor, itemgetter
 try:
@@ -55,9 +56,12 @@ class GRL(object):
             self.__grl = grl
         elif type(grl) in [str, file]:
             filename = grl
-            if type(grl) is file:
+            if type(grl) is str:
+                if grl.startswith("http://"):
+                   grl = urllib2.urlopen(grl)
+            elif type(grl) is file:
                 filename = grl.name
-            if filename == "<stdin>" or filename.endswith('.xml'):
+            if filename == "<stdin>" or filename.endswith('.xml') or filename.startswith("http://"):
                 tree = ET.parse(grl)
                 lbcols = tree.getroot().findall('NamedLumiRange/LumiBlockCollection')
                 for lbcol in lbcols:
