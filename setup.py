@@ -11,6 +11,6 @@ setup(name='goodruns',
       author_email='noel.dawe@cern.ch',
       url='https://github.com/noeldawe/goodruns',
       py_modules=['goodruns'],
-      requires=['rootpy', 'yaml', 'lxml'],
+      requires=['yaml', 'lxml'],
       scripts=glob('scripts/*')
      )
