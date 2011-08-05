@@ -2,7 +2,7 @@
 
 # Place current directory at the front of PYTHONPATH
 import sys
-sys.path.insert(0,'.')
+sys.path.insert(0, '.')
 
 import pkginfo
 from distutils.core import setup
@@ -18,4 +18,3 @@ setup(name='goodruns',
       requires=['rootpy', 'yaml', 'lxml'],
       scripts=glob('scripts/*')
      )
-
