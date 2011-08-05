@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 
-# Place current directory at the front of PYTHONPATH
-import sys
-sys.path.insert(0, '.')
-
 import pkginfo
 from distutils.core import setup
 from glob import glob
