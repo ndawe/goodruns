@@ -16,7 +16,7 @@ if not sys.stdin.isatty():
 if len(args) > 1:
     sys.exit("Need exactly one argument or one pipe")
 
-from goodruns.grl import GRL
+from goodruns import GRL
 
 try:
     grl = GRL(args[0])

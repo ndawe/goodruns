@@ -14,7 +14,7 @@ if not sys.stdin.isatty():
 if len(args) < 2:
     sys.exit("Need at least two arguments or one pipe and one or more arguments")
 
-from goodruns.grl import GRL, ored
+from goodruns import GRL, ored
 
 try:
     oredgrl = ored(*[GRL(arg) for arg in args])

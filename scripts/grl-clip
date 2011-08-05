@@ -22,7 +22,7 @@ if not sys.stdin.isatty():
 if len(args) > 1:
     sys.exit("Too many arguments")
 
-from goodruns.grl import GRL, clipped
+from goodruns import GRL, clipped
 
 try:
     clippedgrl = clipped(GRL(args[0]),
