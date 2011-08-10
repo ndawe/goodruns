@@ -6,7 +6,7 @@ from glob import glob
 
 setup(name='goodruns',
       version=pkginfo.__RELEASE__,
-      description='ATLAS good runs lists utilities',
+      description='ATLAS "good runs list" utilities',
       author='Noel Dawe',
       author_email='noel.dawe@cern.ch',
       url='https://github.com/noeldawe/goodruns',
