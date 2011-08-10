@@ -7,4 +7,5 @@ scripts/grl-clip
 scripts/grl-convert
 scripts/grl-diff
 scripts/grl-or
+scripts/grl-runs
 scripts/grl-xor
