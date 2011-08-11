@@ -62,6 +62,8 @@ class GRL(object):
     def __init__(self, grl=None):
 
         self.__grl = {}
+        if not grl:
+            return
         if type(grl) is dict:
             self.__grl = grl
         elif type(grl) in [str, file]:
