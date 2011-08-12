@@ -1,6 +1,25 @@
+.. -*- mode: rst -*-
+
+About
+=====
+
 goodruns provides an implementation of an ATLAS "good runs list" (GRL) reader/writer in Python, and collection of useful command-line tools.
 
-An example of how to use goodruns::
+Installation
+============
+
+To install in your home directory, use::
+
+  python setup.py install --home
+
+To install for all users on Unix/Linux::
+
+  sudo python setup.py install
+
+Usage
+=====
+
+An example of how to use goodruns in a Python application::
 
     from goodruns import GRL
 
@@ -12,16 +31,19 @@ An example of how to use goodruns::
         pass
 
 Command-line Tools
-------------------
+==================
 
 grl-diff
+~~~~~~~~
 
-grl-and
-grl-or
-grl-xor
+grl-and grl-or grl-xor
+~~~~~~~~~~~~~~~~~~~~~~
 
 grl-clip
+~~~~~~~~
 
 grl-convert
+~~~~~~~~~~~
 
 grl-runs
+~~~~~~~~
