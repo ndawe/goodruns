@@ -11,11 +11,15 @@ Installation
 
 To install in your home directory, use::
 
-  python setup.py install --home
+    python setup.py install --home
 
 To install for all users::
 
-  sudo python setup.py install
+    sudo python setup.py install
+
+For more installation options::
+
+    python setup.py install --help
 
 Usage
 =====
