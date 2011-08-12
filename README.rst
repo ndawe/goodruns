@@ -59,8 +59,8 @@ which results in the GRL E=((A-B)-C)-D). This is equivalent to::
 
 The output of one command can be piped into any of the other commands in goodruns.
 
-grl-and grl-or grl-xor
-^^^^^^^^^^^^^^^^^^^^^^
+grl-and, grl-or, grl-xor
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 These scripts implement logical combinations of GRLs. Logical AND::
 
@@ -80,6 +80,20 @@ Again, these commands can be combined arbitrarily::
 
 grl-clip
 ^^^^^^^^
+
+Use ``grl-clip`` to truncate a GRL between a starting run/lumiblock and ending run/lumiblock::
+
+    $> grl-clip --help
+    Usage: grl-clip [options] [file]
+
+    Options:
+      -h, --help            show this help message and exit
+      -o OUTPUT, --output=OUTPUT
+                            Output filename
+      --startrun=STARTRUN   Start run
+      --startlb=STARTLB     Start lumiblock
+      --endrun=ENDRUN       End run
+      --endlb=ENDLB         End lumiblock
 
 grl-convert
 ^^^^^^^^^^^
