@@ -15,5 +15,16 @@ setup(name='goodruns',
       license='GPLv3',
       py_modules=['goodruns', 'pkginfo'],
       requires=['yaml', 'lxml'],
-      scripts=glob('scripts/*')
+      scripts=glob('scripts/*'),
+      classifiers=[
+        "Programming Language :: Python",
+        "Topic :: Text Processing :: Markup :: XML",
+        "Topic :: Utilities",
+        "Operating System :: POSIX :: Linux",
+        "Development Status :: 5 - Production/Stable",
+        "Environment :: Other Environment",
+        "Intended Audience :: Science/Research",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: GNU General Public License (GPL)"
+      ]
      )
