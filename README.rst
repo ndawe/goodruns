@@ -40,7 +40,7 @@ for combining, manipulating, and inspecting GRLs.
 grl-diff
 ^^^^^^^^
 
-Use ``grl-diff`` determine the GRL containing the runs/lumiblocks in ``A.xml`` but not in ``B.xml``::
+Use ``grl-diff`` to determine the GRL containing the runs/lumiblocks in ``A.xml`` but not in ``B.xml``::
     
     grl-diff A.xml B.xml
 
@@ -53,7 +53,7 @@ You may supply more than two GRLs to ``grl-diff``::
 
     grl-diff A.xml B.xml C.xml D.xml > E.xml
 
-which results in the GRL ((A-B)-C)-D). This is equivalent to::
+which results in the GRL E=((A-B)-C)-D). This is equivalent to::
 
     grl-diff A.xml B.xml | grl-diff C.xml | grl-diff D.xml > E.xml
 
@@ -61,6 +61,22 @@ The output of one command can be piped into any of the other commands in goodrun
 
 grl-and grl-or grl-xor
 ^^^^^^^^^^^^^^^^^^^^^^
+
+These scripts implement logical combinations of GRLs. Logical AND::
+
+    grl-and A.xml B.xml > C.xml
+
+OR::
+
+    grl-or A.xml B.xml > C.xml
+
+and XOR (exclusive OR)::
+
+    grl-xor A.xml B.xml > C.xml
+
+Again, these commands can be combined arbitrarily::
+
+    grl-and A.xml B.xml | grl-or C.xml | grl-xor D.xml > E.xml
 
 grl-clip
 ^^^^^^^^
