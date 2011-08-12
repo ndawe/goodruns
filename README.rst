@@ -37,13 +37,27 @@ Command-line Tools
 goodruns also provides a collection of command-line tools
 for combining, manipulating, and inspecting GRLs.
 
+grl-diff
+^^^^^^^^
+
 Use ``grl-diff`` determine the GRL containing the runs/lumiblocks in ``A.xml`` but not in ``B.xml``::
     
     grl-diff A.xml B.xml
 
+In other words, ``B.xml`` is subtracted from ``A.xml``.
 All command-line tools print on stdout. Redirect stdout to a file to save the result::
 
     grl-diff A.xml B.xml > C.xml
+
+You may supply more than two GRLs to ``grl-diff``::
+
+    grl-diff A.xml B.xml C.xml D.xml > E.xml
+
+which results in the GRL ((A-B)-C)-D). This is equivalent to::
+
+    grl-diff A.xml B.xml | grl-diff C.xml | grl-diff D.xml > E.xml
+
+The output of one command can be piped into any of the other commands in goodruns.
 
 grl-and grl-or grl-xor
 ^^^^^^^^^^^^^^^^^^^^^^
