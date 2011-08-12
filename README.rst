@@ -83,7 +83,7 @@ grl-clip
 
 Use ``grl-clip`` to truncate a GRL between a starting run/lumiblock and ending run/lumiblock::
 
-    $> grl-clip --help
+    > grl-clip --help
     Usage: grl-clip [options] [file]
 
     Options:
@@ -98,5 +98,69 @@ Use ``grl-clip`` to truncate a GRL between a starting run/lumiblock and ending r
 grl-convert
 ^^^^^^^^^^^
 
+``grl-convert`` can convert a GRL in XML format into YAML::
+
+    > grl-convert -f yml A.xml
+    186178:
+    - !!python/tuple [125, 156]
+    - !!python/tuple [158, 161]
+    186179:
+    - !!python/tuple [382, 388]
+    - !!python/tuple [390, 390]
+    - !!python/tuple [396, 396]
+    - !!python/tuple [398, 415]
+    - !!python/tuple [417, 431]
+    - !!python/tuple [433, 453]
+    - !!python/tuple [455, 469]
+    - !!python/tuple [471, 474]
+    - !!python/tuple [476, 479]
+    186180:
+    - !!python/tuple [114, 116]
+    - !!python/tuple [118, 124]
+    - !!python/tuple [126, 140]
+    - !!python/tuple [144, 149]
+    - !!python/tuple [151, 170]
+    - !!python/tuple [173, 176]
+    ...
+
+or plain text format::
+
+    > grl-convert -f txt A.xml
+    ---------------
+    RUN: 186178
+    LUMIBLOCKS:
+      125 --> 156
+      158 --> 161
+    ---------------
+    RUN: 186179
+    LUMIBLOCKS:
+      382 --> 388
+      390
+      396
+      398 --> 415
+      417 --> 431
+      433 --> 453
+      455 --> 469
+      471 --> 474
+      476 --> 479
+    ---------------
+    RUN: 186180
+    LUMIBLOCKS:
+      114 --> 116
+      118 --> 124
+      126 --> 140
+      144 --> 149
+      151 --> 170
+      173 --> 176
+    ...
+
 grl-runs
 ^^^^^^^^
+
+``grl-runs`` simply prints the run numbers, one per line, contained within a GRL::
+
+    > grl-runs A.xml
+    186178
+    186179
+    186180
+    ...
