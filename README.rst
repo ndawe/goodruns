@@ -12,7 +12,7 @@ To install in your home directory, use::
 
   python setup.py install --home
 
-To install for all users on Unix/Linux::
+To install for all users::
 
   sudo python setup.py install
 
@@ -34,16 +34,16 @@ Command-line Tools
 ==================
 
 grl-diff
-~~~~~~~~
+^^^^^^^^
 
 grl-and grl-or grl-xor
-~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^
 
 grl-clip
-~~~~~~~~
+^^^^^^^^
 
 grl-convert
-~~~~~~~~~~~
+^^^^^^^^^^^
 
 grl-runs
-~~~~~~~~
+^^^^^^^^
