@@ -13,7 +13,7 @@ setup(name='goodruns',
       long_description='An implementation of an ATLAS "good runs list" reader/writer in Python, and collection of useful command-line tools.',
       download_url='https://github.com/ndawe/goodruns/tarball/v1.0',
       license='GPLv3',
-      py_modules=['goodruns'],
+      py_modules=['goodruns', 'pkginfo'],
       requires=['yaml', 'lxml'],
       scripts=glob('scripts/*')
      )
