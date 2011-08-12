@@ -6,6 +6,12 @@ About
 goodruns provides an implementation of an ATLAS "good run list" (GRL)
 reader/writer in Python, and collection of useful command-line tools.
 
+Requirements
+============
+
+goodruns requires `lxml <http://pypi.python.org/pypi/lxml/2.3>`_ and optionally
+`PyYAML <http://pypi.python.org/pypi/PyYAML/>`_ if you would like to convert GRLs into YAML format.
+
 Installation
 ============
 
