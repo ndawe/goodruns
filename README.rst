@@ -10,3 +10,18 @@ An example of how to use goodruns::
     if (186356, 231) in grl:
         # do something
         pass
+
+Command-line Tools
+------------------
+
+grl-diff
+
+grl-and
+grl-or
+grl-xor
+
+grl-clip
+
+grl-convert
+
+grl-runs

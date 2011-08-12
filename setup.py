@@ -27,4 +27,4 @@ setup(name='goodruns',
         "Intended Audience :: Developers",
         "License :: OSI Approved :: GNU General Public License (GPL)"
       ]
-     )
+    )
