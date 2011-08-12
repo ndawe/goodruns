@@ -102,7 +102,7 @@ Use ``grl-clip`` to truncate a GRL between a starting run/lumiblock and ending r
 grl-convert
 ^^^^^^^^^^^
 
-``grl-convert`` can convert a GRL in XML format into YAML::
+``grl-convert`` can convert a GRL from XML format into YAML::
 
     > grl-convert -f yml A.xml
     186178:
