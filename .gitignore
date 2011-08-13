@@ -1,6 +1,4 @@
 *.pyc
-.project
-.pydevproject
 *.d
 *.so
 *~
@@ -12,4 +10,5 @@
 *.eps
 .nfs*
 build
+dist
 *.swp
