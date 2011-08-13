@@ -22,7 +22,7 @@ To install for all users::
 
 To install in your home directory::
 
-    easy_install goodruns --user
+    easy_install --user goodruns
 
 If you have obtained a copy of goodruns yourself use the ``setup.py``
 script to install. To install for all users::
