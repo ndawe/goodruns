@@ -15,17 +15,23 @@ goodruns requires `lxml <http://pypi.python.org/pypi/lxml/2.3>`_ and optionally
 Installation
 ============
 
-To install in your home directory, use::
-
-    python setup.py install --home
-
+The easiest way to install goodruns is via ``easy_install``.
 To install for all users::
+
+    sudo easy_install goodruns
+
+To install in your home directory::
+
+    easy_install goodruns --user
+
+If you have obtained a copy of goodruns yourself use the ``setup.py``
+script to install. To install for all users::
 
     sudo python setup.py install
 
-For more installation options::
+To install in your home directory::
 
-    python setup.py install --help
+    python setup.py install --home
 
 Usage
 =====
