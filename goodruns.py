@@ -3,10 +3,6 @@ import copy
 import urllib2
 from pprint import pprint
 from operator import add, sub, or_, and_, xor, itemgetter
-try:
-    from rootpy.tree import Cut
-except:
-    pass
 
 use_yaml = True
 try:
@@ -117,7 +113,7 @@ class GRL(object):
                 if lbrange[0] == lbrange[1]:
                     output += ("  %%-%ds" % maxlength + "\n") % lbrange[0]
                 else:
-                    output += ("  %%-%ds" % maxlength + " --> %i\n") % lbrange
+                    output += ("  %%-%ds" % maxlength + " - %i\n") % lbrange
         return output
 
     def __getitem__(self, run):
@@ -341,7 +337,5 @@ class GRL(object):
         elif format in ('py', 'python'):
             filehandle.write("grl = ")
             pprint(self.__grl, stream=filehandle)
-        elif format == 'cut':
-            filehandle.write(str(self.cut()) + '\n')
         else:
             raise ValueError("Unrecognized grl format")
