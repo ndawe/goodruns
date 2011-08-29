@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 
-import pkginfo
 from distutils.core import setup
 from glob import glob
 
+execfile('info.py')
+
 setup(name='goodruns',
-      version=pkginfo.__RELEASE__,
+      version=__RELEASE__,
       author='Noel Dawe',
       author_email='noel.dawe@cern.ch',
-      url='https://github.com/ndawe/goodruns',
+      url=__URL__,
       description='ATLAS "good run list" utilities',
       long_description=open('README.rst').read(),
-      download_url='https://github.com/downloads/ndawe/goodruns/goodruns-1.0.tar.gz',
+      download_url="%sgoodruns-%s.tar.gz" % (__URL__, __VERSION__),
       license='GPLv3',
       py_modules=['goodruns', 'pkginfo'],
       requires=['yaml', 'lxml'],
