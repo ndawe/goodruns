@@ -6,7 +6,7 @@ from glob import glob
 execfile('info.py')
 
 setup(name='goodruns',
-      version=__RELEASE__,
+      version=__VERSION__,
       author='Noel Dawe',
       author_email='noel.dawe@cern.ch',
       url=__URL__,
@@ -14,7 +14,7 @@ setup(name='goodruns',
       long_description=open('README.rst').read(),
       download_url="%sgoodruns-%s.tar.gz" % (__URL__, __VERSION__),
       license='GPLv3',
-      py_modules=['goodruns', 'pkginfo'],
+      py_modules=['goodruns', 'info'],
       requires=['yaml', 'lxml'],
       scripts=glob('scripts/*'),
       classifiers=[

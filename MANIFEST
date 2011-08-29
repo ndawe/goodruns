@@ -2,7 +2,7 @@
 README
 README.rst
 goodruns.py
-pkginfo.py
+info.py
 setup.py
 scripts/grl-and
 scripts/grl-clip
