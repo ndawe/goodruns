@@ -20,22 +20,30 @@ def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
 
 
 def diffed(*args):
-
+    """
+    Return the difference of multiple GRLs: (((A-B)-C)-D)...)
+    """
     return reduce(sub, args)
 
 
 def ored(*args):
-
+    """
+    Return the OR of multiple GRLs: A | B | C...
+    """
     return reduce(or_, args)
 
 
 def anded(*args):
-
+    """
+    Return the AND of multiple GRLs: A & B & C...
+    """
     return reduce(and_, args)
 
 
 def xored(*args):
-
+    """
+    Return the XOR of multuple GRLs: A ^ B ^ C...
+    """
     return reduce(xor, args)
 
 
@@ -315,7 +323,9 @@ class GRL(object):
         return cut
 
     def write(self, filehandle, format='xml'):
-
+        """
+        Write the GRL in a specified format to the file object.
+        """
         if format == 'xml':
             root = ET.Element('LumiRangeCollection')
             subroot = ET.SubElement(root, 'NamedLumiRange')
