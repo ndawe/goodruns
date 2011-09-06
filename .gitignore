@@ -2,13 +2,8 @@
 *.d
 *.so
 *~
-*.root
 *.log
 *.out
-*.png
-*.jpg
-*.eps
-.nfs*
 build
 dist
 *.swp
