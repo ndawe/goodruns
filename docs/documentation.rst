@@ -1,0 +1,5 @@
+goodruns
+========
+
+.. automodule:: goodruns
+   :members:
