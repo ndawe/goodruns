@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # goodruns documentation build configuration file, created by
-# sphinx-quickstart on Tue Sep  6 09:40:43 2011.
+# sphinx-quickstart on Tue Sep  6 09:52:18 2011.
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
