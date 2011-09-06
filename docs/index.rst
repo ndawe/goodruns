@@ -6,6 +6,8 @@
 Welcome to goodruns's documentation!
 ====================================
 
+.. include:: ../README.rst
+
 Contents:
 
 .. toctree::
