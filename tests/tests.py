@@ -8,4 +8,4 @@ def test_read():
     grl = GRL(os.path.join(dirname, "grl.xml"))
 
 if __name__ == '__main__':
-    node.runmodule()
+    nose.runmodule()
