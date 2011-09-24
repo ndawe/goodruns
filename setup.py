@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from distutils.core import setup
-from urlparse import urljoin
 from glob import glob
 
 execfile('info.py')
@@ -10,10 +9,10 @@ setup(name='goodruns',
       version=__VERSION__,
       author='Noel Dawe',
       author_email='noel.dawe@cern.ch',
-      url=__URL__,
       description='ATLAS "good run list" utilities',
       long_description=open('README.rst').read(),
-      download_url=urljoin(__URL__, "goodruns-%s.tar.gz" % __VERSION__),
+      url=__URL__,
+      download_url=__DOWNLOAD_URL__,
       license='GPLv3',
       py_modules=['goodruns'],
       requires=['yaml', 'lxml'],
