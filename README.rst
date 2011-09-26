@@ -31,7 +31,7 @@ script to install. To install for all users::
 
 To install in your home directory::
 
-    python setup.py install --home
+    python setup.py install --user
 
 Usage
 =====
