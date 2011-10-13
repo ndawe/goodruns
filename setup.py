@@ -18,7 +18,7 @@ setup(name='goodruns',
       download_url=__DOWNLOAD_URL__,
       license='GPLv3',
       py_modules=['goodruns'],
-      install_requires=['PyYAML', 'lxml'],
+      install_requires=['lxml'],
       scripts=glob('scripts/*'),
       classifiers=[
         "Programming Language :: Python",
