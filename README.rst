@@ -15,14 +15,14 @@ goodruns requires `lxml <http://pypi.python.org/pypi/lxml/2.3>`_ and optionally
 Installation
 ============
 
-The easiest way to install goodruns is via ``easy_install``.
+The easiest way to install goodruns is via ``pip``.
 To install for all users::
 
-    sudo easy_install goodruns
+    sudo pip install goodruns
 
 To install in your home directory::
 
-    easy_install --user goodruns
+    pip install --user goodruns
 
 If you have obtained a copy of goodruns yourself use the ``setup.py``
 script to install. To install for all users::
