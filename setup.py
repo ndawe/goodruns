@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+from distribute_setup import use_setuptools
+use_setuptools()
+
+from setuptools import setup
 from glob import glob
 
 execfile('info.py')
@@ -15,7 +18,7 @@ setup(name='goodruns',
       download_url=__DOWNLOAD_URL__,
       license='GPLv3',
       py_modules=['goodruns'],
-      requires=['yaml', 'lxml'],
+      install_requires=['PyYAML', 'lxml'],
       scripts=glob('scripts/*'),
       classifiers=[
         "Programming Language :: Python",
