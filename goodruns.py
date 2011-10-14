@@ -66,7 +66,7 @@ def _lbrange_as_set(lbrange):
 class GRL(object):
     """
     The main GRL class holds a python dictionary
-    mapping runs to lumiblock ranges (2-tuples)
+    mapping runs to a list of lumiblock ranges (2-tuples)
     """
     def __init__(self, grl=None):
         """
