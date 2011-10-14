@@ -156,7 +156,7 @@ class GRL(object):
 
     def items(self):
         """
-        Iterate over (run, lbrange) in GRL
+        Iterate over (run, lbranges) in GRL
         """
         for run, lbranges in self.__grl.items():
             for lbrange in lbranges:
@@ -164,7 +164,7 @@ class GRL(object):
 
     def iterruns(self):
         """
-        Iterate over runs in GRL
+        Iterate over runs in GRL sorted in ascending order
         """
         for run in sorted(self.__grl.iterkeys()):
             yield run
