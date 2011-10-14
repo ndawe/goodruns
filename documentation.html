@@ -58,6 +58,24 @@
 <dd><p>The main GRL class holds a python dictionary
 mapping runs to a list of lumiblock ranges (2-tuples)</p>
 <dl class="method">
+<dt id="goodruns.GRL.__contains__">
+<tt class="descname">__contains__</tt><big>(</big><em>runlb</em><big>)</big><a class="reference internal" href="_modules/goodruns.html#GRL.__contains__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.GRL.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pass the tuple (run, lbn)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="goodruns.GRL.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>grl=None</em><big>)</big><a class="reference internal" href="_modules/goodruns.html#GRL.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.GRL.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>grl may be a file name or URL of a valid GRL file, or None</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="goodruns.GRL.__weakref__">
+<tt class="descname">__weakref__</tt><a class="headerlink" href="#goodruns.GRL.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="goodruns.GRL.clip">
 <tt class="descname">clip</tt><big>(</big><em>startrun=None</em>, <em>startlb=None</em>, <em>endrun=None</em>, <em>endlb=None</em><big>)</big><a class="reference internal" href="_modules/goodruns.html#GRL.clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.GRL.clip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clip the GRL between startrun, startlb and endrun, endlb (inclusive)</p>
