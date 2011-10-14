@@ -12,7 +12,9 @@ except:
 
 
 def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
-
+    """
+    Clip a GRL between startrun, startlb and endrun, endlb (inclusive)
+    """
     grl_copy = copy.deepcopy(grl)
     grl_copy.clip(startrun=startrun, startlb=startlb,
                   endrun=endrun, endlb=endlb)
@@ -42,7 +44,7 @@ def anded(*args):
 
 def xored(*args):
     """
-    Return the XOR of multuple GRLs: A ^ B ^ C...
+    Return the XOR of multiple GRLs: A ^ B ^ C...
     """
     return reduce(xor, args)
 
@@ -62,9 +64,14 @@ def _lbrange_as_set(lbrange):
 
 
 class GRL(object):
-
+    """
+    The main GRL class holds a python dictionary
+    mapping runs to lumiblock ranges (2-tuples)
+    """
     def __init__(self, grl=None):
-
+        """
+        grl may be a file name or URL of a valid GRL file, or None
+        """
         self.__grl = {}
         if not grl:
             return
@@ -148,22 +155,30 @@ class GRL(object):
         return iter(self.iterruns())
 
     def items(self):
-
+        """
+        Iterate over (run, lbrange) in GRL
+        """
         for run, lbranges in self.__grl.items():
             for lbrange in lbranges:
                 yield (run, lbrange)
 
     def iterruns(self):
-
+        """
+        Iterate over runs in GRL
+        """
         for run in sorted(self.__grl.iterkeys()):
             yield run
 
     def has_run(self, run):
-
+        """
+        Returns True if run is in GRL, else False
+        """
         return run in self.__grl
 
     def insert(self, run, lbrange):
-
+        """
+        Insert a lumiblock range into a run
+        """
         if self.has_run(run):
             if lbrange not in self[run]:
                 self[run].append(lbrange)
@@ -172,7 +187,9 @@ class GRL(object):
             self.__grl[run] = [lbrange]
 
     def remove(self, run, lbrange):
-
+        """
+        Remove a lumiblock range from a run
+        """
         if self.has_run(run):
             for mylbrange in self[run][:]:
                 if lbrange[1] < mylbrange[0]:
@@ -204,7 +221,9 @@ class GRL(object):
                     break
 
     def clip(self, startrun=None, startlb=None, endrun=None, endlb=None):
-
+        """
+        Clip the GRL between startrun, startlb and endrun, endlb (inclusive)
+        """
         for run in sorted(self.iterruns()):
             if startrun is not None:
                 if run < startrun:
@@ -310,7 +329,10 @@ class GRL(object):
         return (self | other) - (self & other)
 
     def cut(self, runname='RunNumber', lbname='lbn'):
-
+        """
+        Convert this GRL into a TCut expression.
+        This method is really meant to be a joke and should be of no use.
+        """
         try:
             cut = Cut()
             for run in self.iterruns():
