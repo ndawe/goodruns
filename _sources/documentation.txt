@@ -3,4 +3,3 @@
 
 .. automodule:: goodruns
    :members:
-   :special-members:
