@@ -1,14 +1,20 @@
-import lxml.etree as ET
-import copy
-import urllib2
-from pprint import pprint
-from operator import add, sub, or_, and_, xor, itemgetter
+use_lxml = True
+try:
+    import lxml.etree as ET
+except ImportError:
+    import xml.etree.ElementTree as ET
+    use_lxml = False
 
 use_yaml = True
 try:
     import yaml
 except:
     use_yaml = False
+
+import copy
+import urllib2
+from pprint import pprint
+from operator import add, sub, or_, and_, xor, itemgetter
 
 
 def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
