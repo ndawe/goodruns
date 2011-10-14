@@ -3,5 +3,3 @@
 
 .. automodule:: goodruns
    :members:
-
-.. autoclass:: goodruns.GRL
