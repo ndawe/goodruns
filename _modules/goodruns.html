@@ -49,17 +49,24 @@
           <div class="body">
             
   <h1>Source code for goodruns</h1><div class="highlight"><pre>
-<span class="kn">import</span> <span class="nn">lxml.etree</span> <span class="kn">as</span> <span class="nn">ET</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">urllib2</span>
-<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
-<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">add</span><span class="p">,</span> <span class="n">sub</span><span class="p">,</span> <span class="n">or_</span><span class="p">,</span> <span class="n">and_</span><span class="p">,</span> <span class="n">xor</span><span class="p">,</span> <span class="n">itemgetter</span>
+<span class="n">use_lxml</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">lxml.etree</span> <span class="kn">as</span> <span class="nn">ET</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
+    <span class="kn">import</span> <span class="nn">xml.dom.minidom</span> <span class="kn">as</span> <span class="nn">minidom</span>
+    <span class="n">use_lxml</span> <span class="o">=</span> <span class="bp">False</span>
 
 <span class="n">use_yaml</span> <span class="o">=</span> <span class="bp">True</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">yaml</span>
-<span class="k">except</span><span class="p">:</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">use_yaml</span> <span class="o">=</span> <span class="bp">False</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">urllib2</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">add</span><span class="p">,</span> <span class="n">sub</span><span class="p">,</span> <span class="n">or_</span><span class="p">,</span> <span class="n">and_</span><span class="p">,</span> <span class="n">xor</span><span class="p">,</span> <span class="n">itemgetter</span>
 
 
 <div class="viewcode-block" id="clipped"><a class="viewcode-back" href="../documentation.html#goodruns.clipped">[docs]</a><span class="k">def</span> <span class="nf">clipped</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="n">startrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">startlb</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endlb</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -117,9 +124,9 @@
 <div class="viewcode-block" id="GRL"><a class="viewcode-back" href="../documentation.html#goodruns.GRL">[docs]</a><span class="k">class</span> <span class="nc">GRL</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The main GRL class holds a python dictionary</span>
-<span class="sd">    mapping runs to lumiblock ranges (2-tuples)</span>
+<span class="sd">    mapping runs to a list of lumiblock ranges (2-tuples)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="GRL.__init__"><a class="viewcode-back" href="../documentation.html#goodruns.GRL.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grl</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grl</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        grl may be a file name or URL of a valid GRL file, or None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -157,7 +164,7 @@
                     <span class="o">%</span> <span class="n">filename</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterruns</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__optimize</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
-</div>
+
     <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -190,7 +197,7 @@
 
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
 
-<div class="viewcode-block" id="GRL.__contains__"><a class="viewcode-back" href="../documentation.html#goodruns.GRL.__contains__">[docs]</a>    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runlb</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runlb</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Pass the tuple (run, lbn)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -200,14 +207,14 @@
                 <span class="k">if</span> <span class="n">runlb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">runlb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                     <span class="k">return</span> <span class="bp">True</span>
         <span class="k">return</span> <span class="bp">False</span>
-</div>
+
     <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterruns</span><span class="p">())</span>
 
 <div class="viewcode-block" id="GRL.items"><a class="viewcode-back" href="../documentation.html#goodruns.GRL.items">[docs]</a>    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Iterate over (run, lbrange) in GRL</span>
+<span class="sd">        Iterate over (run, lbranges) in GRL</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbranges</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">lbrange</span> <span class="ow">in</span> <span class="n">lbranges</span><span class="p">:</span>
@@ -215,7 +222,7 @@
 </div>
 <div class="viewcode-block" id="GRL.iterruns"><a class="viewcode-back" href="../documentation.html#goodruns.GRL.iterruns">[docs]</a>    <span class="k">def</span> <span class="nf">iterruns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Iterate over runs in GRL</span>
+<span class="sd">        Iterate over runs in GRL sorted in ascending order</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">()):</span>
             <span class="k">yield</span> <span class="n">run</span>
@@ -412,7 +419,12 @@
                     <span class="n">lbrange</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;Start&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">lumiblock</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
                     <span class="n">lbrange</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&quot;End&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">lumiblock</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
             <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">ElementTree</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-            <span class="n">tree</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filehandle</span><span class="p">,</span> <span class="n">pretty_print</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">use_lxml</span><span class="p">:</span>
+                <span class="n">tree</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filehandle</span><span class="p">,</span> <span class="n">pretty_print</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c"># current hack to get pretty XML from ElementTree </span>
+                <span class="n">xml</span> <span class="o">=</span> <span class="n">minidom</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()))</span>
+                <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">xml</span><span class="o">.</span><span class="n">toprettyxml</span><span class="p">())</span>
         <span class="k">elif</span> <span class="n">format</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;yml&#39;</span><span class="p">,</span> <span class="s">&#39;yaml&#39;</span><span class="p">):</span>
             <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">format</span> <span class="o">==</span> <span class="s">&#39;txt&#39;</span><span class="p">:</span>
