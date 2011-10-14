@@ -10,8 +10,10 @@ reader/writer in Python, and collection of useful command-line tools.
 Requirements
 ============
 
-goodruns requires `lxml <http://pypi.python.org/pypi/lxml/2.3>`_ and optionally
-`PyYAML <http://pypi.python.org/pypi/PyYAML/>`_ if you would like to convert GRLs into YAML format.
+goodruns requires at least Python 2.5 and only depends on modules in the standard library.
+For improved performance goodruns will optionally use `lxml <http://pypi.python.org/pypi/lxml/2.3>`_
+if installed. Install `PyYAML <http://pypi.python.org/pypi/PyYAML/>`_ if you would
+like to convert GRLs into YAML format.
 
 
 Installation
