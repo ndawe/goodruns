@@ -48,7 +48,7 @@ An example of how to use goodruns in a Python application::
 
     from goodruns import GRL
 
-    grl = GRL("some_grl.xml")
+    grl = GRL('grl.xml')
     
     # check if the GRL contains the lumiblock 231 in run 186356:
     if (186356, 231) in grl:
