@@ -3,6 +3,7 @@ try:
     import lxml.etree as ET
 except ImportError:
     import xml.etree.ElementTree as ET
+    import xml.dom.minidom as minidom
     use_lxml = False
 
 use_yaml = True
@@ -367,7 +368,12 @@ class GRL(object):
                     lbrange.set("Start", str(lumiblock[0]))
                     lbrange.set("End", str(lumiblock[1]))
             tree = ET.ElementTree(root)
-            tree.write(filehandle, pretty_print=True)
+            if use_lxml:
+                tree.write(filehandle, pretty_print=True)
+            else:
+                # current hack to get pretty XML from ElementTree 
+                xml = minidom.parseString(ET.tostring(tree.getroot()))
+                filehandle.write(xml.toprettyxml())
         elif format in ('yml', 'yaml'):
             filehandle.write(yaml.dump(self.__grl))
         elif format == 'txt':
