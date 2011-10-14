@@ -9,7 +9,7 @@ except ImportError:
 use_yaml = True
 try:
     import yaml
-except:
+except ImportError:
     use_yaml = False
 
 import copy
