@@ -18,6 +18,7 @@ setup(name='goodruns',
       download_url=__DOWNLOAD_URL__,
       license='GPLv3',
       py_modules=['goodruns'],
+      requires=['lxml'],
       install_requires=['lxml>=2.3'],
       scripts=glob('scripts/*'),
       classifiers=[
