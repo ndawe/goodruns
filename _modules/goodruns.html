@@ -62,14 +62,16 @@
     <span class="n">use_yaml</span> <span class="o">=</span> <span class="bp">False</span>
 
 
-<span class="k">def</span> <span class="nf">clipped</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="n">startrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">startlb</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endlb</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-
+<div class="viewcode-block" id="clipped"><a class="viewcode-back" href="../documentation.html#goodruns.clipped">[docs]</a><span class="k">def</span> <span class="nf">clipped</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="n">startrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">startlb</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endlb</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Clip a GRL between startrun, startlb and endrun, endlb (inclusive)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">grl_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">grl</span><span class="p">)</span>
     <span class="n">grl_copy</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">startrun</span><span class="o">=</span><span class="n">startrun</span><span class="p">,</span> <span class="n">startlb</span><span class="o">=</span><span class="n">startlb</span><span class="p">,</span>
                   <span class="n">endrun</span><span class="o">=</span><span class="n">endrun</span><span class="p">,</span> <span class="n">endlb</span><span class="o">=</span><span class="n">endlb</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">grl_copy</span>
 
-
+</div>
 <div class="viewcode-block" id="diffed"><a class="viewcode-back" href="../documentation.html#goodruns.diffed">[docs]</a><span class="k">def</span> <span class="nf">diffed</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the difference of multiple GRLs: (((A-B)-C)-D)...)</span>
@@ -93,7 +95,7 @@
 </div>
 <div class="viewcode-block" id="xored"><a class="viewcode-back" href="../documentation.html#goodruns.xored">[docs]</a><span class="k">def</span> <span class="nf">xored</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return the XOR of multuple GRLs: A ^ B ^ C...</span>
+<span class="sd">    Return the XOR of multiple GRLs: A ^ B ^ C...</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">xor</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 
