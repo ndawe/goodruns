@@ -37,7 +37,7 @@ To install in your home directory::
 
     python setup.py install --user
 
-To install the optional requirements
+To install the optional dependencies
 (first download a source distribution if you haven't already)::
 
     pip install -U -r optional-requirements.txt
@@ -46,7 +46,7 @@ To install the optional requirements
 Usage
 =====
 
-An example of how to use goodruns in a Python application::
+An example of how to use goodruns::
 
     from goodruns import GRL
 
