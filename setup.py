@@ -17,6 +17,7 @@ setup(name='goodruns',
       url=__URL__,
       download_url=__DOWNLOAD_URL__,
       license='GPLv3',
+      install_requires=['ordereddict'],
       py_modules=['goodruns'],
       scripts=glob('scripts/*'),
       classifiers=[
