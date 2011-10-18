@@ -1,21 +1,25 @@
-use_lxml = True
+"""
+This module provides the main GRL class and utility functions
+"""
+
+USE_LXML = True
 try:
     import lxml.etree as ET
 except ImportError:
     import xml.etree.ElementTree as ET
     import xml.dom.minidom as minidom
-    use_lxml = False
+    USE_LXML = False
 
-use_yaml = True
+USE_YAML = True
 try:
     import yaml
 except ImportError:
-    use_yaml = False
+    USE_YAML = False
 
 import copy
 import urllib2
 from pprint import pprint
-from operator import add, sub, or_, and_, xor, itemgetter
+from operator import sub, or_, and_, xor, itemgetter
 
 
 def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
@@ -57,7 +61,9 @@ def xored(*args):
 
 
 def _lbrange_intersects(lbrange1, lbrange2):
-
+    """
+    Determine if two lumiblock ranges intersect
+    """
     if lbrange1[0] >= lbrange2[0] and lbrange1[0] <= lbrange2[1]:
         return True
     if lbrange1[1] >= lbrange2[0] and lbrange1[1] <= lbrange2[1]:
@@ -66,7 +72,9 @@ def _lbrange_intersects(lbrange1, lbrange2):
 
 
 def _lbrange_as_set(lbrange):
-
+    """
+    Convert lumiblock range to set of lumiblocks
+    """
     return set(range(lbrange[0], lbrange[1] + 1))
 
 
@@ -99,11 +107,12 @@ class GRL(object):
                 for lbcol in lbcols:
                     run = int(lbcol.find('Run').text)
                     lbs = lbcol.findall('LBRange')
-                    for lb in lbs:
+                    for lumiblock in lbs:
                         self.insert(run,
-                            (int(lb.attrib['Start']), int(lb.attrib['End'])))
+                            (int(lumiblock.attrib['Start']),
+                             int(lumiblock.attrib['End'])))
             elif filename.endswith('.yml'):
-                if use_yaml:
+                if USE_YAML:
                     self.__grl = yaml.load(grl)
                 else:
                     raise ImportError("PyYAML module not found")
@@ -278,22 +287,22 @@ class GRL(object):
             first = 0
             last = len(lbranges) - 1
             while first != last:
-                next = first + 1
+                _next = first + 1
                 merged = False
-                while next <= last:
-                    if lbranges[first][1] >= lbranges[next][1]:
-                        for index in range(first + 1, next + 1):
-                            lbranges.pop(next)
+                while _next <= last:
+                    if lbranges[first][1] >= lbranges[_next][1]:
+                        for index in range(first + 1, _next + 1):
+                            lbranges.pop(_next)
                         merged = True
                         break
-                    elif lbranges[first][1] + 1 >= lbranges[next][0]:
+                    elif lbranges[first][1] + 1 >= lbranges[_next][0]:
                         lbranges[first] = \
-                            (lbranges[first][0], lbranges[next][1])
-                        for index in range(first + 1, next + 1):
-                            lbranges.pop(next)
+                            (lbranges[first][0], lbranges[_next][1])
+                        for index in range(first + 1, _next + 1):
+                            lbranges.pop(_next)
                         merged = True
                         break
-                    next += 1
+                    _next += 1
                 last = len(lbranges) - 1
                 if not merged:
                     first += 1
@@ -341,14 +350,15 @@ class GRL(object):
         This method is really meant to be a joke and should be of no use.
         """
         try:
-            cut = Cut()
-            for run in self.iterruns():
-                lbcut = Cut()
-                for lbrange in self[run]:
-                    lbcut |= (lbname + ">=%i&&" + lbname + "<=%i") % lbrange
-                cut |= "(%s==%i)&&(%s)" % (runname, run, lbcut)
-        except:
-            cut = "install rootpy to enable conversion to a cut expression"
+            from rootpy.tree import Cut
+        except ImportError:
+            return "install rootpy to enable conversion to a cut expression"
+        cut = Cut()
+        for run in self.iterruns():
+            lbcut = Cut()
+            for lbrange in self[run]:
+                lbcut |= (lbname + ">=%i&&" + lbname + "<=%i") % lbrange
+            cut |= "(%s==%i)&&(%s)" % (runname, run, lbcut)
         return cut
 
     def write(self, filehandle, format='xml'):
@@ -368,7 +378,7 @@ class GRL(object):
                     lbrange.set("Start", str(lumiblock[0]))
                     lbrange.set("End", str(lumiblock[1]))
             tree = ET.ElementTree(root)
-            if use_lxml:
+            if USE_LXML:
                 tree.write(filehandle, pretty_print=True)
             else:
                 # current hack to get pretty XML from ElementTree 
