@@ -91,8 +91,9 @@ class GRL(object):
         if not grl:
             return
         if type(grl) is dict:
-            self.__grl = grl
-        elif type(grl) in [str, file]:
+            self.__grl = grl.copy()
+            return
+        if type(grl) in [str, file]:
             filename = grl
             if type(grl) is str:
                 if grl.startswith("http://"):
