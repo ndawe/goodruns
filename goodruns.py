@@ -20,7 +20,7 @@ import copy
 import urllib2
 from pprint import pprint
 from operator import sub, or_, and_, xor, itemgetter
-from ordereddict import OrderedDict
+from sorteddict import SortedDict
 
 def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
     """
@@ -87,12 +87,11 @@ class GRL(object):
         """
         grl may be a file name or URL of a valid GRL file, or None
         """
-        self.__grl = OrderedDict()
+        self.__grl = SortedDict()
         if not grl:
             return
         if isinstance(grl, dict):
-            self.__grl = OrderedDict(copy.deepcopy(
-                    sorted(grl.items(), key=lambda t: t[0])))
+            self.__grl = SortedDict(copy.deepcopy(grl))
             return
         if type(grl) in [str, file]:
             filename = grl
