@@ -381,7 +381,7 @@ class GRL(object):
             if USE_LXML:
                 tree.write(filehandle, pretty_print=True)
             else:
-                # current hack to get pretty XML from ElementTree 
+                # current hack to get pretty XML from ElementTree
                 xml = minidom.parseString(ET.tostring(tree.getroot()))
                 filehandle.write(xml.toprettyxml())
         elif format in ('yml', 'yaml'):
