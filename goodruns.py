@@ -136,7 +136,7 @@ class GRL(object):
     def __str__(self):
 
         output = ""
-        for run in sorted(self.iterruns()):
+        for run in self.iterruns():
             lbranges = self.__grl[run]
             maxlength = max([len(str(lbrange[0])) for lbrange in lbranges])
             output += '-' * 15 + '\n'
@@ -182,9 +182,9 @@ class GRL(object):
 
     def iterruns(self):
         """
-        Iterate over runs in GRL sorted in ascending order
+        Iterate over runs in GRL
         """
-        for run in sorted(self.__grl.iterkeys()):
+        for run in self.__grl.iterkeys():
             yield run
 
     def has_run(self, run):
@@ -242,7 +242,7 @@ class GRL(object):
         """
         Clip the GRL between startrun, startlb and endrun, endlb (inclusive)
         """
-        for run in sorted(self.iterruns()):
+        for run in self.iterruns():
             if startrun is not None:
                 if run < startrun:
                     del self.__grl[run]
