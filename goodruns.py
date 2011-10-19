@@ -22,6 +22,7 @@ from pprint import pprint
 from operator import sub, or_, and_, xor, itemgetter
 from sorteddict import SortedDict
 
+
 def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
     """
     Clip a GRL between startrun, startlb and endrun, endlb (inclusive)
