@@ -16,13 +16,11 @@ if len(args) < 2:
 
 from goodruns import GRL, ored
 
-#try:
-oredgrl = ored(*[GRL(arg) for arg in args])
-"""
+try:
+    oredgrl = ored(*[GRL(arg) for arg in args])
 except:
     print "could not parse one or more grls"
     sys.exit(1)
-"""
 
 if options.output is None:
     oredgrl.write(sys.stdout, format = 'xml')
