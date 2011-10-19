@@ -115,7 +115,7 @@ class GRL(object):
                              int(lumiblock.attrib['End'])))
             elif filename.endswith('.yml'):
                 if USE_YAML:
-                    self.__grl = yaml.load(grl)
+                    self.__grl = SortedDict(yaml.load(grl))
                 else:
                     raise ImportError("PyYAML module not found")
             else:
@@ -197,6 +197,15 @@ class GRL(object):
         """
         Insert a lumiblock range into a run
         """
+        if not isinstance(run, int):
+            raise TypeError('run must be an integer')
+        if not isinstance(lbrange, tuple):
+            raise TypeError('lbrange must be a 2-tuple')
+        if len(lbrange) != 2:
+            raise ValueError('lbrange must contain exactly 2 elements')
+        for lumiblock in lbrange:
+            if not isinstance(lumiblock, int):
+                raise TypeError('lbrange must contain integers only')
         if self.has_run(run):
             if lbrange not in self[run]:
                 self[run].append(lbrange)
