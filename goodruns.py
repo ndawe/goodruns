@@ -237,11 +237,12 @@ class GRL(object):
             raise TypeError('run must be an integer')
         if not isinstance(lbrange, LumiblockRange):
             raise TypeError('lbrange must be a LumiblockRange')
-        if self.has_run(run):
-            if lbrange not in self[run]:
-                self[run].append(lbrange)
+        try:
+            lbranges = self.__grl[run]
+            i = bisect.bisect(lbranges, lbrange[0])
+            lbranges.insert(i, lbrange)
             self.__optimize(run)
-        else:
+        except KeyError:
             self.__grl[run] = [lbrange]
 
     def remove(self, run, lbrange):
@@ -324,7 +325,7 @@ class GRL(object):
         if len(self[run]) == 0:
             del self[run]
             return
-        lbranges = sorted(self[run], key=itemgetter(0))
+        lbranges = self.__grl[run]
         if len(lbranges) > 1:
             first = 0
             last = len(lbranges) - 1
@@ -348,7 +349,6 @@ class GRL(object):
                 last = len(lbranges) - 1
                 if not merged:
                     first += 1
-            self.__grl[run] = lbranges
 
     def __add__(self, other):
 
