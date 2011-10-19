@@ -318,14 +318,12 @@ class GRL(object):
 
     def __optimize(self, run):
         """
-        Sort and merge lumiblock ranges
+        Merge lumiblock ranges
         """
-        if not self.has_run(run):
-            return
-        if len(self[run]) == 0:
-            del self[run]
-            return
         lbranges = self.__grl[run]
+        if len(lbranges) == 0:
+            del self.__grl[run]
+            return
         if len(lbranges) > 1:
             first = 0
             last = len(lbranges) - 1
