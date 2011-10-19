@@ -236,7 +236,7 @@ class GRL(object):
         if not isinstance(run, int):
             raise TypeError('run must be an integer')
         if not isinstance(lbrange, LumiblockRange):
-            raise TypeError('lbrange must be a LumiblockRange')
+            lbrange = LumiblockRange(lbrange)
         try:
             lbranges = self.__grl[run]
             i = bisect.bisect(lbranges, lbrange[0])
