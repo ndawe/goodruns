@@ -206,6 +206,8 @@ class GRL(object):
         for lumiblock in lbrange:
             if not isinstance(lumiblock, int):
                 raise TypeError('lbrange must contain integers only')
+        if lbrange[0] > lbrange[1]:
+            raise ValueError('lbrange in wrong order: %s' % lbrange)
         if self.has_run(run):
             if lbrange not in self[run]:
                 self[run].append(lbrange)
