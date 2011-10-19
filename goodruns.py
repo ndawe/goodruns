@@ -177,7 +177,7 @@ class GRL(object):
             output += '-' * 15 + '\n'
             output += 'RUN: %i\n' % run
             output += 'LUMIBLOCKS:\n'
-            lbranges_end = len(lbranges)
+            lbranges_end = len(lbranges) - 1
             for j, lbrange in enumerate(lbranges):
                 if lbrange[0] == lbrange[1]:
                     output += ('  %%-%ds' % maxlength) % lbrange[0]
