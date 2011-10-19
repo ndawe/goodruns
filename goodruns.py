@@ -21,6 +21,7 @@ import urllib2
 from pprint import pprint
 from operator import sub, or_, and_, xor, itemgetter
 from sorteddict import SortedDict
+import bisect
 
 
 def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
@@ -79,6 +80,39 @@ def _lbrange_as_set(lbrange):
     return set(range(lbrange[0], lbrange[1] + 1))
 
 
+def _dict_to_grl(d):
+    """
+    Convert tuples to LumiblockRanges
+    """
+    o = {}
+    for run, lbranges in d.items():
+        o[run] = [LumiblockRange(*a) for a in lbranges]
+    return o
+
+
+class LumiblockRange(tuple):
+    
+    def __new__(cls, *args):
+        
+        if len(args) != 2:
+            raise ValueError('lbrange must contain exactly 2 elements')
+        for lumiblock in args:
+            if not isinstance(lumiblock, int):
+                raise TypeError('lbrange must contain integers only')
+        if args[0] > args[1]:
+            raise ValueError('lbrange in wrong order: %s' % (args,))
+   
+        return super(LumiblockRange, cls).__new__(cls, args)
+
+    def __cmp__(self, lumiblock):
+        
+        if lumiblock < self[0]:
+            return 1
+        if lumiblock > self[1]:
+            return -1
+        return 0
+ 
+
 class GRL(object):
     """
     The main GRL class holds a python dictionary
@@ -92,7 +126,7 @@ class GRL(object):
         if not grl:
             return
         if isinstance(grl, dict):
-            self.__grl = SortedDict(copy.deepcopy(grl))
+            self.__grl = SortedDict(_dict_to_grl(grl))
             return
         if type(grl) in [str, file]:
             filename = grl
@@ -111,11 +145,11 @@ class GRL(object):
                     lbs = lbcol.findall('LBRange')
                     for lumiblock in lbs:
                         self.insert(run,
-                            (int(lumiblock.attrib['Start']),
-                             int(lumiblock.attrib['End'])))
+                            LumiblockRange(int(lumiblock.attrib['Start']),
+                                           int(lumiblock.attrib['End'])))
             elif filename.endswith('.yml'):
                 if USE_YAML:
-                    self.__grl = SortedDict(yaml.load(grl))
+                    self.__grl = SortedDict(_dict_to_grl(grl))
                 else:
                     raise ImportError("PyYAML module not found")
             else:
@@ -161,11 +195,13 @@ class GRL(object):
         """
         Pass the tuple (run, lbn)
         """
-        if self.has_run(runlb[0]):
-            lbranges = self[runlb[0]]
-            for lbrange in lbranges:
-                if runlb[1] >= lbrange[0] and runlb[1] <= lbrange[1]:
-                    return True
+        run, lbn = runlb
+        if self.has_run(run):
+            lbranges = self[run]
+            # Locate the LumiblockRange containing lbn
+            i = bisect.bisect_left(lbranges, lbn)
+            if i != len(lbranges) and lbranges[i] == lbn:
+                return True
         return False
 
     def __iter__(self):
@@ -199,15 +235,8 @@ class GRL(object):
         """
         if not isinstance(run, int):
             raise TypeError('run must be an integer')
-        if not isinstance(lbrange, tuple):
-            raise TypeError('lbrange must be a 2-tuple')
-        if len(lbrange) != 2:
-            raise ValueError('lbrange must contain exactly 2 elements')
-        for lumiblock in lbrange:
-            if not isinstance(lumiblock, int):
-                raise TypeError('lbrange must contain integers only')
-        if lbrange[0] > lbrange[1]:
-            raise ValueError('lbrange in wrong order: %s' % lbrange)
+        if not isinstance(lbrange, LumiblockRange):
+            raise TypeError('lbrange must be a LumiblockRange')
         if self.has_run(run):
             if lbrange not in self[run]:
                 self[run].append(lbrange)
@@ -230,8 +259,8 @@ class GRL(object):
                     break
                 elif lbrange[0] > mylbrange[0] and lbrange[1] < mylbrange[1]:
                     # embedded: must split
-                    left_lbrange = (mylbrange[0], lbrange[0] - 1)
-                    right_lbrange = (lbrange[1] + 1, mylbrange[1])
+                    left_lbrange = LumiblockRange(mylbrange[0], lbrange[0] - 1)
+                    right_lbrange = LumiblockRange(lbrange[1] + 1, mylbrange[1])
                     index = self[run].index(mylbrange)
                     self[run][index] = left_lbrange
                     self[run].insert(index + 1, right_lbrange)
