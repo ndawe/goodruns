@@ -169,18 +169,22 @@ class GRL(object):
 
     def __str__(self):
 
-        output = ""
-        for run in self.iterruns():
+        output = ''
+        runs_end = len(self.__grl) - 1
+        for i, run in enumerate(self.iterruns()):
             lbranges = self.__grl[run]
             maxlength = max([len(str(lbrange[0])) for lbrange in lbranges])
             output += '-' * 15 + '\n'
-            output += "RUN: %i\n" % run
-            output += "LUMIBLOCKS:\n"
-            for lbrange in lbranges:
+            output += 'RUN: %i\n' % run
+            output += 'LUMIBLOCKS:\n'
+            lbranges_end = len(lbranges) - 1
+            for j, lbrange in enumerate(lbranges):
                 if lbrange[0] == lbrange[1]:
-                    output += ("  %%-%ds" % maxlength + "\n") % lbrange[0]
+                    output += ('  %%-%ds' % maxlength) % lbrange[0]
                 else:
-                    output += ("  %%-%ds" % maxlength + " - %i\n") % lbrange
+                    output += ('  %%-%ds' % maxlength + ' - %i') % lbrange
+                if i != runs_end and j != lbranges_end:
+                    output += '\n'
         return output
 
     def __getitem__(self, run):
