@@ -86,16 +86,16 @@ def _dict_to_grl(d):
     """
     o = {}
     for run, lbranges in d.items():
-        o[run] = [LumiblockRange(*a) for a in lbranges]
+        o[run] = [LumiblockRange(a) for a in lbranges]
     return o
 
 
 class LumiblockRange(tuple):
     
-    def __new__(cls, *args):
+    def __new__(cls, args):
         
         if len(args) != 2:
-            raise ValueError('lbrange must contain exactly 2 elements')
+            raise ValueError('lbrange must contain exactly 2 elements: %s' % (args,))
         for lumiblock in args:
             if not isinstance(lumiblock, int):
                 raise TypeError('lbrange must contain integers only')
@@ -145,8 +145,8 @@ class GRL(object):
                     lbs = lbcol.findall('LBRange')
                     for lumiblock in lbs:
                         self.insert(run,
-                            LumiblockRange(int(lumiblock.attrib['Start']),
-                                           int(lumiblock.attrib['End'])))
+                            LumiblockRange((int(lumiblock.attrib['Start']),
+                                            int(lumiblock.attrib['End']))))
             elif filename.endswith('.yml'):
                 if USE_YAML:
                     self.__grl = SortedDict(_dict_to_grl(grl))
@@ -260,8 +260,8 @@ class GRL(object):
                     break
                 elif lbrange[0] > mylbrange[0] and lbrange[1] < mylbrange[1]:
                     # embedded: must split
-                    left_lbrange = LumiblockRange(mylbrange[0], lbrange[0] - 1)
-                    right_lbrange = LumiblockRange(lbrange[1] + 1, mylbrange[1])
+                    left_lbrange = LumiblockRange((mylbrange[0], lbrange[0] - 1))
+                    right_lbrange = LumiblockRange((lbrange[1] + 1, mylbrange[1]))
                     index = self[run].index(mylbrange)
                     self[run][index] = left_lbrange
                     self[run].insert(index + 1, right_lbrange)
