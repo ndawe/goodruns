@@ -1,14 +1,14 @@
 .. -*- mode: rst -*-
 
-About
-=====
+goodruns
+========
 
 goodruns provides an implementation of an ATLAS "good run list" (GRL)
 reader/writer in Python, and collection of useful command-line tools.
 
 
 Requirements
-============
+------------
 
 goodruns requires at least Python 2.5 and only depends on modules in the standard library.
 For improved performance goodruns will optionally use `lxml <http://pypi.python.org/pypi/lxml/2.3>`_
@@ -17,7 +17,7 @@ like to convert GRLs into YAML format.
 
 
 Installation
-============
+------------
 
 The easiest way to install goodruns is with ``pip``.
 To install for all users::
@@ -44,7 +44,7 @@ To install the optional dependencies
 
 
 Usage
-=====
+-----
 
 An example of how to use goodruns::
 
@@ -59,7 +59,7 @@ An example of how to use goodruns::
 
 
 Command-line Tools
-==================
+------------------
 
 goodruns also provides a collection of command-line tools
 for combining, manipulating, and inspecting GRLs.
