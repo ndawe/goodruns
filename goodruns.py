@@ -165,7 +165,7 @@ class GRL(object):
 
     def __nonzero__(self):
 
-        return self.__grl.__nonzero__()
+        return bool(self.__grl)
 
     def __repr__(self):
 
