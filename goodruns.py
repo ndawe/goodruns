@@ -163,6 +163,10 @@ class GRL(object):
 
         return copy.deepcopy(self)
 
+    def __nonzero__(self):
+
+        return self.__grl.__nonzero__()
+
     def __repr__(self):
 
         return self.__str__()
