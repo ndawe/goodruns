@@ -61,6 +61,7 @@
 <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">sub</span><span class="p">,</span> <span class="n">or_</span><span class="p">,</span> <span class="n">and_</span><span class="p">,</span> <span class="n">xor</span><span class="p">,</span> <span class="n">itemgetter</span>
 <span class="kn">from</span> <span class="nn">sorteddict</span> <span class="kn">import</span> <span class="n">SortedDict</span>
+<span class="kn">import</span> <span class="nn">bisect</span>
 
 
 <div class="viewcode-block" id="clipped"><a class="viewcode-back" href="../index.html#goodruns.clipped">[docs]</a><span class="k">def</span> <span class="nf">clipped</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="n">startrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">startlb</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endlb</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -119,6 +120,39 @@
     <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
 
 
+<span class="k">def</span> <span class="nf">_dict_to_grl</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert tuples to LumiblockRanges</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbranges</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">o</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">LumiblockRange</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">lbranges</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">o</span>
+
+
+<span class="k">class</span> <span class="nc">LumiblockRange</span><span class="p">(</span><span class="nb">tuple</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;lbrange must contain exactly 2 elements: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">args</span><span class="p">,))</span>
+        <span class="k">for</span> <span class="n">lumiblock</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lumiblock</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;lbrange must contain integers only&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;lbrange in wrong order: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">args</span><span class="p">,))</span>
+   
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">LumiblockRange</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__cmp__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lumiblock</span><span class="p">):</span>
+        
+        <span class="k">if</span> <span class="n">lumiblock</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">lumiblock</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">return</span> <span class="mi">0</span>
+ 
+
 <div class="viewcode-block" id="GRL"><a class="viewcode-back" href="../index.html#goodruns.GRL">[docs]</a><span class="k">class</span> <span class="nc">GRL</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The main GRL class holds a python dictionary</span>
@@ -132,7 +166,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">grl</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span> <span class="o">=</span> <span class="n">SortedDict</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">grl</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span> <span class="o">=</span> <span class="n">SortedDict</span><span class="p">(</span><span class="n">_dict_to_grl</span><span class="p">(</span><span class="n">grl</span><span class="p">))</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">grl</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">file</span><span class="p">]:</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="n">grl</span>
@@ -151,11 +185,11 @@
                     <span class="n">lbs</span> <span class="o">=</span> <span class="n">lbcol</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&#39;LBRange&#39;</span><span class="p">)</span>
                     <span class="k">for</span> <span class="n">lumiblock</span> <span class="ow">in</span> <span class="n">lbs</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">run</span><span class="p">,</span>
-                            <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">lumiblock</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;Start&#39;</span><span class="p">]),</span>
-                             <span class="nb">int</span><span class="p">(</span><span class="n">lumiblock</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;End&#39;</span><span class="p">])))</span>
+                            <span class="n">LumiblockRange</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">lumiblock</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;Start&#39;</span><span class="p">]),</span>
+                                            <span class="nb">int</span><span class="p">(</span><span class="n">lumiblock</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;End&#39;</span><span class="p">]))))</span>
             <span class="k">elif</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.yml&#39;</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">USE_YAML</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span> <span class="o">=</span> <span class="n">SortedDict</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">grl</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span> <span class="o">=</span> <span class="n">SortedDict</span><span class="p">(</span><span class="n">_dict_to_grl</span><span class="p">(</span><span class="n">grl</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s">&quot;PyYAML module not found&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -169,24 +203,32 @@
 
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">__nonzero__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__str__</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
-        <span class="n">output</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterruns</span><span class="p">():</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="n">runs_end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterruns</span><span class="p">()):</span>
             <span class="n">lbranges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
             <span class="n">maxlength</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="k">for</span> <span class="n">lbrange</span> <span class="ow">in</span> <span class="n">lbranges</span><span class="p">])</span>
             <span class="n">output</span> <span class="o">+=</span> <span class="s">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">15</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span>
-            <span class="n">output</span> <span class="o">+=</span> <span class="s">&quot;RUN: </span><span class="si">%i</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">run</span>
-            <span class="n">output</span> <span class="o">+=</span> <span class="s">&quot;LUMIBLOCKS:</span><span class="se">\n</span><span class="s">&quot;</span>
-            <span class="k">for</span> <span class="n">lbrange</span> <span class="ow">in</span> <span class="n">lbranges</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">+=</span> <span class="s">&#39;RUN: </span><span class="si">%i</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">run</span>
+            <span class="n">output</span> <span class="o">+=</span> <span class="s">&#39;LUMIBLOCKS:</span><span class="se">\n</span><span class="s">&#39;</span>
+            <span class="n">lbranges_end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lbranges</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">lbrange</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lbranges</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-                    <span class="n">output</span> <span class="o">+=</span> <span class="p">(</span><span class="s">&quot;  </span><span class="si">%%</span><span class="s">-</span><span class="si">%d</span><span class="s">s&quot;</span> <span class="o">%</span> <span class="n">maxlength</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">output</span> <span class="o">+=</span> <span class="p">(</span><span class="s">&#39;  </span><span class="si">%%</span><span class="s">-</span><span class="si">%d</span><span class="s">s&#39;</span> <span class="o">%</span> <span class="n">maxlength</span><span class="p">)</span> <span class="o">%</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">output</span> <span class="o">+=</span> <span class="p">(</span><span class="s">&quot;  </span><span class="si">%%</span><span class="s">-</span><span class="si">%d</span><span class="s">s&quot;</span> <span class="o">%</span> <span class="n">maxlength</span> <span class="o">+</span> <span class="s">&quot; - </span><span class="si">%i</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">lbrange</span>
+                    <span class="n">output</span> <span class="o">+=</span> <span class="p">(</span><span class="s">&#39;  </span><span class="si">%%</span><span class="s">-</span><span class="si">%d</span><span class="s">s&#39;</span> <span class="o">%</span> <span class="n">maxlength</span> <span class="o">+</span> <span class="s">&#39; - </span><span class="si">%i</span><span class="s">&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="n">lbrange</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">runs_end</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">!=</span> <span class="n">lbranges_end</span><span class="p">:</span>
+                    <span class="n">output</span> <span class="o">+=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span>
         <span class="k">return</span> <span class="n">output</span>
 
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
@@ -201,11 +243,13 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Pass the tuple (run, lbn)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_run</span><span class="p">(</span><span class="n">runlb</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-            <span class="n">lbranges</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">runlb</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
-            <span class="k">for</span> <span class="n">lbrange</span> <span class="ow">in</span> <span class="n">lbranges</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">runlb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">runlb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-                    <span class="k">return</span> <span class="bp">True</span>
+        <span class="n">run</span><span class="p">,</span> <span class="n">lbn</span> <span class="o">=</span> <span class="n">runlb</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_run</span><span class="p">(</span><span class="n">run</span><span class="p">):</span>
+            <span class="n">lbranges</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
+            <span class="c"># Locate the LumiblockRange containing lbn</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">bisect</span><span class="o">.</span><span class="n">bisect_left</span><span class="p">(</span><span class="n">lbranges</span><span class="p">,</span> <span class="n">lbn</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lbranges</span><span class="p">)</span> <span class="ow">and</span> <span class="n">lbranges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">lbn</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">True</span>
         <span class="k">return</span> <span class="bp">False</span>
 
     <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -239,20 +283,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;run must be an integer&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lbrange</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;lbrange must be a 2-tuple&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lbrange</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;lbrange must contain exactly 2 elements&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">lumiblock</span> <span class="ow">in</span> <span class="n">lbrange</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lumiblock</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;lbrange must contain integers only&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;lbrange in wrong order: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">lbrange</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_run</span><span class="p">(</span><span class="n">run</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">lbrange</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]:</span>
-                <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lbrange</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lbrange</span><span class="p">,</span> <span class="n">LumiblockRange</span><span class="p">):</span>
+            <span class="n">lbrange</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">(</span><span class="n">lbrange</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">lbranges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">bisect</span><span class="o">.</span><span class="n">bisect</span><span class="p">(</span><span class="n">lbranges</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">lbranges</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__optimize</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">lbrange</span><span class="p">]</span>
 </div>
 <div class="viewcode-block" id="GRL.remove"><a class="viewcode-back" href="../index.html#goodruns.GRL.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">):</span>
@@ -270,8 +308,8 @@
                     <span class="k">break</span>
                 <span class="k">elif</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">mylbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">mylbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                     <span class="c"># embedded: must split</span>
-                    <span class="n">left_lbrange</span> <span class="o">=</span> <span class="p">(</span><span class="n">mylbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-                    <span class="n">right_lbrange</span> <span class="o">=</span> <span class="p">(</span><span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">mylbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">left_lbrange</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">((</span><span class="n">mylbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+                    <span class="n">right_lbrange</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">((</span><span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">mylbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
                     <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">mylbrange</span><span class="p">)</span>
                     <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">left_lbrange</span>
                     <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">right_lbrange</span><span class="p">)</span>
@@ -328,14 +366,12 @@
 </div>
     <span class="k">def</span> <span class="nf">__optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Sort and merge lumiblock ranges</span>
+<span class="sd">        Merge lumiblock ranges</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_run</span><span class="p">(</span><span class="n">run</span><span class="p">):</span>
+        <span class="n">lbranges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lbranges</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
             <span class="k">return</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">del</span> <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
-            <span class="k">return</span>
-        <span class="n">lbranges</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lbranges</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">first</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">last</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lbranges</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
@@ -359,7 +395,6 @@
                 <span class="n">last</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lbranges</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">merged</span><span class="p">:</span>
                     <span class="n">first</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="n">lbranges</span>
 
     <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 
