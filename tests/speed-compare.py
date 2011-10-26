@@ -38,6 +38,24 @@ def goodruns():
         (runs[i], lbs[i]) in grl
 
 
+def compare_response():
+
+    for i in xrange(size):
+        run = runs[i]
+        lb = lbs[i]
+        if ((run, lb) in grl) != goodrunslist.HasRunLumiBlock(run, lb):
+            raise ValueError('conflicting response for (%i, %i)' % (run, lb))
+
+
+print "Comparing responses from GoodRunsLists and goodruns... ",
+sys.stdout.flush()
+try:
+    compare_response()
+except ValueError, e:
+    print "Failed: %s" % e
+    sys.exit(1)
+print "OK"
+
 print "Running speed test on %i (run, lumiblock) combinations..." % size
 
 print "GoodRunsLists... ",
@@ -53,3 +71,5 @@ t1 = time.time()
 goodruns()
 t2 = time.time()
 print "%f [sec]" % (t2 - t1)
+
+
