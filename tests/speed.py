@@ -9,16 +9,23 @@ from numpy import random
 import time
 import sys
 
+ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
+print "Initializing GRL readers... ",
+sys.stdout.flush()
 reader = Root.TGoodRunsListReader('grl.xml')
 reader.Interpret()
 goodrunslist = reader.GetMergedGRLCollection()
 
 grl = GRL('grl.xml')
+print "done"
 
 size = 5000000
+print "Generating list of %i random (run, lumiblock) combinations... " % size,
+sys.stdout.flush()
 runs = [int(i) for i in random.randint(178000, 190500, size=size)]
 lbs = [int(i) for i in random.randint(0, 1000, size=size)]
+print "done"
 
 
 def GoodRunsLists():
@@ -31,7 +38,7 @@ def goodruns():
         (runs[i], lbs[i]) in grl
 
 
-print "Running over %i random (run, lumiblock) combinations..." % size
+print "Running speed test on %i (run, lumiblock) combinations..." % size
 
 print "GoodRunsLists... ",
 sys.stdout.flush()
