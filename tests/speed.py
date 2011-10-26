@@ -13,7 +13,7 @@ goodrunslist = reader.GetMergedGRLCollection()
 
 grl = GRL('grl.xml')
 
-size = 1000000
+size = 10000000
 runs = [int(i) for i in random.randint(178000, 190500, size=size)]
 lbs = [int(i) for i in random.randint(0, 1000, size=size)]
 
