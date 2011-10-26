@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import nose
 import os
 from goodruns import GRL
