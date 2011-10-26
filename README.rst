@@ -65,7 +65,7 @@ goodruns also provides a collection of command-line tools
 for combining, manipulating, and inspecting GRLs.
 
 grl-diff
-^^^^^^^^
+~~~~~~~~
 
 Use ``grl-diff`` to determine the GRL containing the runs/lumiblocks in ``A.xml`` but not in ``B.xml``::
     
@@ -87,7 +87,7 @@ which results in the GRL E=((A-B)-C)-D). This is equivalent to::
 The output of one command can be piped into any of the other commands in goodruns.
 
 grl-and, grl-or, grl-xor
-^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 These scripts implement logical combinations of GRLs. Logical AND::
 
@@ -106,7 +106,7 @@ Again, these commands can be combined arbitrarily::
     grl-and A.xml B.xml | grl-or C.xml | grl-xor D.xml > E.xml
 
 grl-clip
-^^^^^^^^
+~~~~~~~~
 
 Use ``grl-clip`` to truncate a GRL between a starting run/lumiblock and ending run/lumiblock::
 
@@ -123,7 +123,7 @@ Use ``grl-clip`` to truncate a GRL between a starting run/lumiblock and ending r
       --endlb=ENDLB         End lumiblock
 
 grl-convert
-^^^^^^^^^^^
+~~~~~~~~~~~
 
 ``grl-convert`` can convert a GRL from XML format into YAML::
 
@@ -182,7 +182,7 @@ or plain text format::
     ...
 
 grl-runs
-^^^^^^^^
+~~~~~~~~
 
 ``grl-runs`` simply prints the run numbers, one per line, contained within a GRL::
 
