@@ -1,3 +1,5 @@
+# Author: E. Noel Dawe <Noel.Dawe@cern.ch>
+
 """
 This module provides the main GRL class and utility functions
 """
