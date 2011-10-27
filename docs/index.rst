@@ -7,7 +7,7 @@ goodruns
    :start-line: 5
 
 Documentation
-------------
+-------------
 
 :mod:`goodruns`
 ~~~~~~~~~~~~~~~
