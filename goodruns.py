@@ -102,27 +102,28 @@ def _grl_to_dict(g):
 
 
 class LumiblockRange(tuple):
-    
+
     def __new__(cls, args):
-        
+
         if len(args) != 2:
-            raise ValueError('lbrange must contain exactly 2 elements: %s' % (args,))
+            raise ValueError('lbrange must contain exactly 2 elements: %s' % \
+                             (args,))
         for lumiblock in args:
             if not isinstance(lumiblock, int):
                 raise TypeError('lbrange must contain integers only')
         if args[0] > args[1]:
             raise ValueError('lbrange in wrong order: %s' % (args,))
-   
+
         return super(LumiblockRange, cls).__new__(cls, args)
 
     def __cmp__(self, lumiblock):
-        
+
         if lumiblock < self[0]:
             return 1
         if lumiblock > self[1]:
             return -1
         return 0
- 
+
 
 class GRL(object):
     """
@@ -241,7 +242,7 @@ class GRL(object):
         """
         for run in self.__grl.iterkeys():
             yield run
-    
+
     def runs(self):
 
         return self.__grl.keys()
@@ -283,8 +284,10 @@ class GRL(object):
                     break
                 elif lbrange[0] > mylbrange[0] and lbrange[1] < mylbrange[1]:
                     # embedded: must split
-                    left_lbrange = LumiblockRange((mylbrange[0], lbrange[0] - 1))
-                    right_lbrange = LumiblockRange((lbrange[1] + 1, mylbrange[1]))
+                    left_lbrange = LumiblockRange((mylbrange[0],
+                                                   lbrange[0] - 1))
+                    right_lbrange = LumiblockRange((lbrange[1] + 1,
+                                                    mylbrange[1]))
                     index = self[run].index(mylbrange)
                     self[run][index] = left_lbrange
                     self[run].insert(index + 1, right_lbrange)
@@ -355,14 +358,14 @@ class GRL(object):
                 merged = False
                 while _next <= last:
                     if lbranges[first][1] >= lbranges[_next][1]:
-                        for index in range(first + 1, _next + 1):
+                        for index in xrange(first + 1, _next + 1):
                             lbranges.pop(_next)
                         merged = True
                         break
                     elif lbranges[first][1] + 1 >= lbranges[_next][0]:
-                        lbranges[first] = \
-                            (lbranges[first][0], lbranges[_next][1])
-                        for index in range(first + 1, _next + 1):
+                        lbranges[first] = LumiblockRange(lbranges[first][0],
+                                                         lbranges[_next][1])
+                        for index in xrange(first + 1, _next + 1):
                             lbranges.pop(_next)
                         merged = True
                         break
@@ -459,6 +462,6 @@ class GRL(object):
             filehandle.write("grl = ")
             pprint(self.__grl, stream=filehandle)
         elif format == 'cut':
-            filehandle.write(self.cut()+'\n')
+            filehandle.write(self.cut() + '\n')
         else:
             raise ValueError("Unrecognized grl format")
