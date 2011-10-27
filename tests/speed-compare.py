@@ -5,7 +5,7 @@ ROOT.gSystem.Load('libGoodRunsLists.so')
 from ROOT import Root
 import random
 from goodruns import GRL
-from numpy import random
+import random
 import time
 import sys
 
@@ -18,13 +18,16 @@ reader.Interpret()
 goodrunslist = reader.GetMergedGRLCollection()
 
 grl = GRL('grl.xml')
+runs = grl.runs()
+maxrun = max(runs)
+minrun = min(runs)
 print "done"
 
 size = 5000000
-print "Generating list of %i random (run, lumiblock) combinations... " % size,
+print "Generating list of %i random (run, lumiblock) pairs... " % size,
 sys.stdout.flush()
-runs = [int(i) for i in random.randint(178000, 190500, size=size)]
-lbs = [int(i) for i in random.randint(0, 1000, size=size)]
+runs = [random.randint(minrun, maxrun) for i in xrange(size)]
+lbs = [random.randint(0, 1000) for i in xrange(size)]
 print "done"
 
 
@@ -56,20 +59,20 @@ except ValueError, e:
     sys.exit(1)
 print "OK"
 
-print "Running speed test on %i (run, lumiblock) combinations..." % size
+print "Running speed test on %i (run, lumiblock) pairs..." % size
 
-print "GoodRunsLists... ",
-sys.stdout.flush()
-t1 = time.time()
-GoodRunsLists()
-t2 = time.time()
-print "%f [sec]" % (t2 - t1)
+for i in range(3):
+    
+    print "GoodRunsLists... ",
+    sys.stdout.flush()
+    t1 = time.time()
+    GoodRunsLists()
+    t2 = time.time()
+    print "%f [sec]" % (t2 - t1)
 
-print "goodruns... ",
-sys.stdout.flush()
-t1 = time.time()
-goodruns()
-t2 = time.time()
-print "%f [sec]" % (t2 - t1)
-
-
+    print "goodruns... ",
+    sys.stdout.flush()
+    t1 = time.time()
+    goodruns()
+    t2 = time.time()
+    print "%f [sec]" % (t2 - t1)

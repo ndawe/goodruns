@@ -204,7 +204,7 @@ class GRL(object):
         Pass the tuple (run, lbn)
         """
         run, lbn = runlb
-        if self.__grl.has_key(run):
+        if run in self.__grl:
             lbranges = self.__grl[run]
             # Locate the LumiblockRange containing lbn
             i = bisect.bisect_left(lbranges, lbn)
@@ -230,6 +230,10 @@ class GRL(object):
         """
         for run in self.__grl.iterkeys():
             yield run
+    
+    def runs(self):
+
+        return self.__grl.keys()
 
     def has_run(self, run):
         """
