@@ -466,7 +466,7 @@ class GRL(object):
         elif format in ('yml', 'yaml'):
             filehandle.write(yaml.dump(_grl_to_dict(self)))
         elif format == 'txt':
-            filehandle.write(str(self))
+            filehandle.write(str(self) + '\n')
         elif format in ('py', 'python'):
             filehandle.write("grl = ")
             pprint(self.__grl, stream=filehandle)
