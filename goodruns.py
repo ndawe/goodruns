@@ -371,6 +371,7 @@ class GRL(object):
                     merged = True
                     break
                 _next += 1
+            last = len(lbranges) - 1
             if not merged:
                 first += 1
 
