@@ -90,6 +90,17 @@ def _dict_to_grl(d):
     return o
 
 
+def _grl_to_dict(g):
+    """
+    Convert tuples to LumiblockRanges
+    """
+    o = {}
+    for run in g.iterruns():
+        lbranges = g[run]
+        o[run] = [(a[0], a[1]) for a in lbranges]
+    return o
+
+
 class LumiblockRange(tuple):
     
     def __new__(cls, args):
@@ -441,7 +452,7 @@ class GRL(object):
                 xml = minidom.parseString(ET.tostring(tree.getroot()))
                 filehandle.write(xml.toprettyxml())
         elif format in ('yml', 'yaml'):
-            filehandle.write(yaml.dump(self.__grl))
+            filehandle.write(yaml.dump(_grl_to_dict(self)))
         elif format == 'txt':
             filehandle.write(str(self))
         elif format in ('py', 'python'):
