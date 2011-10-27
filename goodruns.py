@@ -104,7 +104,10 @@ def _grl_to_dict(g):
 
 
 class LumiblockRange(tuple):
-
+    """
+    A 2-tuple consisting of the lower and upper
+    bounds of a lumiblock range
+    """
     def __new__(cls, args):
 
         if len(args) != 2:
@@ -206,11 +209,15 @@ class GRL(object):
         return output
 
     def __getitem__(self, run):
-
+        """
+        Return list of lumiblock ranges for a run
+        """
         return self.__grl[run]
 
     def __delitem__(self, run):
-
+        """
+        Remove run and associated lumiblock ranges from GRL
+        """
         del self.__grl[run]
 
     def __contains__(self, runlb):
@@ -227,7 +234,9 @@ class GRL(object):
         return False
 
     def __iter__(self):
-
+        """
+        Iterate over runs in GRL
+        """
         return iter(self.iterruns())
 
     def items(self):
@@ -246,7 +255,9 @@ class GRL(object):
             yield run
 
     def runs(self):
-
+        """
+        Return list of runs in GRL
+        """
         return self.__grl.keys()
 
     def has_run(self, run):
