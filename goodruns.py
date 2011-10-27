@@ -364,8 +364,8 @@ class GRL(object):
                     merged = True
                     break
                 elif lbranges[first][1] + 1 >= lbranges[_next][0]:
-                    lbranges[first] = LumiblockRange(lbranges[first][0],
-                                                     lbranges[_next][1])
+                    lbranges[first] = LumiblockRange((lbranges[first][0],
+                                                      lbranges[_next][1]))
                     for index in xrange(first + 1, _next + 1):
                         lbranges.pop(_next)
                     merged = True
