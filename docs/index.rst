@@ -6,7 +6,7 @@ goodruns
 .. include:: ../README.rst
    :start-line: 5
 
-Documentaion
+Documentation
 ------------
 
 :mod:`goodruns`
