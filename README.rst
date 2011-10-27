@@ -52,7 +52,7 @@ An example of how to use goodruns::
 
     grl = GRL('grl.xml')
     # or:
-    grl = GRL('http://some.url.to/grl.xml')
+    grl = GRL('http://atlasdqm.web.cern.ch/atlasdqm/grlgen/path/to/grl.xml')
 
     # check if the GRL contains the lumiblock 231 in run 186356:
     if (186356, 231) in grl:
