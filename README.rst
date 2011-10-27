@@ -181,6 +181,8 @@ or plain text format::
       173 - 176
     ...
 
+``grl-convert`` will also convert a GRL into Python code or (as a joke) a ROOT TCut expression.
+
 grl-runs
 ~~~~~~~~
 
