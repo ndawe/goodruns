@@ -84,7 +84,6 @@ The GRL is automatically optimized (lumiblocks are merged and sorted)::
     RUN: 1
     LUMIBLOCKS:
       1 - 10
-    >>>
 
 
 Command-line Tools
