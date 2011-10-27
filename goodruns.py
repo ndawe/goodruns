@@ -401,16 +401,20 @@ class GRL(object):
         Convert this GRL into a TCut expression.
         This method is really meant to be a joke and should be of no use.
         """
-        try:
-            from rootpy.tree import Cut
-        except ImportError:
-            return "install rootpy to enable conversion to a cut expression"
-        cut = Cut()
+        cut = ''
         for run in self.iterruns():
-            lbcut = Cut()
+            lbcut = ''
             for lbrange in self[run]:
-                lbcut |= (lbname + ">=%i&&" + lbname + "<=%i") % lbrange
-            cut |= "(%s==%i)&&(%s)" % (runname, run, lbcut)
+                newcut = (lbname + '>=%i&&' + lbname + '<=%i') % lbrange
+                if lbcut:
+                    lbcut = '(%s)|(%s)' % (lbcut, newcut)
+                else:
+                    lbcut = newcut
+            newcut = '(%s==%i)&&(%s)' % (runname, run, lbcut)
+            if cut:
+                cut = '(%s)|(%s)' % (cut, newcut)
+            else:
+                cut = newcut
         return cut
 
     def write(self, filehandle, format='xml'):
@@ -427,8 +431,8 @@ class GRL(object):
                 runelement.text = str(run)
                 for lumiblock in lumiblocks:
                     lbrange = ET.SubElement(lbcol, 'LBRange')
-                    lbrange.set("Start", str(lumiblock[0]))
-                    lbrange.set("End", str(lumiblock[1]))
+                    lbrange.set('Start', str(lumiblock[0]))
+                    lbrange.set('End', str(lumiblock[1]))
             tree = ET.ElementTree(root)
             if USE_LXML:
                 tree.write(filehandle, pretty_print=True)
@@ -443,5 +447,7 @@ class GRL(object):
         elif format in ('py', 'python'):
             filehandle.write("grl = ")
             pprint(self.__grl, stream=filehandle)
+        elif format == 'cut':
+            filehandle.write(self.cut()+'\n')
         else:
             raise ValueError("Unrecognized grl format")
