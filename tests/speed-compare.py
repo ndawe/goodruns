@@ -13,11 +13,11 @@ ROOT.gErrorIgnoreLevel = ROOT.kFatal
 
 print "Initializing GRL readers... ",
 sys.stdout.flush()
-reader = Root.TGoodRunsListReader('grl.xml')
+reader = Root.TGoodRunsListReader('grlA.xml')
 reader.Interpret()
 goodrunslist = reader.GetMergedGRLCollection()
 
-grl = GRL('grl.xml')
+grl = GRL('grlA.xml')
 runs = grl.runs()
 maxrun = max(runs)
 minrun = min(runs)
