@@ -352,29 +352,27 @@ class GRL(object):
         if len(lbranges) == 0:
             del self.__grl[run]
             return
-        if len(lbranges) > 1:
-            first = 0
-            last = len(lbranges) - 1
-            while first != last:
-                _next = first + 1
-                merged = False
-                while _next <= last:
-                    if lbranges[first][1] >= lbranges[_next][1]:
-                        for index in xrange(first + 1, _next + 1):
-                            lbranges.pop(_next)
-                        merged = True
-                        break
-                    elif lbranges[first][1] + 1 >= lbranges[_next][0]:
-                        lbranges[first] = LumiblockRange(lbranges[first][0],
-                                                         lbranges[_next][1])
-                        for index in xrange(first + 1, _next + 1):
-                            lbranges.pop(_next)
-                        merged = True
-                        break
-                    _next += 1
-                last = len(lbranges) - 1
-                if not merged:
-                    first += 1
+        first = 0
+        last = len(lbranges) - 1
+        while first != last:
+            _next = first + 1
+            merged = False
+            while _next <= last:
+                if lbranges[first][1] >= lbranges[_next][1]:
+                    for index in xrange(first + 1, _next + 1):
+                        lbranges.pop(_next)
+                    merged = True
+                    break
+                elif lbranges[first][1] + 1 >= lbranges[_next][0]:
+                    lbranges[first] = LumiblockRange(lbranges[first][0],
+                                                     lbranges[_next][1])
+                    for index in xrange(first + 1, _next + 1):
+                        lbranges.pop(_next)
+                    merged = True
+                    break
+                _next += 1
+            if not merged:
+                first += 1
 
     def __add__(self, other):
 
