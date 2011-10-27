@@ -3,20 +3,19 @@
 import sys
 import os
 from optparse import OptionParser
+from goodruns import GRL
 
 parser = OptionParser()
 parser.add_option("-o","--output", action="store", type="str", dest="output",
-                  help="Output filename", default=None)
+                  help="Output filename (optional)", default=None)
 parser.add_option("-f","--format", action="store", type="str", dest="format",
-                  help="Output format", default="xml")
+                  help="Output format: " + ', '.join(GRL.formats), default="xml")
 options, args = parser.parse_args()
 
 if not sys.stdin.isatty():
     args.insert(0, sys.stdin)
 if len(args) > 1:
     sys.exit("Need exactly one argument or one pipe")
-
-from goodruns import GRL
 
 try:
     grl = GRL(args[0])

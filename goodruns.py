@@ -432,6 +432,14 @@ class GRL(object):
                 cut = newcut
         return cut
 
+    formats = [
+        'xml',
+        'yml',
+        'txt',
+        'py',
+        'cut'
+    ]
+
     def write(self, filehandle, format='xml'):
         """
         Write the GRL in a specified format to the file object.

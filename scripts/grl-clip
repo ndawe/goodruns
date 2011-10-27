@@ -6,7 +6,7 @@ from optparse import OptionParser
 
 parser = OptionParser(usage="usage: %prog [options] [file]")
 parser.add_option("-o","--output", action="store", type="str", dest="output",
-                  help="Output filename", default=None)
+                  help="Output filename (optional)", default=None)
 parser.add_option("--startrun", action="store", type="int", dest="startrun",
                   help="Start run", default=None)
 parser.add_option("--startlb", action="store", type="int", dest="startlb",

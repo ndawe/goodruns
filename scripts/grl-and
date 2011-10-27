@@ -6,7 +6,7 @@ from optparse import OptionParser
 
 parser = OptionParser()
 parser.add_option("-o","--output", action="store", type="str", dest="output",
-                  help="Output filename", default=None)
+                  help="Output filename (optional)", default=None)
 options, args = parser.parse_args()
 
 if not sys.stdin.isatty():
