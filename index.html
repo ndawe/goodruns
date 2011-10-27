@@ -45,7 +45,7 @@ reader/writer in Python, and collection of useful command-line tools.</p>
 <div class="section" id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
 <p>goodruns requires at least Python 2.5 and only depends on modules in the standard library.
-For improved performance goodruns will optionally use <a class="reference external" href="http://pypi.python.org/pypi/lxml/2.3">lxml</a>
+For better XML reading/writing goodruns will optionally use <a class="reference external" href="http://pypi.python.org/pypi/lxml/2.3">lxml</a>
 if installed. Install <a class="reference external" href="http://pypi.python.org/pypi/PyYAML/">PyYAML</a> if you would
 like to convert GRLs into YAML format.</p>
 </div>
@@ -76,11 +76,40 @@ script to install. To install for all users:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">goodruns</span> <span class="kn">import</span> <span class="n">GRL</span>
 
 <span class="n">grl</span> <span class="o">=</span> <span class="n">GRL</span><span class="p">(</span><span class="s">&#39;grl.xml&#39;</span><span class="p">)</span>
+<span class="c"># or:</span>
+<span class="n">grl</span> <span class="o">=</span> <span class="n">GRL</span><span class="p">(</span><span class="s">&#39;http://atlasdqm.web.cern.ch/atlasdqm/grlgen/path/to/grl.xml&#39;</span><span class="p">)</span>
 
 <span class="c"># check if the GRL contains the lumiblock 231 in run 186356:</span>
 <span class="k">if</span> <span class="p">(</span><span class="mi">186356</span><span class="p">,</span> <span class="mi">231</span><span class="p">)</span> <span class="ow">in</span> <span class="n">grl</span><span class="p">:</span>
     <span class="c"># do something</span>
     <span class="k">pass</span>
+</pre></div>
+</div>
+<p>The GRL is automatically optimized (lumiblocks are merged and sorted):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">goodruns</span> <span class="kn">import</span> <span class="n">GRL</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">GRL</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
+<span class="go">---------------</span>
+<span class="go">RUN: 1</span>
+<span class="go">LUMIBLOCKS:</span>
+<span class="go">  1 - 4</span>
+<span class="go">  7 - 10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
+<span class="go">---------------</span>
+<span class="go">RUN: 1</span>
+<span class="go">LUMIBLOCKS:</span>
+<span class="go">  1 - 4</span>
+<span class="go">  6 - 10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
+<span class="go">---------------</span>
+<span class="go">RUN: 1</span>
+<span class="go">LUMIBLOCKS:</span>
+<span class="go">  1 - 10</span>
+<span class="go">&gt;&gt;&gt;</span>
 </pre></div>
 </div>
 </div>
@@ -192,6 +221,7 @@ LUMIBLOCKS:
   173 - 176
 ...</pre>
 </div>
+<p><tt class="docutils literal"><span class="pre">grl-convert</span></tt> will also convert a GRL into Python code (dict of lists of tuples) or (as a joke) a ROOT TCut expression.</p>
 </div>
 <div class="section" id="grl-runs">
 <h3>grl-runs<a class="headerlink" href="#grl-runs" title="Permalink to this headline">¶</a></h3>
@@ -202,10 +232,13 @@ LUMIBLOCKS:
 186180
 ...</pre>
 </div>
+<p>Quickly print the runs contained in a GRL from a URL:</p>
+<div class="highlight-python"><pre>&gt; grl-runs http://atlasdqm.web.cern.ch/atlasdqm/grlgen/path/to/grl.xml</pre>
 </div>
 </div>
-<div class="section" id="documentaion">
-<h2>Documentaion<a class="headerlink" href="#documentaion" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id1">
 <h3><a class="reference internal" href="#module-goodruns" title="goodruns"><tt class="xref py py-mod docutils literal"><span class="pre">goodruns</span></tt></a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-goodruns"></span><p>This module provides the main GRL class and utility functions</p>
@@ -259,11 +292,24 @@ This method is really meant to be a joke and should be of no use.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="goodruns.GRL.runs">
+<tt class="descname">runs</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/goodruns.html#GRL.runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.GRL.runs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return list of runs in GRL</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="goodruns.GRL.write">
 <tt class="descname">write</tt><big>(</big><em>filehandle</em>, <em>format='xml'</em><big>)</big><a class="reference internal" href="_modules/goodruns.html#GRL.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.GRL.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the GRL in a specified format to the file object.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="goodruns.LumiblockRange">
+<em class="property">class </em><tt class="descclassname">goodruns.</tt><tt class="descname">LumiblockRange</tt><a class="reference internal" href="_modules/goodruns.html#LumiblockRange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.LumiblockRange" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 2-tuple consisting of the lower and upper
+bounds of a lumiblock range</p>
 </dd></dl>
 
 <dl class="function">
