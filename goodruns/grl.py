@@ -174,6 +174,7 @@ class GRL(object):
                     "File %s is not recognized as a valid GRL format"
                     % filename)
             for run in self.iterruns():
+                self.__grl[run].sort()
                 self.__optimize(run)
 
     def __copy__(self):
@@ -286,14 +287,15 @@ class GRL(object):
         """
         Remove a lumiblock range from a run
         """
-        if self.has_run(run):
-            for mylbrange in self[run][:]:
+        if run in self.__grl:
+            lbranges = self.__grl[run]
+            for mylbrange in lbranges[:]:
                 if lbrange[1] < mylbrange[0]:
                     continue
                 if lbrange == mylbrange:
-                    self[run].remove(mylbrange)
-                    if len(self[run]) == 0:
-                        del self[run]
+                    lbranges.remove(mylbrange)
+                    if len(lbranges) == 0:
+                        del self.__grl[run]
                     break
                 elif lbrange[0] > mylbrange[0] and lbrange[1] < mylbrange[1]:
                     # embedded: must split
@@ -308,13 +310,13 @@ class GRL(object):
                     diff = _lbrange_as_set(mylbrange).difference(
                         _lbrange_as_set(lbrange))
                     if not diff:  # empty set
-                        self[run].remove(mylbrange)
-                        if len(self[run]) == 0:
-                            del self[run]
+                        lbranges.remove(mylbrange)
+                        if len(lbranges) == 0:
+                            del self.__grl[run]
                             break
                         continue
-                    newlbrange = (min(diff), max(diff))
-                    self[run][self[run].index(mylbrange)] = newlbrange
+                    newlbrange = LumiblockRange((min(diff), max(diff)))
+                    lbranges[lbranges.index(mylbrange)] = newlbrange
                 elif mylbrange[0] > lbrange[1]:
                     break
 
