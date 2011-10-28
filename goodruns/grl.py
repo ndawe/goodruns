@@ -330,7 +330,7 @@ class GRL(object):
         """
         Clip the GRL between startrun, startlb and endrun, endlb (inclusive)
         """
-        for run in self.iterruns():
+        for run in self.runs():
             if startrun is not None:
                 if run < startrun:
                     del self.__grl[run]
