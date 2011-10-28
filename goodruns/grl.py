@@ -288,6 +288,8 @@ class GRL(object):
         Remove a lumiblock range from a run
         """
         if run in self.__grl:
+            if not isinstance(lbrange, LumiblockRange):
+                lbrange = LumiblockRange(lbrange)
             lbranges = self.__grl[run]
             for mylbrange in lbranges[:]:
                 if lbrange[1] < mylbrange[0]:
@@ -303,9 +305,9 @@ class GRL(object):
                                                    lbrange[0] - 1))
                     right_lbrange = LumiblockRange((lbrange[1] + 1,
                                                     mylbrange[1]))
-                    index = self[run].index(mylbrange)
-                    self[run][index] = left_lbrange
-                    self[run].insert(index + 1, right_lbrange)
+                    index = lbranges.index(mylbrange)
+                    lbranges[index] = left_lbrange
+                    lbranges.insert(index + 1, right_lbrange)
                 elif _lbrange_intersects(lbrange, mylbrange):
                     diff = _lbrange_as_set(mylbrange).difference(
                         _lbrange_as_set(lbrange))
