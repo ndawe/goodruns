@@ -2,5 +2,4 @@ include *.py
 include LICENSE
 include README
 include README.rst
-include argparse/*.txt
 include scripts/*
