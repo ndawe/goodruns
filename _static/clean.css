@@ -101,7 +101,8 @@ div.body h6 {
 
 
 
-div.body h1 { font-size: 350%; }
+div.body h1 { font-size: 250%; }
+div.indexwrapper h1 { font-size: 350%; }
 div.body h2 { font-size: 180%; }
 div.body h3 { font-size: 150%; }
 div.body h4 { font-size: 130%; }
