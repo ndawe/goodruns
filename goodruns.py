@@ -473,7 +473,7 @@ class GRL(object):
             else:
                 # current hack to get pretty XML from ElementTree
                 xml = minidom.parseString(ET.tostring(tree.getroot()))
-                filehandle.write(xml.toprettyxml())
+                filehandle.write(xml.toprettyxml(indent='   '))
         elif format in ('yml', 'yaml'):
             filehandle.write(yaml.dump(_grl_to_dict(self)))
         elif format == 'txt':
