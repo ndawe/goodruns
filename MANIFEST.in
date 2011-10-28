@@ -3,3 +3,4 @@ include LICENSE
 include README
 include README.rst
 include scripts/*
+prune tests
