@@ -72,6 +72,10 @@ def _lbrange_intersects(lbrange1, lbrange2):
         return True
     if lbrange1[1] >= lbrange2[0] and lbrange1[1] <= lbrange2[1]:
         return True
+    if lbrange2[0] >= lbrange1[0] and lbrange2[0] <= lbrange1[1]:
+        return True
+    if lbrange2[1] >= lbrange1[0] and lbrange2[1] <= lbrange1[1]:
+        return True
     return False
 
 
