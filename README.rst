@@ -37,8 +37,7 @@ To install in your home directory::
 
     python setup.py install --user
 
-To install the optional dependencies
-(first download a source distribution if you haven't already)::
+To install the optional dependencies::
 
     pip install -U -r optional-requirements.txt
 
