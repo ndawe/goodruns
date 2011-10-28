@@ -340,7 +340,7 @@ class GRL(object):
                                  startlb <= lbrange[1]:
                                 self.__grl[run][
                                     self.__grl[run].index(lbrange)
-                                    ] = (startlb, lbrange[1])
+                                    ] = LumiblockRange((startlb, lbrange[1]))
                         if len(self.__grl[run]) == 0:
                             del self[run]
             if endrun is not None:
@@ -355,7 +355,7 @@ class GRL(object):
                             elif endlb >= lbrange[0] and endlb <= lbrange[1]:
                                 self[run][
                                     self[run].index(lbrange)
-                                    ] = (lbrange[0], endlb)
+                                    ] = LumiblockRange((lbrange[0], endlb))
                         if len(self[run]) == 0:
                             del self[run]
 
