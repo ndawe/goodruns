@@ -237,106 +237,106 @@ LUMIBLOCKS:
 </div>
 <div class="section" id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id1">
-<h3><a class="reference internal" href="#module-goodruns" title="goodruns"><tt class="xref py py-mod docutils literal"><span class="pre">goodruns</span></tt></a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<span class="target" id="module-goodruns"></span><p>This module provides the main GRL class and utility functions</p>
+<div class="section" id="module-goodruns.grl">
+<span id="goodruns-grl"></span><h3><a class="reference internal" href="#module-goodruns.grl" title="goodruns.grl"><tt class="xref py py-mod docutils literal"><span class="pre">goodruns.grl</span></tt></a><a class="headerlink" href="#module-goodruns.grl" title="Permalink to this headline">¶</a></h3>
+<p>This module provides the main GRL class and utility functions</p>
 <dl class="class">
-<dt id="goodruns.GRL">
-<em class="property">class </em><tt class="descclassname">goodruns.</tt><tt class="descname">GRL</tt><big>(</big><em>grl=None</em><big>)</big><a class="reference internal" href="_modules/goodruns.html#GRL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.GRL" title="Permalink to this definition">¶</a></dt>
+<dt id="goodruns.grl.GRL">
+<em class="property">class </em><tt class="descclassname">goodruns.grl.</tt><tt class="descname">GRL</tt><big>(</big><em>grl=None</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL" title="Permalink to this definition">¶</a></dt>
 <dd><p>The main GRL class holds a python dictionary
 mapping runs to a list of lumiblock ranges (2-tuples)</p>
 <p>grl may be a file name or URL of a valid GRL file, or None</p>
 <dl class="method">
-<dt id="goodruns.GRL.clip">
-<tt class="descname">clip</tt><big>(</big><em>startrun=None</em>, <em>startlb=None</em>, <em>endrun=None</em>, <em>endlb=None</em><big>)</big><a class="reference internal" href="_modules/goodruns.html#GRL.clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.GRL.clip" title="Permalink to this definition">¶</a></dt>
+<dt id="goodruns.grl.GRL.clip">
+<tt class="descname">clip</tt><big>(</big><em>startrun=None</em>, <em>startlb=None</em>, <em>endrun=None</em>, <em>endlb=None</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.clip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clip the GRL between startrun, startlb and endrun, endlb (inclusive)</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="goodruns.GRL.cut">
-<tt class="descname">cut</tt><big>(</big><em>runname='RunNumber'</em>, <em>lbname='lbn'</em><big>)</big><a class="reference internal" href="_modules/goodruns.html#GRL.cut"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.GRL.cut" title="Permalink to this definition">¶</a></dt>
+<dt id="goodruns.grl.GRL.cut">
+<tt class="descname">cut</tt><big>(</big><em>runname='RunNumber'</em>, <em>lbname='lbn'</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.cut"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.cut" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert this GRL into a TCut expression.
 This method is really meant to be a joke and should be of no use.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="goodruns.GRL.has_run">
-<tt class="descname">has_run</tt><big>(</big><em>run</em><big>)</big><a class="reference internal" href="_modules/goodruns.html#GRL.has_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.GRL.has_run" title="Permalink to this definition">¶</a></dt>
+<dt id="goodruns.grl.GRL.has_run">
+<tt class="descname">has_run</tt><big>(</big><em>run</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.has_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.has_run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True if run is in GRL, else False</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="goodruns.GRL.insert">
-<tt class="descname">insert</tt><big>(</big><em>run</em>, <em>lbrange</em><big>)</big><a class="reference internal" href="_modules/goodruns.html#GRL.insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.GRL.insert" title="Permalink to this definition">¶</a></dt>
+<dt id="goodruns.grl.GRL.insert">
+<tt class="descname">insert</tt><big>(</big><em>run</em>, <em>lbrange</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert a lumiblock range into a run</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="goodruns.GRL.items">
-<tt class="descname">items</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/goodruns.html#GRL.items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.GRL.items" title="Permalink to this definition">¶</a></dt>
+<dt id="goodruns.grl.GRL.items">
+<tt class="descname">items</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterate over (run, lbranges) in GRL</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="goodruns.GRL.iterruns">
-<tt class="descname">iterruns</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/goodruns.html#GRL.iterruns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.GRL.iterruns" title="Permalink to this definition">¶</a></dt>
+<dt id="goodruns.grl.GRL.iterruns">
+<tt class="descname">iterruns</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.iterruns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.iterruns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterate over runs in GRL</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="goodruns.GRL.remove">
-<tt class="descname">remove</tt><big>(</big><em>run</em>, <em>lbrange</em><big>)</big><a class="reference internal" href="_modules/goodruns.html#GRL.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.GRL.remove" title="Permalink to this definition">¶</a></dt>
+<dt id="goodruns.grl.GRL.remove">
+<tt class="descname">remove</tt><big>(</big><em>run</em>, <em>lbrange</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a lumiblock range from a run</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="goodruns.GRL.runs">
-<tt class="descname">runs</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/goodruns.html#GRL.runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.GRL.runs" title="Permalink to this definition">¶</a></dt>
+<dt id="goodruns.grl.GRL.runs">
+<tt class="descname">runs</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.runs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return list of runs in GRL</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="goodruns.GRL.write">
-<tt class="descname">write</tt><big>(</big><em>filehandle</em>, <em>format='xml'</em><big>)</big><a class="reference internal" href="_modules/goodruns.html#GRL.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.GRL.write" title="Permalink to this definition">¶</a></dt>
+<dt id="goodruns.grl.GRL.write">
+<tt class="descname">write</tt><big>(</big><em>filehandle</em>, <em>format='xml'</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the GRL in a specified format to the file object.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="goodruns.LumiblockRange">
-<em class="property">class </em><tt class="descclassname">goodruns.</tt><tt class="descname">LumiblockRange</tt><a class="reference internal" href="_modules/goodruns.html#LumiblockRange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.LumiblockRange" title="Permalink to this definition">¶</a></dt>
+<dt id="goodruns.grl.LumiblockRange">
+<em class="property">class </em><tt class="descclassname">goodruns.grl.</tt><tt class="descname">LumiblockRange</tt><a class="reference internal" href="_modules/goodruns/grl.html#LumiblockRange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.LumiblockRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>A 2-tuple consisting of the lower and upper
 bounds of a lumiblock range</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="goodruns.anded">
-<tt class="descclassname">goodruns.</tt><tt class="descname">anded</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="_modules/goodruns.html#anded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.anded" title="Permalink to this definition">¶</a></dt>
+<dt id="goodruns.grl.anded">
+<tt class="descclassname">goodruns.grl.</tt><tt class="descname">anded</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#anded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.anded" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the AND of multiple GRLs: A &amp; B &amp; C...</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="goodruns.clipped">
-<tt class="descclassname">goodruns.</tt><tt class="descname">clipped</tt><big>(</big><em>grl</em>, <em>startrun=None</em>, <em>startlb=None</em>, <em>endrun=None</em>, <em>endlb=None</em><big>)</big><a class="reference internal" href="_modules/goodruns.html#clipped"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.clipped" title="Permalink to this definition">¶</a></dt>
+<dt id="goodruns.grl.clipped">
+<tt class="descclassname">goodruns.grl.</tt><tt class="descname">clipped</tt><big>(</big><em>grl</em>, <em>startrun=None</em>, <em>startlb=None</em>, <em>endrun=None</em>, <em>endlb=None</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#clipped"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.clipped" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clip a GRL between startrun, startlb and endrun, endlb (inclusive)</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="goodruns.diffed">
-<tt class="descclassname">goodruns.</tt><tt class="descname">diffed</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="_modules/goodruns.html#diffed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.diffed" title="Permalink to this definition">¶</a></dt>
+<dt id="goodruns.grl.diffed">
+<tt class="descclassname">goodruns.grl.</tt><tt class="descname">diffed</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#diffed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.diffed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the difference of multiple GRLs: (((A-B)-C)-D)...)</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="goodruns.ored">
-<tt class="descclassname">goodruns.</tt><tt class="descname">ored</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="_modules/goodruns.html#ored"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.ored" title="Permalink to this definition">¶</a></dt>
+<dt id="goodruns.grl.ored">
+<tt class="descclassname">goodruns.grl.</tt><tt class="descname">ored</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#ored"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.ored" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the OR of multiple GRLs: A | B | C...</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="goodruns.xored">
-<tt class="descclassname">goodruns.</tt><tt class="descname">xored</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="_modules/goodruns.html#xored"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.xored" title="Permalink to this definition">¶</a></dt>
+<dt id="goodruns.grl.xored">
+<tt class="descclassname">goodruns.grl.</tt><tt class="descname">xored</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#xored"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.xored" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the XOR of multiple GRLs: A ^ B ^ C...</p>
 </dd></dl>
 

@@ -7,25 +7,25 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>goodruns &mdash; goodruns 1.5 documentation</title>
+    <title>goodruns.grl &mdash; goodruns 1.5 documentation</title>
     
-    <link rel="stylesheet" href="../_static/clean.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/clean.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
+        URL_ROOT:    '../../',
         VERSION:     '1.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="goodruns 1.5 documentation" href="../index.html" />
-    <link rel="up" title="Module code" href="index.html" /> 
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="goodruns 1.5 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body>
   
@@ -37,7 +37,7 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <h1>Source code for goodruns</h1><div class="highlight"><pre>
+  <h1>Source code for goodruns.grl</h1><div class="highlight"><pre>
 <span class="c"># Author: E. Noel Dawe &lt;Noel.Dawe@cern.ch&gt;</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -62,11 +62,11 @@
 <span class="kn">import</span> <span class="nn">urllib2</span>
 <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">sub</span><span class="p">,</span> <span class="n">or_</span><span class="p">,</span> <span class="n">and_</span><span class="p">,</span> <span class="n">xor</span><span class="p">,</span> <span class="n">itemgetter</span>
-<span class="kn">from</span> <span class="nn">sorteddict</span> <span class="kn">import</span> <span class="n">SortedDict</span>
+<span class="kn">from</span> <span class="nn">.sorteddict</span> <span class="kn">import</span> <span class="n">SortedDict</span>
 <span class="kn">import</span> <span class="nn">bisect</span>
 
 
-<div class="viewcode-block" id="clipped"><a class="viewcode-back" href="../index.html#goodruns.clipped">[docs]</a><span class="k">def</span> <span class="nf">clipped</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="n">startrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">startlb</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endlb</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="clipped"><a class="viewcode-back" href="../../index.html#goodruns.grl.clipped">[docs]</a><span class="k">def</span> <span class="nf">clipped</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="n">startrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">startlb</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endlb</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Clip a GRL between startrun, startlb and endrun, endlb (inclusive)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -76,28 +76,28 @@
     <span class="k">return</span> <span class="n">grl_copy</span>
 
 </div>
-<div class="viewcode-block" id="diffed"><a class="viewcode-back" href="../index.html#goodruns.diffed">[docs]</a><span class="k">def</span> <span class="nf">diffed</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="diffed"><a class="viewcode-back" href="../../index.html#goodruns.grl.diffed">[docs]</a><span class="k">def</span> <span class="nf">diffed</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the difference of multiple GRLs: (((A-B)-C)-D)...)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="ored"><a class="viewcode-back" href="../index.html#goodruns.ored">[docs]</a><span class="k">def</span> <span class="nf">ored</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="ored"><a class="viewcode-back" href="../../index.html#goodruns.grl.ored">[docs]</a><span class="k">def</span> <span class="nf">ored</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the OR of multiple GRLs: A | B | C...</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">or_</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="anded"><a class="viewcode-back" href="../index.html#goodruns.anded">[docs]</a><span class="k">def</span> <span class="nf">anded</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="anded"><a class="viewcode-back" href="../../index.html#goodruns.grl.anded">[docs]</a><span class="k">def</span> <span class="nf">anded</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the AND of multiple GRLs: A &amp; B &amp; C...</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">and_</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="xored"><a class="viewcode-back" href="../index.html#goodruns.xored">[docs]</a><span class="k">def</span> <span class="nf">xored</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="xored"><a class="viewcode-back" href="../../index.html#goodruns.grl.xored">[docs]</a><span class="k">def</span> <span class="nf">xored</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the XOR of multiple GRLs: A ^ B ^ C...</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -111,6 +111,10 @@
     <span class="k">if</span> <span class="n">lbrange1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">lbrange2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">lbrange1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">lbrange2</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">True</span>
     <span class="k">if</span> <span class="n">lbrange1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">lbrange2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">lbrange1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">lbrange2</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">if</span> <span class="n">lbrange2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">lbrange1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">lbrange2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">lbrange1</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">if</span> <span class="n">lbrange2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">lbrange1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">lbrange2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">lbrange1</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">True</span>
     <span class="k">return</span> <span class="bp">False</span>
 
@@ -143,7 +147,7 @@
     <span class="k">return</span> <span class="n">o</span>
 
 
-<div class="viewcode-block" id="LumiblockRange"><a class="viewcode-back" href="../index.html#goodruns.LumiblockRange">[docs]</a><span class="k">class</span> <span class="nc">LumiblockRange</span><span class="p">(</span><span class="nb">tuple</span><span class="p">):</span>
+<div class="viewcode-block" id="LumiblockRange"><a class="viewcode-back" href="../../index.html#goodruns.grl.LumiblockRange">[docs]</a><span class="k">class</span> <span class="nc">LumiblockRange</span><span class="p">(</span><span class="nb">tuple</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A 2-tuple consisting of the lower and upper</span>
 <span class="sd">    bounds of a lumiblock range</span>
@@ -170,7 +174,7 @@
         <span class="k">return</span> <span class="mi">0</span>
 
 </div>
-<div class="viewcode-block" id="GRL"><a class="viewcode-back" href="../index.html#goodruns.GRL">[docs]</a><span class="k">class</span> <span class="nc">GRL</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="GRL"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL">[docs]</a><span class="k">class</span> <span class="nc">GRL</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The main GRL class holds a python dictionary</span>
 <span class="sd">    mapping runs to a list of lumiblock ranges (2-tuples)</span>
@@ -214,6 +218,7 @@
                     <span class="s">&quot;File </span><span class="si">%s</span><span class="s"> is not recognized as a valid GRL format&quot;</span>
                     <span class="o">%</span> <span class="n">filename</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterruns</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__optimize</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -279,7 +284,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterruns</span><span class="p">())</span>
 
-<div class="viewcode-block" id="GRL.items"><a class="viewcode-back" href="../index.html#goodruns.GRL.items">[docs]</a>    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GRL.items"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.items">[docs]</a>    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Iterate over (run, lbranges) in GRL</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -287,26 +292,26 @@
             <span class="k">for</span> <span class="n">lbrange</span> <span class="ow">in</span> <span class="n">lbranges</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="GRL.iterruns"><a class="viewcode-back" href="../index.html#goodruns.GRL.iterruns">[docs]</a>    <span class="k">def</span> <span class="nf">iterruns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GRL.iterruns"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.iterruns">[docs]</a>    <span class="k">def</span> <span class="nf">iterruns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Iterate over runs in GRL</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">():</span>
             <span class="k">yield</span> <span class="n">run</span>
 </div>
-<div class="viewcode-block" id="GRL.runs"><a class="viewcode-back" href="../index.html#goodruns.GRL.runs">[docs]</a>    <span class="k">def</span> <span class="nf">runs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GRL.runs"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.runs">[docs]</a>    <span class="k">def</span> <span class="nf">runs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return list of runs in GRL</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 </div>
-<div class="viewcode-block" id="GRL.has_run"><a class="viewcode-back" href="../index.html#goodruns.GRL.has_run">[docs]</a>    <span class="k">def</span> <span class="nf">has_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
+<div class="viewcode-block" id="GRL.has_run"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.has_run">[docs]</a>    <span class="k">def</span> <span class="nf">has_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns True if run is in GRL, else False</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span>
 </div>
-<div class="viewcode-block" id="GRL.insert"><a class="viewcode-back" href="../index.html#goodruns.GRL.insert">[docs]</a>    <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">):</span>
+<div class="viewcode-block" id="GRL.insert"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.insert">[docs]</a>    <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Insert a lumiblock range into a run</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -322,18 +327,19 @@
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">lbrange</span><span class="p">]</span>
 </div>
-<div class="viewcode-block" id="GRL.remove"><a class="viewcode-back" href="../index.html#goodruns.GRL.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">):</span>
+<div class="viewcode-block" id="GRL.remove"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove a lumiblock range from a run</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_run</span><span class="p">(</span><span class="n">run</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">mylbrange</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">][:]:</span>
+        <span class="k">if</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lbrange</span><span class="p">,</span> <span class="n">LumiblockRange</span><span class="p">):</span>
+                <span class="n">lbrange</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">(</span><span class="n">lbrange</span><span class="p">)</span>
+            <span class="n">lbranges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">mylbrange</span> <span class="ow">in</span> <span class="n">lbranges</span><span class="p">[:]:</span>
                 <span class="k">if</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">mylbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                     <span class="k">continue</span>
                 <span class="k">if</span> <span class="n">lbrange</span> <span class="o">==</span> <span class="n">mylbrange</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mylbrange</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="k">del</span> <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
+                    <span class="n">lbranges</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mylbrange</span><span class="p">)</span>
                     <span class="k">break</span>
                 <span class="k">elif</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">mylbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">mylbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                     <span class="c"># embedded: must split</span>
@@ -341,28 +347,30 @@
                                                    <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
                     <span class="n">right_lbrange</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">((</span><span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
                                                     <span class="n">mylbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-                    <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">mylbrange</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">left_lbrange</span>
-                    <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">right_lbrange</span><span class="p">)</span>
+                    <span class="n">index</span> <span class="o">=</span> <span class="n">lbranges</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">mylbrange</span><span class="p">)</span>
+                    <span class="n">lbranges</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">left_lbrange</span>
+                    <span class="n">lbranges</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">right_lbrange</span><span class="p">)</span>
+                    <span class="k">break</span>
                 <span class="k">elif</span> <span class="n">_lbrange_intersects</span><span class="p">(</span><span class="n">lbrange</span><span class="p">,</span> <span class="n">mylbrange</span><span class="p">):</span>
                     <span class="n">diff</span> <span class="o">=</span> <span class="n">_lbrange_as_set</span><span class="p">(</span><span class="n">mylbrange</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span>
                         <span class="n">_lbrange_as_set</span><span class="p">(</span><span class="n">lbrange</span><span class="p">))</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">diff</span><span class="p">:</span>  <span class="c"># empty set</span>
-                        <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mylbrange</span><span class="p">)</span>
-                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                            <span class="k">del</span> <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
+                        <span class="n">lbranges</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mylbrange</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lbranges</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                             <span class="k">break</span>
                         <span class="k">continue</span>
-                    <span class="n">newlbrange</span> <span class="o">=</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">diff</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span>
-                    <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">][</span><span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">mylbrange</span><span class="p">)]</span> <span class="o">=</span> <span class="n">newlbrange</span>
+                    <span class="n">newlbrange</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">((</span><span class="nb">min</span><span class="p">(</span><span class="n">diff</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">diff</span><span class="p">)))</span>
+                    <span class="n">lbranges</span><span class="p">[</span><span class="n">lbranges</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">mylbrange</span><span class="p">)]</span> <span class="o">=</span> <span class="n">newlbrange</span>
                 <span class="k">elif</span> <span class="n">mylbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                     <span class="k">break</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lbranges</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
 </div>
-<div class="viewcode-block" id="GRL.clip"><a class="viewcode-back" href="../index.html#goodruns.GRL.clip">[docs]</a>    <span class="k">def</span> <span class="nf">clip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">startrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">startlb</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endlb</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="GRL.clip"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.clip">[docs]</a>    <span class="k">def</span> <span class="nf">clip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">startrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">startlb</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endlb</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clip the GRL between startrun, startlb and endrun, endlb (inclusive)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterruns</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runs</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">startrun</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">run</span> <span class="o">&lt;</span> <span class="n">startrun</span><span class="p">:</span>
                     <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
@@ -376,7 +384,7 @@
                                  <span class="n">startlb</span> <span class="o">&lt;=</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">][</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">lbrange</span><span class="p">)</span>
-                                    <span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">startlb</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                                    <span class="p">]</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">((</span><span class="n">startlb</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                             <span class="k">del</span> <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">endrun</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -391,7 +399,7 @@
                             <span class="k">elif</span> <span class="n">endlb</span> <span class="o">&gt;=</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">endlb</span> <span class="o">&lt;=</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                                 <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">][</span>
                                     <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">lbrange</span><span class="p">)</span>
-                                    <span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">endlb</span><span class="p">)</span>
+                                    <span class="p">]</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">((</span><span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">endlb</span><span class="p">))</span>
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                             <span class="k">del</span> <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
 </div>
@@ -462,7 +470,7 @@
 
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span> <span class="o">|</span> <span class="n">other</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span> <span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GRL.cut"><a class="viewcode-back" href="../index.html#goodruns.GRL.cut">[docs]</a>    <span class="k">def</span> <span class="nf">cut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runname</span><span class="o">=</span><span class="s">&#39;RunNumber&#39;</span><span class="p">,</span> <span class="n">lbname</span><span class="o">=</span><span class="s">&#39;lbn&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="GRL.cut"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.cut">[docs]</a>    <span class="k">def</span> <span class="nf">cut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runname</span><span class="o">=</span><span class="s">&#39;RunNumber&#39;</span><span class="p">,</span> <span class="n">lbname</span><span class="o">=</span><span class="s">&#39;lbn&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert this GRL into a TCut expression.</span>
 <span class="sd">        This method is really meant to be a joke and should be of no use.</span>
@@ -491,7 +499,7 @@
         <span class="s">&#39;cut&#39;</span>
     <span class="p">]</span>
 
-<div class="viewcode-block" id="GRL.write"><a class="viewcode-back" href="../index.html#goodruns.GRL.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;xml&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="GRL.write"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;xml&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write the GRL in a specified format to the file object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -511,7 +519,7 @@
             <span class="k">if</span> <span class="n">USE_LXML</span><span class="p">:</span>
                 <span class="n">tree</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filehandle</span><span class="p">,</span> <span class="n">pretty_print</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c"># current hack to get pretty XML from ElementTree</span>
+                <span class="c"># get pretty XML from ElementTree</span>
                 <span class="n">xml</span> <span class="o">=</span> <span class="n">minidom</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()))</span>
                 <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">xml</span><span class="o">.</span><span class="n">toprettyxml</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="s">&#39;   &#39;</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">format</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;yml&#39;</span><span class="p">,</span> <span class="s">&#39;yaml&#39;</span><span class="p">):</span>

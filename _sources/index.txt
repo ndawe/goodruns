@@ -9,8 +9,8 @@ goodruns
 Documentation
 -------------
 
-:mod:`goodruns`
-~~~~~~~~~~~~~~~
+:mod:`goodruns.grl`
+~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: goodruns
+.. automodule:: goodruns.grl
    :members:
