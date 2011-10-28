@@ -3,10 +3,10 @@
 from distribute_setup import use_setuptools
 use_setuptools()
 
-from setuptools import setup, find_packages
+from setuptools import setup
 from glob import glob
 
-execfile('info.py')
+execfile('goodruns/info.py')
 
 setup(name='goodruns',
       version=__VERSION__,
@@ -17,7 +17,7 @@ setup(name='goodruns',
       url=__URL__,
       download_url=__DOWNLOAD_URL__,
       license='GPLv3',
-      py_modules=['goodruns', 'sorteddict'],
+      packages=['goodruns'],
       scripts=glob('scripts/*'),
       classifiers=[
         "Programming Language :: Python",

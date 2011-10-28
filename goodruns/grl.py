@@ -22,7 +22,7 @@ import copy
 import urllib2
 from pprint import pprint
 from operator import sub, or_, and_, xor, itemgetter
-from sorteddict import SortedDict
+from .sorteddict import SortedDict
 import bisect
 
 
