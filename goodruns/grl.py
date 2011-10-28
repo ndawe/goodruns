@@ -296,8 +296,6 @@ class GRL(object):
                     continue
                 if lbrange == mylbrange:
                     lbranges.remove(mylbrange)
-                    if len(lbranges) == 0:
-                        del self.__grl[run]
                     break
                 elif lbrange[0] > mylbrange[0] and lbrange[1] < mylbrange[1]:
                     # embedded: must split
@@ -308,19 +306,21 @@ class GRL(object):
                     index = lbranges.index(mylbrange)
                     lbranges[index] = left_lbrange
                     lbranges.insert(index + 1, right_lbrange)
+                    break
                 elif _lbrange_intersects(lbrange, mylbrange):
                     diff = _lbrange_as_set(mylbrange).difference(
                         _lbrange_as_set(lbrange))
                     if not diff:  # empty set
                         lbranges.remove(mylbrange)
                         if len(lbranges) == 0:
-                            del self.__grl[run]
                             break
                         continue
                     newlbrange = LumiblockRange((min(diff), max(diff)))
                     lbranges[lbranges.index(mylbrange)] = newlbrange
                 elif mylbrange[0] > lbrange[1]:
                     break
+            if len(lbranges) == 0:
+                del self.__grl[run]
 
     def clip(self, startrun=None, startlb=None, endrun=None, endlb=None):
         """
