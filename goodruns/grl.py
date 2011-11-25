@@ -25,6 +25,7 @@ from operator import sub, or_, and_, xor, itemgetter
 from .sorteddict import SortedDict
 import bisect
 import datetime
+import cStringIO
 
 
 def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
@@ -471,6 +472,14 @@ class GRL(object):
         'cut'
     ]
 
+    def str(self, format='xml'):
+        """
+        Return string repr of self in specified format
+        """ 
+        str_io = cStringIO.cStringIO()
+        self.write(filehandle=str_io, format=format)
+        return str_io.getvalue()
+    
     def write(self, filehandle, format='xml'):
         """
         Write the GRL in a specified format to the file object.
