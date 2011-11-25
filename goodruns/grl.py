@@ -476,7 +476,7 @@ class GRL(object):
         """
         Return string repr of self in specified format
         """ 
-        str_io = cStringIO.cStringIO()
+        str_io = cStringIO.StringIO()
         self.write(filehandle=str_io, format=format)
         return str_io.getvalue()
     
