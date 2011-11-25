@@ -155,7 +155,7 @@ class GRL(object):
             self.__grl = SortedDict(_dict_to_grl(grl))
             return
         if isinstance(grl, basestring) and from_string:
-            tree = ET.parseString(grl)
+            tree = ET.fromstring(grl)
             self.from_xml(tree)
             return
         elif from_string:
@@ -189,7 +189,7 @@ class GRL(object):
     
     def from_xml(self, tree):
 
-        root = tree.getroot()
+        root = tree
         name = root.find('NamedLumiRange/Name')
         if name is not None:
             self.name = name.text
