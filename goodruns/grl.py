@@ -146,6 +146,7 @@ class GRL(object):
         """
         self.name = 'GRL'
         self.version = '1.0'
+        self.metadata = []
         self.__grl = SortedDict()
         if not grl:
             return
@@ -169,6 +170,7 @@ class GRL(object):
                 version = root.find('NamedLumiRange/Version')
                 if version is not None:
                     self.version = version.text
+                self.metadata = root.findall('NamedLumiRange/Metadata')
                 lbcols = root.findall(
                     'NamedLumiRange/LumiBlockCollection')
                 for lbcol in lbcols:
@@ -480,6 +482,8 @@ class GRL(object):
             name.text = self.name
             version = ET.SubElement(subroot, 'Version')
             version.text = self.version
+            for meta in self.metadata:
+                subroot.append(meta)
             for run in self.iterruns():
                 lumiblocks = self.__grl[run]
                 lbcol = ET.SubElement(subroot, 'LumiBlockCollection')
@@ -490,15 +494,16 @@ class GRL(object):
                     lbrange.set('Start', str(lumiblock[0]))
                     lbrange.set('End', str(lumiblock[1]))
             date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            filehandle.write('<?xml version="1.0"?>\n')
-            filehandle.write('<!DOCTYPE LumiRangeCollection SYSTEM "http://atlas-runquery.cern.ch/LumiRangeCollection.dtd">\n')
-            filehandle.write('<!-- This document is created by goodruns: http://pypi.python.org/pypi/goodruns/ on %s -->\n' % date)
+            meta = ('''<!DOCTYPE LumiRangeCollection SYSTEM "http://atlas-runquery.cern.ch/LumiRangeCollection.dtd">\n'''
+                    '''<!-- This document is created by goodruns: http://pypi.python.org/pypi/goodruns/ on %s -->\n''' % date)
             tree = ET.ElementTree(root)
             if USE_LXML:
+                filehandle.write('<?xml version="1.0"?>\n')
+                filehandle.write(meta)
                 tree.write(filehandle, pretty_print=True)
             else:
                 # get pretty XML from ElementTree
-                xml = minidom.parseString(ET.tostring(tree.getroot()))
+                xml = minidom.parseString(meta + ET.tostring(tree.getroot(), 'utf-8'))
                 filehandle.write(xml.toprettyxml(indent='   '))
         elif format in ('yml', 'yaml'):
             filehandle.write(yaml.dump(_grl_to_dict(self)))
