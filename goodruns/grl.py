@@ -160,7 +160,7 @@ class GRL(object):
             return
         elif from_string:
             raise TypeError("grl is non-string type %s while using from_string" % type(grl))
-        else:
+        elif isinstance(grl, (basestring, file)):
             filename = grl
             if isinstance(grl, basestring):
                 if grl.startswith("http://"):
