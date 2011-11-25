@@ -154,9 +154,9 @@ class GRL(object):
         if isinstance(grl, dict):
             self.__grl = SortedDict(_dict_to_grl(grl))
             return
-        if type(grl) in [str, file]:
+        if isinstance(grl, (basestring, file)):
             filename = grl
-            if type(grl) is str:
+            if isinstance(grl, basestring):
                 if grl.startswith("http://"):
                     grl = urllib2.urlopen(grl)
             elif type(grl) is file:
@@ -193,6 +193,8 @@ class GRL(object):
             for run in self.iterruns():
                 self.__grl[run].sort()
                 self.__optimize(run)
+            return
+        raise TypeError("Unable to initialize GRL from a %s" % type(grl))
 
     def __copy__(self):
 
