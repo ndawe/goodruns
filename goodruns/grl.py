@@ -144,6 +144,8 @@ class GRL(object):
         """
         grl may be a file name or URL of a valid GRL file, or None
         """
+        self.name = 'GRL'
+        self.version = '1.0'
         self.__grl = SortedDict()
         if not grl:
             return
@@ -160,7 +162,14 @@ class GRL(object):
             if filename == "<stdin>" or filename.endswith('.xml') or \
                     filename.startswith("http://"):
                 tree = ET.parse(grl)
-                lbcols = tree.getroot().findall(
+                root = tree.getroot()
+                name = root.find('NamedLumiRange/Name')
+                if name is not None:
+                    self.name = name.text
+                version = root.find('NamedLumiRange/Version')
+                if version is not None:
+                    self.version = version.text
+                lbcols = root.findall(
                     'NamedLumiRange/LumiBlockCollection')
                 for lbcol in lbcols:
                     run = int(lbcol.find('Run').text)
@@ -467,6 +476,10 @@ class GRL(object):
         if format == 'xml':
             root = ET.Element('LumiRangeCollection')
             subroot = ET.SubElement(root, 'NamedLumiRange')
+            name = ET.SubElement(subroot, 'Name')
+            name.text = self.name
+            version = ET.SubElement(subroot, 'Version')
+            version.text = self.version
             for run in self.iterruns():
                 lumiblocks = self.__grl[run]
                 lbcol = ET.SubElement(subroot, 'LumiBlockCollection')
