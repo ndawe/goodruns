@@ -141,7 +141,7 @@ class GRL(object):
     The main GRL class holds a python dictionary
     mapping runs to a list of lumiblock ranges (2-tuples)
     """
-    def __init__(self, grl=None):
+    def __init__(self, grl=None, from_string=False):
         """
         grl may be a file name or URL of a valid GRL file, or None
         """
@@ -154,7 +154,13 @@ class GRL(object):
         if isinstance(grl, dict):
             self.__grl = SortedDict(_dict_to_grl(grl))
             return
-        if isinstance(grl, (basestring, file)):
+        if isinstance(grl, basestring) and from_string:
+            tree = ET.parseString(grl)
+            self.from_xml(tree)
+            return
+        elif from_string:
+            raise TypeError("grl is non-string type %s while using from_string" % type(grl))
+        else:
             filename = grl
             if isinstance(grl, basestring):
                 if grl.startswith("http://"):
@@ -164,23 +170,7 @@ class GRL(object):
             if filename == "<stdin>" or filename.endswith('.xml') or \
                     filename.startswith("http://"):
                 tree = ET.parse(grl)
-                root = tree.getroot()
-                name = root.find('NamedLumiRange/Name')
-                if name is not None:
-                    self.name = name.text
-                version = root.find('NamedLumiRange/Version')
-                if version is not None:
-                    self.version = version.text
-                self.metadata = root.findall('NamedLumiRange/Metadata')
-                lbcols = root.findall(
-                    'NamedLumiRange/LumiBlockCollection')
-                for lbcol in lbcols:
-                    run = int(lbcol.find('Run').text)
-                    lbs = lbcol.findall('LBRange')
-                    for lumiblock in lbs:
-                        self.insert(run,
-                            LumiblockRange((int(lumiblock.attrib['Start']),
-                                            int(lumiblock.attrib['End']))))
+                self.from_xml(tree)
             elif filename.endswith('.yml'):
                 if USE_YAML:
                     self.__grl = SortedDict(_dict_to_grl(grl))
@@ -196,6 +186,27 @@ class GRL(object):
             return
         raise TypeError("Unable to initialize GRL from a %s" % type(grl))
 
+    
+    def from_xml(self, tree):
+
+        root = tree.getroot()
+        name = root.find('NamedLumiRange/Name')
+        if name is not None:
+            self.name = name.text
+        version = root.find('NamedLumiRange/Version')
+        if version is not None:
+            self.version = version.text
+        self.metadata = root.findall('NamedLumiRange/Metadata')
+        lbcols = root.findall(
+            'NamedLumiRange/LumiBlockCollection')
+        for lbcol in lbcols:
+            run = int(lbcol.find('Run').text)
+            lbs = lbcol.findall('LBRange')
+            for lumiblock in lbs:
+                self.insert(run,
+                    LumiblockRange((int(lumiblock.attrib['Start']),
+                                    int(lumiblock.attrib['End']))))
+    
     def __copy__(self):
 
         return copy.deepcopy(self)
