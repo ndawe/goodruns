@@ -24,6 +24,7 @@ from pprint import pprint
 from operator import sub, or_, and_, xor, itemgetter
 from .sorteddict import SortedDict
 import bisect
+import datetime
 
 
 def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
@@ -475,6 +476,10 @@ class GRL(object):
                     lbrange = ET.SubElement(lbcol, 'LBRange')
                     lbrange.set('Start', str(lumiblock[0]))
                     lbrange.set('End', str(lumiblock[1]))
+            date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            filehandle.write('<?xml version="1.0"?>\n')
+            filehandle.write('<!DOCTYPE LumiRangeCollection SYSTEM "http://atlas-runquery.cern.ch/LumiRangeCollection.dtd">\n')
+            filehandle.write('<!-- This document is created by goodruns: http://pypi.python.org/pypi/goodruns/ on %s -->\n' % date)
             tree = ET.ElementTree(root)
             if USE_LXML:
                 tree.write(filehandle, pretty_print=True)
