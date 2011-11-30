@@ -14,7 +14,7 @@ body {
     font-family: 'Georgia', serif;
     font-size: 17px;
     color: #000;
-    background: white;
+    background: #ddd;
     margin: 0;
     padding: 0;
 }
@@ -34,7 +34,6 @@ hr {
 }
  
 div.body {
-    background-color: #ffffff;
     color: #3E4349;
     padding: 0 30px 30px 30px;
 }
@@ -101,7 +100,7 @@ div.body h6 {
 
 
 
-div.body h1 { font-size: 250%; }
+div.body h1 { font-size: 240%; }
 div.indexwrapper h1 { font-size: 350%; }
 div.body h2 { font-size: 180%; }
 div.body h3 { font-size: 150%; }
@@ -250,11 +249,12 @@ dl dd {
  
 pre {
     padding: 0;
-    margin: 15px -30px;
+    margin: 15px -10px;
     padding: 8px;
     line-height: 1.3em;
-    padding: 7px 30px;
-    background: #eee;
+    padding: 10px 10px;
+    background: #111;
+    color: #fff;
     border-radius: 2px;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
