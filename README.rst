@@ -47,42 +47,42 @@ Usage
 
 An example of how to use goodruns::
 
-    from goodruns import GRL
+   from goodruns import GRL
 
-    grl = GRL('grl.xml')
-    # or:
-    grl = GRL('http://atlasdqm.web.cern.ch/atlasdqm/grlgen/path/to/grl.xml')
+   grl = GRL('grl.xml')
+   # or:
+   grl = GRL('http://atlasdqm.web.cern.ch/atlasdqm/grlgen/path/to/grl.xml')
 
-    # check if the GRL contains the lumiblock 231 in run 186356:
-    if (186356, 231) in grl:
-        # do something
-        pass
+   # check if the GRL contains the lumiblock 231 in run 186356:
+   if (186356, 231) in grl:
+       # do something
+       pass
 
 The GRL is automatically optimized (lumiblocks are merged and sorted)::
 
-    >>> from goodruns import GRL
-    >>> a = GRL()
-    >>> a.insert(1, (1,4))
-    >>> a.insert(1, (7,10))
-    >>> a
-    ---------------
-    RUN: 1
-    LUMIBLOCKS:
-      1 - 4
-      7 - 10
-    >>> a.insert(1, (6,7))
-    >>> a
-    ---------------
-    RUN: 1
-    LUMIBLOCKS:
-      1 - 4
-      6 - 10
-    >>> a.insert(1, (5,5))
-    >>> a
-    ---------------
-    RUN: 1
-    LUMIBLOCKS:
-      1 - 10
+   >>> from goodruns import GRL
+   >>> a = GRL()
+   >>> a.insert(1, (1,4))
+   >>> a.insert(1, (7,10))
+   >>> a
+   ---------------
+   RUN: 1
+   LUMIBLOCKS:
+     1 - 4
+     7 - 10
+   >>> a.insert(1, (6,7))
+   >>> a
+   ---------------
+   RUN: 1
+   LUMIBLOCKS:
+     1 - 4
+     6 - 10
+   >>> a.insert(1, (5,5))
+   >>> a
+   ---------------
+   RUN: 1
+   LUMIBLOCKS:
+     1 - 10
 
 
 Command-line Tools
