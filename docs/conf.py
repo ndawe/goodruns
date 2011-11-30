@@ -13,6 +13,7 @@
 
 import sys, os
 sys.path.append(os.path.abspath('_themes'))
+execfile('../goodruns/info.py')
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -55,9 +56,9 @@ copyright = u'2011, Noel Dawe'
 # built documents.
 #
 # The short X.Y version.
-version = '1.5'
+version = __VERSION__
 # The full version, including alpha/beta/rc tags.
-release = '1.5'
+release = __VERSION__
 
 autoclass_content = "both"
 
