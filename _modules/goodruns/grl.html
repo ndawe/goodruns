@@ -64,8 +64,6 @@
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">sub</span><span class="p">,</span> <span class="n">or_</span><span class="p">,</span> <span class="n">and_</span><span class="p">,</span> <span class="n">xor</span><span class="p">,</span> <span class="n">itemgetter</span>
 <span class="kn">from</span> <span class="nn">.sorteddict</span> <span class="kn">import</span> <span class="n">SortedDict</span>
 <span class="kn">import</span> <span class="nn">bisect</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">cStringIO</span>
 
 
 <div class="viewcode-block" id="clipped"><a class="viewcode-back" href="../../index.html#goodruns.grl.clipped">[docs]</a><span class="k">def</span> <span class="nf">clipped</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="n">startrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">startlb</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endlb</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -185,9 +183,6 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        grl may be a file name or URL of a valid GRL file, or None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;GRL&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="s">&#39;1.0&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span> <span class="o">=</span> <span class="n">SortedDict</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">grl</span><span class="p">:</span>
             <span class="k">return</span>
@@ -204,15 +199,7 @@
             <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s">&quot;&lt;stdin&gt;&quot;</span> <span class="ow">or</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.xml&#39;</span><span class="p">)</span> <span class="ow">or</span> \
                     <span class="n">filename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;http://&quot;</span><span class="p">):</span>
                 <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">grl</span><span class="p">)</span>
-                <span class="n">root</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;NamedLumiRange/Name&#39;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">text</span>
-                <span class="n">version</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;NamedLumiRange/Version&#39;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span><span class="o">.</span><span class="n">text</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&#39;NamedLumiRange/Metadata&#39;</span><span class="p">)</span>
-                <span class="n">lbcols</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span>
+                <span class="n">lbcols</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span>
                     <span class="s">&#39;NamedLumiRange/LumiBlockCollection&#39;</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">lbcol</span> <span class="ow">in</span> <span class="n">lbcols</span><span class="p">:</span>
                     <span class="n">run</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lbcol</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;Run&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
@@ -512,14 +499,6 @@
         <span class="s">&#39;cut&#39;</span>
     <span class="p">]</span>
 
-<div class="viewcode-block" id="GRL.str"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.str">[docs]</a>    <span class="k">def</span> <span class="nf">str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;xml&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return string repr of self in specified format</span>
-<span class="sd">        &quot;&quot;&quot;</span> 
-        <span class="n">str_io</span> <span class="o">=</span> <span class="n">cStringIO</span><span class="o">.</span><span class="n">cStringIO</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filehandle</span><span class="o">=</span><span class="n">str_io</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="n">format</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">str_io</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
-    </div>
 <div class="viewcode-block" id="GRL.write"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;xml&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write the GRL in a specified format to the file object.</span>
@@ -527,12 +506,6 @@
         <span class="k">if</span> <span class="n">format</span> <span class="o">==</span> <span class="s">&#39;xml&#39;</span><span class="p">:</span>
             <span class="n">root</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s">&#39;LumiRangeCollection&#39;</span><span class="p">)</span>
             <span class="n">subroot</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s">&#39;NamedLumiRange&#39;</span><span class="p">)</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">subroot</span><span class="p">,</span> <span class="s">&#39;Name&#39;</span><span class="p">)</span>
-            <span class="n">name</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
-            <span class="n">version</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">subroot</span><span class="p">,</span> <span class="s">&#39;Version&#39;</span><span class="p">)</span>
-            <span class="n">version</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span>
-            <span class="k">for</span> <span class="n">meta</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">:</span>
-                <span class="n">subroot</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterruns</span><span class="p">():</span>
                 <span class="n">lumiblocks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
                 <span class="n">lbcol</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">subroot</span><span class="p">,</span> <span class="s">&#39;LumiBlockCollection&#39;</span><span class="p">)</span>
@@ -542,17 +515,12 @@
                     <span class="n">lbrange</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">lbcol</span><span class="p">,</span> <span class="s">&#39;LBRange&#39;</span><span class="p">)</span>
                     <span class="n">lbrange</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;Start&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">lumiblock</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
                     <span class="n">lbrange</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;End&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">lumiblock</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S&quot;</span><span class="p">)</span>
-            <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;&#39;&#39;&lt;!DOCTYPE LumiRangeCollection SYSTEM &quot;http://atlas-runquery.cern.ch/LumiRangeCollection.dtd&quot;&gt;</span><span class="se">\n</span><span class="s">&#39;&#39;&#39;</span>
-                    <span class="sd">&#39;&#39;&#39;&lt;!-- This document is created by goodruns: http://pypi.python.org/pypi/goodruns/ on %s --&gt;\n&#39;&#39;&#39;</span> <span class="o">%</span> <span class="n">date</span><span class="p">)</span>
             <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">ElementTree</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">USE_LXML</span><span class="p">:</span>
-                <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&lt;?xml version=&quot;1.0&quot;?&gt;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
-                <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
                 <span class="n">tree</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filehandle</span><span class="p">,</span> <span class="n">pretty_print</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c"># get pretty XML from ElementTree</span>
-                <span class="n">xml</span> <span class="o">=</span> <span class="n">minidom</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">meta</span> <span class="o">+</span> <span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">(),</span> <span class="s">&#39;utf-8&#39;</span><span class="p">))</span>
+                <span class="n">xml</span> <span class="o">=</span> <span class="n">minidom</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()))</span>
                 <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">xml</span><span class="o">.</span><span class="n">toprettyxml</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="s">&#39;   &#39;</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">format</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;yml&#39;</span><span class="p">,</span> <span class="s">&#39;yaml&#39;</span><span class="p">):</span>
             <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">_grl_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
