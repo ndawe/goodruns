@@ -33,9 +33,18 @@ script to install. To install for all users::
 
     sudo python setup.py install
 
-To install in your home directory::
+or to install in your user base directory::
 
     python setup.py install --user
+
+If installing in your user base directory be sure to add `~/.local/bin` to your
+`$PATH`::
+
+    export PATH=${HOME}/.local/bin${PATH:+:$PATH}
+
+You may specify a different location for your user base directory by::
+
+    export PYTHONUSERBASE=/path/to/alternate/.local
 
 To install the optional dependencies::
 
