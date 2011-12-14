@@ -186,7 +186,7 @@ grl-convert
     - !!python/tuple [173, 176]
     ...
 
-or plain text format::
+or plain text::
 
     > grl-convert -f txt A.xml
     ---------------
