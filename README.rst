@@ -24,7 +24,7 @@ To install for all users::
 
     sudo pip install goodruns
 
-To install in your home directory::
+To install in your user site-packages directory (also see below)::
 
     pip install --user goodruns
 
@@ -37,12 +37,12 @@ or to install in your user base directory::
 
     python setup.py install --user
 
-If installing in your user base directory be sure to add `~/.local/bin` to your
+If installing in your user site-packages directory be sure to add `~/.local/bin` to your
 `$PATH`::
 
     export PATH=${HOME}/.local/bin${PATH:+:$PATH}
 
-You may specify a different location for your user base directory by::
+You may specify a different location for your user site-packages directory by::
 
     export PYTHONUSERBASE=/path/to/alternate/.local
 
