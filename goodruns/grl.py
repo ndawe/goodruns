@@ -516,7 +516,7 @@ class GRL(object):
 
     def save(self, name, format='xml'):
 
-        with open(name) as filehandle:
+        with open(name, 'w') as filehandle:
             self.write(filehandle, format=format)
 
     def write(self, filehandle, format='xml'):
