@@ -514,9 +514,15 @@ class GRL(object):
         self.write(filehandle=str_io, format=format)
         return str_io.getvalue()
 
+    def save(self, name, format='xml'):
+
+        with open(name) as filehandle:
+            self.write(filehandle, format=format)
+
     def write(self, filehandle, format='xml'):
         """
         Write the GRL in a specified format to the file object.
+        If filehandle is a string, then attempt to open it first
         """
         if format == 'xml':
             root = ET.Element('LumiRangeCollection')
