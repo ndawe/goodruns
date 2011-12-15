@@ -452,13 +452,30 @@ class GRL(object):
 
         return self - (self - other)
 
+    def __iand__(self, other):
+
+        self -= (self - other)
+        return self
+
     def __or__(self, other):
 
         return self + other
 
+    def __ior__(self, other):
+
+        self += other
+        return self
+
     def __xor__(self, other):
 
         return (self | other) - (self & other)
+
+    def __ixor__(self, other):
+
+        grlcopy = copy.deepcopy(self)
+        self |= other
+        self -= (grlcopy & other)
+        return self
 
     def cut(self, runname='RunNumber', lbname='lbn'):
         """
