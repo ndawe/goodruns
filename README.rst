@@ -11,6 +11,7 @@ Requirements
 ------------
 
 goodruns requires at least Python 2.5 and only depends on modules in the standard library.
+Unlike the standard ATLAS GoodRunsLists package, goodruns does not depend in any way on `ROOT <http://root.cern.ch/>`_.
 For better XML reading/writing goodruns will optionally use `lxml <http://pypi.python.org/pypi/lxml/2.3>`_
 if installed. Install `PyYAML <http://pypi.python.org/pypi/PyYAML/>`_ if you would
 like to convert GRLs into YAML format.
@@ -24,7 +25,7 @@ To install for all users::
 
     sudo pip install goodruns
 
-To install in your home directory::
+To install in your user site-packages directory (also see below)::
 
     pip install --user goodruns
 
@@ -33,9 +34,18 @@ script to install. To install for all users::
 
     sudo python setup.py install
 
-To install in your home directory::
+or to install in your user base directory::
 
     python setup.py install --user
+
+If installing in your user site-packages directory be sure to add `~/.local/bin` to your
+`$PATH`::
+
+    export PATH=${HOME}/.local/bin${PATH:+:$PATH}
+
+You may specify a different location for your user site-packages directory by::
+
+    export PYTHONUSERBASE=/path/to/alternate/.local
 
 To install the optional dependencies::
 
@@ -177,7 +187,7 @@ grl-convert
     - !!python/tuple [173, 176]
     ...
 
-or plain text format::
+or plain text::
 
     > grl-convert -f txt A.xml
     ---------------
