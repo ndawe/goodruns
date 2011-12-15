@@ -186,7 +186,7 @@ class GRL(object):
             return
         raise TypeError("Unable to initialize GRL from a %s" % type(grl))
 
-    
+
     def from_xml(self, tree):
 
         root = tree
@@ -206,7 +206,7 @@ class GRL(object):
                 self.insert(run,
                     LumiblockRange((int(lumiblock.attrib['Start']),
                                     int(lumiblock.attrib['End']))))
-    
+
     def __copy__(self):
 
         return copy.deepcopy(self)
@@ -428,6 +428,8 @@ class GRL(object):
 
     def __iadd__(self, other):
 
+        if isinstance(other, basestring):
+            other = GRL(other, from_string=True)
         for run, lbrange in other.items():
             self.insert(run, lbrange)
         return self
@@ -440,6 +442,8 @@ class GRL(object):
 
     def __isub__(self, other):
 
+        if isinstance(other, basestring):
+            other = GRL(other, from_string=True)
         for run, lbrange in other.items():
             self.remove(run, lbrange)
         return self
@@ -488,11 +492,11 @@ class GRL(object):
     def str(self, format='xml'):
         """
         Return string repr of self in specified format
-        """ 
+        """
         str_io = cStringIO.StringIO()
         self.write(filehandle=str_io, format=format)
         return str_io.getvalue()
-    
+
     def write(self, filehandle, format='xml'):
         """
         Write the GRL in a specified format to the file object.
