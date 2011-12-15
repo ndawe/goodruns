@@ -542,9 +542,9 @@ class GRL(object):
                     lbrange = ET.SubElement(lbcol, 'LBRange')
                     lbrange.set('Start', str(lumiblock[0]))
                     lbrange.set('End', str(lumiblock[1]))
-            date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            date = datetime.datetime.now().strftime("%Y-%m-%d at %H:%M:%S")
             meta = ('''<!DOCTYPE LumiRangeCollection SYSTEM "http://atlas-runquery.cern.ch/LumiRangeCollection.dtd">\n'''
-                    '''<!-- This document is created by goodruns: http://pypi.python.org/pypi/goodruns/ on %s -->\n''' % date)
+                    '''<!-- This document was created by goodruns: http://pypi.python.org/pypi/goodruns/ on %s -->\n''' % date)
             tree = ET.ElementTree(root)
             if USE_LXML:
                 filehandle.write('<?xml version="1.0"?>\n')
