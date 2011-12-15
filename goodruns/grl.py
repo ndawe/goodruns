@@ -508,21 +508,22 @@ class GRL(object):
 
     def str(self, format='xml'):
         """
-        Return string repr of self in specified format
+        Return string repr of self in the specified format
         """
         str_io = cStringIO.StringIO()
         self.write(filehandle=str_io, format=format)
         return str_io.getvalue()
 
     def save(self, name, format='xml'):
-
+        """
+        Save GRL to file by name in the specified format
+        """
         with open(name, 'w') as filehandle:
             self.write(filehandle, format=format)
 
     def write(self, filehandle, format='xml'):
         """
-        Write the GRL in a specified format to the file object.
-        If filehandle is a string, then attempt to open it first
+        Write the GRL in the specified format to the file object.
         """
         if format == 'xml':
             root = ET.Element('LumiRangeCollection')
