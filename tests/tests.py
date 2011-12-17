@@ -7,10 +7,12 @@ from goodruns import GRL
 DIRNAME = os.path.dirname(__file__)
 
 def str_init_test():
-    
+
     grl = GRL(os.path.join(DIRNAME, 'grlA.xml'))
 
     assert (180225, 87) in grl
+    assert (180225, 1) not in grl
+
 
 
 def dict_init_test():
@@ -21,7 +23,7 @@ def dict_init_test():
 
 
 def file_init_test():
-    
+
     with open(os.path.join(DIRNAME, 'grlA.xml')) as f:
         grl = GRL(f)
         assert (180225, 87) in grl
