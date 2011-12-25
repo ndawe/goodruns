@@ -34,13 +34,13 @@ def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
 
     *grl*: GRL
 
-    *startrun* : [ int | None ]
+    *startrun*: [ int | None ]
 
-    *startlb* : [ int | None ]
+    *startlb*: [ int | None ]
 
-    *endrun* : [ int | None ]
+    *endrun*: [ int | None ]
 
-    *endlb* : [ int | None ]
+    *endlb*: [ int | None ]
     """
     grl_copy = copy.deepcopy(grl)
     grl_copy.clip(startrun=startrun, startlb=startlb,
@@ -422,13 +422,13 @@ class GRL(object):
         """
         Clip the GRL between startrun, startlb and endrun, endlb (inclusive)
 
-        *startrun* : [ int | None ]
+        *startrun*: [ int | None ]
 
-        *startlb* : [ int | None ]
+        *startlb*: [ int | None ]
 
-        *endrun* : [ int | None ]
+        *endrun*: [ int | None ]
 
-        *endlb* : [ int | None ]
+        *endlb*: [ int | None ]
         """
         for run in self.runs():
             if startrun is not None:
