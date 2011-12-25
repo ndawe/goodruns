@@ -30,7 +30,17 @@ import cStringIO
 
 def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
     """
-    Clip a GRL between startrun, startlb and endrun, endlb (inclusive)
+    Return a clipped GRL between startrun, startlb and endrun, endlb (inclusive)
+
+    *grl*: GRL
+
+    *startrun* : [ int | None ]
+
+    *startlb* : [ int | None ]
+
+    *endrun* : [ int | None ]
+
+    *endlb* : [ int | None ]
     """
     grl_copy = copy.deepcopy(grl)
     grl_copy.clip(startrun=startrun, startlb=startlb,
@@ -41,6 +51,8 @@ def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
 def diffed(*args):
     """
     Return the difference of multiple GRLs: (((A-B)-C)-D)...)
+
+    *args*: tuple of GRLs
     """
     return reduce(sub, args)
 
@@ -48,6 +60,8 @@ def diffed(*args):
 def ored(*args):
     """
     Return the OR of multiple GRLs: A | B | C...
+
+    *args*: tuple of GRLs
     """
     return reduce(or_, args)
 
@@ -55,6 +69,8 @@ def ored(*args):
 def anded(*args):
     """
     Return the AND of multiple GRLs: A & B & C...
+
+    *args*: tuple of GRLs
     """
     return reduce(and_, args)
 
@@ -62,6 +78,8 @@ def anded(*args):
 def xored(*args):
     """
     Return the XOR of multiple GRLs: A ^ B ^ C...
+
+    *args*: tuple of GRLs
     """
     return reduce(xor, args)
 
@@ -69,6 +87,10 @@ def xored(*args):
 def _lbrange_intersects(lbrange1, lbrange2):
     """
     Determine if two lumiblock ranges intersect
+
+    *lbrange1*: LumiblockRange
+
+    *lbrange2*: LumiblockRange
     """
     if lbrange1[0] >= lbrange2[0] and lbrange1[0] <= lbrange2[1]:
         return True
@@ -84,6 +106,8 @@ def _lbrange_intersects(lbrange1, lbrange2):
 def _lbrange_as_set(lbrange):
     """
     Convert lumiblock range to set of lumiblocks
+
+    *lbrange*: LumiblockRange
     """
     return set(range(lbrange[0], lbrange[1] + 1))
 
@@ -91,6 +115,8 @@ def _lbrange_as_set(lbrange):
 def _dict_to_grl(d):
     """
     Convert tuples to LumiblockRanges
+
+    *d*: dict
     """
     o = {}
     for run, lbranges in d.items():
@@ -101,6 +127,8 @@ def _dict_to_grl(d):
 def _grl_to_dict(g):
     """
     Convert tuples to LumiblockRanges
+
+    *g*: GRL
     """
     o = {}
     for run in g.iterruns():
@@ -115,7 +143,10 @@ class LumiblockRange(tuple):
     bounds of a lumiblock range
     """
     def __new__(cls, args):
-
+        """
+        *args*: [ tuple | list ]
+            2-tuple/list of lumiblock numbers in ascending order
+        """
         if len(args) != 2:
             raise ValueError('lbrange must contain exactly 2 elements: %s' % \
                              (args,))
@@ -128,7 +159,10 @@ class LumiblockRange(tuple):
         return super(LumiblockRange, cls).__new__(cls, args)
 
     def __cmp__(self, lumiblock):
-
+        """
+        Determine whether this lumiblock should be placed
+        to the right or left of another lumiblock
+        """
         if lumiblock < self[0]:
             return 1
         if lumiblock > self[1]:
@@ -141,9 +175,20 @@ class GRL(object):
     The main GRL class holds a python dictionary
     mapping runs to a list of lumiblock ranges (2-tuples)
     """
+    formats = [
+        'xml',
+        'yml',
+        'txt',
+        'py',
+        'cut'
+    ]
+
     def __init__(self, grl=None, from_string=False):
         """
-        grl may be a file name or URL of a valid GRL file, or None
+        *grl*: [ dict | str | None ]
+
+        *from_string*: bool
+            If True, interpret grl as xml string and not filename
         """
         self.name = 'GRL'
         self.version = '1.0'
@@ -188,7 +233,11 @@ class GRL(object):
 
 
     def from_xml(self, tree):
+        """
+        Insert runs and lumiblocks from xml
 
+        *tree*: ElementTree
+        """
         root = tree
         name = root.find('NamedLumiRange/Name')
         if name is not None:
@@ -242,18 +291,25 @@ class GRL(object):
     def __getitem__(self, run):
         """
         Return list of lumiblock ranges for a run
+
+        *run*: int
         """
         return self.__grl[run]
 
     def __delitem__(self, run):
         """
         Remove run and associated lumiblock ranges from GRL
+
+        *run*: int
         """
         del self.__grl[run]
 
     def __contains__(self, runlb):
         """
-        Pass the tuple (run, lbn)
+        Returns True if this GRL contains a run and lumiblock
+
+        *runlb*: tuple
+            2-tuple of ints containing run number and lumiblock number
         """
         run, lbn = runlb
         if run in self.__grl:
@@ -294,12 +350,18 @@ class GRL(object):
     def has_run(self, run):
         """
         Returns True if run is in GRL, else False
+
+        *run*: int
         """
         return run in self.__grl
 
     def insert(self, run, lbrange):
         """
         Insert a lumiblock range into a run
+
+        *run*: int
+
+        *lbrange*: [ LumiblockRange | tuple ]
         """
         if not isinstance(run, int):
             raise TypeError('run must be an integer')
@@ -316,6 +378,10 @@ class GRL(object):
     def remove(self, run, lbrange):
         """
         Remove a lumiblock range from a run
+
+        *run*: int
+
+        *lbrange*: LumiblockRange
         """
         if run in self.__grl:
             if not isinstance(lbrange, LumiblockRange):
@@ -355,6 +421,14 @@ class GRL(object):
     def clip(self, startrun=None, startlb=None, endrun=None, endlb=None):
         """
         Clip the GRL between startrun, startlb and endrun, endlb (inclusive)
+
+        *startrun* : [ int | None ]
+
+        *startlb* : [ int | None ]
+
+        *endrun* : [ int | None ]
+
+        *endlb* : [ int | None ]
         """
         for run in self.runs():
             if startrun is not None:
@@ -392,6 +466,8 @@ class GRL(object):
     def __optimize(self, run):
         """
         Merge lumiblock ranges
+
+        *run*: int
         """
         lbranges = self.__grl[run]
         if len(lbranges) == 0:
@@ -481,6 +557,10 @@ class GRL(object):
         """
         Convert this GRL into a TCut expression.
         This method is really meant to be a joke and should be of no use.
+
+        *runname*: str
+
+        *lbname*: str
         """
         cut = ''
         for run in self.iterruns():
@@ -498,17 +578,11 @@ class GRL(object):
                 cut = newcut
         return cut
 
-    formats = [
-        'xml',
-        'yml',
-        'txt',
-        'py',
-        'cut'
-    ]
-
     def str(self, format='xml'):
         """
         Return string repr of self in the specified format
+
+        *format*: str
         """
         str_io = cStringIO.StringIO()
         self.write(filehandle=str_io, format=format)
@@ -517,6 +591,10 @@ class GRL(object):
     def save(self, name, format='xml'):
         """
         Save GRL to file by name in the specified format
+
+        *name*: str
+
+        *format*: str
         """
         with open(name, 'w') as filehandle:
             self.write(filehandle, format=format)
@@ -524,6 +602,10 @@ class GRL(object):
     def write(self, filehandle, format='xml'):
         """
         Write the GRL in the specified format to the file object.
+
+        *filehandle*: file
+
+        *format*: str
         """
         if format == 'xml':
             root = ET.Element('LumiRangeCollection')
