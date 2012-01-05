@@ -1,4 +1,4 @@
-# Author: E. Noel Dawe <Noel.Dawe@cern.ch>
+# Author: Noel Dawe <Noel.Dawe@cern.ch>
 
 """
 This module provides the main GRL class and utility functions
@@ -30,7 +30,8 @@ import cStringIO
 
 def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
     """
-    Return a clipped GRL between startrun, startlb and endrun, endlb (inclusive)
+    Return a clipped GRL between startrun, startlb and
+    endrun, endlb (inclusive)
 
     *grl*: GRL
 
@@ -204,7 +205,8 @@ class GRL(object):
             self.from_xml(tree)
             return
         elif from_string:
-            raise TypeError("grl is non-string type %s while using from_string" % type(grl))
+            raise TypeError("grl is non-string type %s while "
+                            "using from_string" % type(grl))
         elif isinstance(grl, (basestring, file)):
             filename = grl
             if isinstance(grl, basestring):
@@ -230,7 +232,6 @@ class GRL(object):
                 self.__optimize(run)
             return
         raise TypeError("Unable to initialize GRL from a %s" % type(grl))
-
 
     def from_xml(self, tree):
         """
@@ -626,8 +627,11 @@ class GRL(object):
                     lbrange.set('Start', str(lumiblock[0]))
                     lbrange.set('End', str(lumiblock[1]))
             date = datetime.datetime.now().strftime("%Y-%m-%d at %H:%M:%S")
-            meta = ('''<!DOCTYPE LumiRangeCollection SYSTEM "http://atlas-runquery.cern.ch/LumiRangeCollection.dtd">\n'''
-                    '''<!-- This document was created by goodruns: http://pypi.python.org/pypi/goodruns/ on %s -->\n''' % date)
+            meta = (
+            '''<!DOCTYPE LumiRangeCollection SYSTEM '''
+            '''"http://atlas-runquery.cern.ch/LumiRangeCollection.dtd">\n'''
+            '''<!-- This document was created by goodruns: '''
+            '''http://pypi.python.org/pypi/goodruns/ on %s -->\n''' % date)
             tree = ET.ElementTree(root)
             if USE_LXML:
                 filehandle.write('<?xml version="1.0"?>\n')
@@ -635,7 +639,8 @@ class GRL(object):
                 tree.write(filehandle, pretty_print=True)
             else:
                 # get pretty XML from ElementTree
-                xml = minidom.parseString(meta + ET.tostring(tree.getroot(), 'utf-8'))
+                xml = minidom.parseString(meta +
+                                          ET.tostring(tree.getroot(), 'utf-8'))
                 filehandle.write(xml.toprettyxml(indent='   '))
         elif format in ('yml', 'yaml'):
             filehandle.write(yaml.dump(_grl_to_dict(self)))
