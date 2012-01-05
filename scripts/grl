@@ -91,8 +91,8 @@ if hasattr(options, 'grls'):
                  "and one or more arguments")
     try:
         grls = [goodruns.GRL(grl) for grl in options.grls]
-    except:
-        sys.exit("Could not parse one or more GRLs")
+    except Exception, e:
+        sys.exit("Could not parse GRL: \n%s" % e)
     grl = options.op(*grls)
 
 elif hasattr(options, 'grl'):
@@ -102,8 +102,8 @@ elif hasattr(options, 'grl'):
         sys.exit("Need exactly one argument or one pipe")
     try:
         grl = goodruns.GRL(options.grl)
-    except:
-        sys.exit("Could not parse GRL")
+    except Exception, e:
+        sys.exit("Could not parse GRL: \n%s" % e)
     if options.op is not None:
         kwargs = dict(options._get_kwargs())
         del kwargs['grl']

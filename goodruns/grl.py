@@ -18,6 +18,7 @@ try:
 except ImportError:
     USE_YAML = False
 
+import os
 import copy
 import urllib2
 from pprint import pprint
@@ -223,21 +224,21 @@ class GRL(object):
             if isinstance(grl, basestring):
                 if grl.startswith("http://"):
                     grl = urllib2.urlopen(grl)
-            elif type(grl) is file:
+            elif isinstance(grl, file):
                 filename = grl.name
-            if filename == "<stdin>" or filename.endswith('.xml') or \
-                    filename.startswith("http://"):
+            name, ext = os.path.splitext(filename)
+            if filename == "<stdin>" or ext == '.xml':
                 tree = ET.parse(grl)
                 self.from_xml(tree)
-            elif filename.endswith('.yml'):
+            elif ext == '.yml':
                 if USE_YAML:
                     self.__grl = SortedDict(_dict_to_grl(grl))
                 else:
                     raise ImportError("PyYAML module not found")
             else:
                 raise ValueError(
-                    "File %s is not recognized as a valid GRL format"
-                    % filename)
+                    "File %s does not have valid GRL extension: %s"
+                    % (filename, ext))
             for run in self.iterruns():
                 self.__grl[run].sort()
                 self.__optimize(run)
