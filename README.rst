@@ -101,70 +101,77 @@ Command-line Tools
 goodruns also provides a collection of command-line tools
 for combining, manipulating, and inspecting GRLs.
 
-grl-diff
+grl diff
 ~~~~~~~~
 
-Use ``grl-diff`` to determine the GRL containing the runs/lumiblocks in ``A.xml`` but not in ``B.xml``::
+Use ``grl diff`` to determine the GRL containing the runs/lumiblocks in ``A.xml`` but not in ``B.xml``::
     
-    grl-diff A.xml B.xml
+    grl diff A.xml B.xml
 
 In other words, ``B.xml`` is subtracted from ``A.xml``.
 All command-line tools print on stdout. Redirect stdout to a file to save the result::
 
-    grl-diff A.xml B.xml > C.xml
+    grl diff A.xml B.xml > C.xml
 
-You may supply more than two GRLs to ``grl-diff``::
+You may supply more than two GRLs to ``grl diff``::
 
-    grl-diff A.xml B.xml C.xml D.xml > E.xml
+    grl diff A.xml B.xml C.xml D.xml > E.xml
 
 which results in the GRL E=((A-B)-C)-D). This is equivalent to::
 
-    grl-diff A.xml B.xml | grl-diff C.xml | grl-diff D.xml > E.xml
+    grl diff A.xml B.xml | grl diff C.xml | grl diff D.xml > E.xml
 
 The output of one command can be piped into any of the other commands in goodruns.
 
-grl-and, grl-or, grl-xor
+grl and, grl or, grl xor
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 These scripts implement logical combinations of GRLs. Logical AND::
 
-    grl-and A.xml B.xml > C.xml
+    grl and A.xml B.xml > C.xml
 
 OR::
 
-    grl-or A.xml B.xml > C.xml
+    grl or A.xml B.xml > C.xml
 
 and XOR (exclusive OR)::
 
-    grl-xor A.xml B.xml > C.xml
+    grl xor A.xml B.xml > C.xml
 
 Again, these commands can be combined arbitrarily::
 
-    grl-and A.xml B.xml | grl-or C.xml | grl-xor D.xml > E.xml
+    grl and A.xml B.xml | grl or C.xml | grl xor D.xml > E.xml
 
-grl-clip
+grl clip
 ~~~~~~~~
 
-Use ``grl-clip`` to truncate a GRL between a starting run/lumiblock and ending run/lumiblock::
+Use ``grl clip`` to truncate a GRL between a starting run/lumiblock and ending run/lumiblock::
 
-    > grl-clip --help
-    Usage: grl-clip [options] [file]
+    > grl clip --help
+    usage: grl clip [-h] [-o OUTPUT] [-f FORMAT] [--startrun STARTRUN]
+                    [--startlb STARTLB] [--endrun ENDRUN] [--endlb ENDLB]
+                    [grl]
 
-    Options:
+    positional arguments:
+      grl
+
+    optional arguments:
       -h, --help            show this help message and exit
-      -o OUTPUT, --output=OUTPUT
-                            Output filename
-      --startrun=STARTRUN   Start run
-      --startlb=STARTLB     Start lumiblock
-      --endrun=ENDRUN       End run
-      --endlb=ENDLB         End lumiblock
-
-grl-convert
+      -o OUTPUT, --output OUTPUT
+                            Output filename (optional)
+      -f FORMAT, --format FORMAT
+                            Output format: xml, yml, txt, py, cut
+      --startrun STARTRUN   Start run
+      --startlb STARTLB     Start lumiblock
+      --endrun ENDRUN       End run
+      --endlb ENDLB         End lumiblock 
+        
+grl convert
 ~~~~~~~~~~~
 
-``grl-convert`` can convert a GRL from XML format into YAML::
+``grl convert`` can convert a GRL from XML format into YAML::
 
-    > grl-convert -f yml A.xml
+    > grl convert -f yml A.xml
     186178:
     - !!python/tuple [125, 156]
     - !!python/tuple [158, 161]
@@ -189,7 +196,7 @@ grl-convert
 
 or plain text::
 
-    > grl-convert -f txt A.xml
+    > grl convert -f txt A.xml
     ---------------
     RUN: 186178
     LUMIBLOCKS:
@@ -218,14 +225,14 @@ or plain text::
       173 - 176
     ...
 
-``grl-convert`` will also convert a GRL into Python code (dict of lists of tuples) or (as a joke) a ROOT TCut expression.
+``grl convert`` will also convert a GRL into Python code (dict of lists of tuples) or (as a joke) a ROOT TCut expression.
 
-grl-runs
+grl runs
 ~~~~~~~~
 
-``grl-runs`` simply prints the run numbers, one per line, contained within a GRL::
+``grl runs`` simply prints the run numbers, one per line, contained within a GRL::
 
-    > grl-runs A.xml
+    > grl runs A.xml
     186178
     186179
     186180
@@ -233,4 +240,4 @@ grl-runs
 
 Quickly print the runs contained in a GRL from a URL::
 
-    > grl-runs http://atlasdqm.web.cern.ch/atlasdqm/grlgen/path/to/grl.xml
+    > grl runs http://atlasdqm.web.cern.ch/atlasdqm/grlgen/path/to/grl.xml
