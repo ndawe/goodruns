@@ -19,6 +19,7 @@ setup(name='goodruns',
       license='GPLv3',
       packages=['goodruns'],
       scripts=glob('scripts/*'),
+      install_requires = ['python>=2.5', 'argparse'],
       classifiers=[
         "Programming Language :: Python",
         "Topic :: Text Processing :: Markup :: XML",

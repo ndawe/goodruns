@@ -1,0 +1,130 @@
+#!/usr/bin/env python
+
+import sys
+import os
+import argparse
+import goodruns
+
+
+parser = argparse.ArgumentParser()
+subparsers = parser.add_subparsers()
+
+def output_arg(parser):
+
+    parser.add_argument('-o', '--output',
+                        help="Output filename (optional)",
+                        default=None)
+    parser.add_argument('-f', '--format',
+                        help="Output format: " +
+                             ', '.join(goodruns.GRL.formats),
+                        default='xml')
+
+def mult_grl_arg(parser):
+    
+    parser.add_argument('grls', nargs='*')
+
+def grl_arg(parser):
+
+    parser.add_argument('grl', nargs='?', default=None)
+
+
+parser_and = subparsers.add_parser('and')
+output_arg(parser_and)
+mult_grl_arg(parser_and)
+parser_and.set_defaults(op=goodruns.anded)
+
+parser_or = subparsers.add_parser('or')
+output_arg(parser_or)
+mult_grl_arg(parser_or)
+parser_or.set_defaults(op=goodruns.ored)
+
+parser_xor = subparsers.add_parser('xor')
+output_arg(parser_xor)
+mult_grl_arg(parser_xor)
+parser_xor.set_defaults(op=goodruns.xored)
+
+parser_diff = subparsers.add_parser('diff')
+output_arg(parser_diff)
+mult_grl_arg(parser_diff)
+parser_diff.set_defaults(op=goodruns.diffed)
+
+parser_conv = subparsers.add_parser('convert')
+output_arg(parser_conv)
+grl_arg(parser_conv)
+parser_conv.set_defaults(op=None)
+
+parser_clip = subparsers.add_parser('clip')
+output_arg(parser_clip)
+grl_arg(parser_clip)
+parser_clip.add_argument('--startrun', type=int,
+                         help="Start run", default=None)
+parser_clip.add_argument('--startlb', type=int,
+                         help="Start lumiblock", default=None)
+parser_clip.add_argument('--endrun', type=int,
+                         help="End run", default=None)
+parser_clip.add_argument('--endlb', type=int,
+                         help="End lumiblock", default=None)
+parser_clip.set_defaults(op=goodruns.clipped)
+
+parser_runs = subparsers.add_parser('runs')
+
+def print_runs(grl):
+
+    for run in grl:
+        print run
+
+grl_arg(parser_runs)
+parser_runs.set_defaults(op=print_runs)
+
+options = parser.parse_args()
+
+if hasattr(options, 'grls'):
+    if not sys.stdin.isatty():
+        options.grls.insert(0, sys.stdin)
+    if len(options.grls) < 2:
+        sys.exit("Need at least two arguments or one pipe "
+                 "and one or more arguments")
+    try:
+        grls = [goodruns.GRL(grl) for grl in options.grls]
+    except:
+        sys.exit("Could not parse one or more GRLs")
+    grl = options.op(*grls)
+
+elif hasattr(options, 'grl'):
+    if not sys.stdin.isatty() and options.grl is None:
+        options.grl = sys.stdin
+    if options.grl is None:
+        sys.exit("Need exactly one argument or one pipe")
+    try:
+        grl = goodruns.GRL(options.grl)
+    except:
+        sys.exit("Could not parse GRL")
+    if options.op is not None:
+        kwargs = dict(options._get_kwargs())
+        try:
+            del kwargs['output']
+            del kwargs['format']
+            del kwargs['grl']
+            del kwargs['op']
+        except KeyError:
+            pass
+        grl = options.op(grl, **kwargs)
+
+if hasattr(options, 'output'):
+    if options.output is None:
+        grl.write(sys.stdout, format=options.format)
+    else:
+        head, tail = os.path.split(options.output)
+        if not tail:
+            sys.exit("Invalid filename")
+        if '.' not in tail:
+            sys.exit("Filename must contain an extension")
+        extension = tail.split('.')[-1]
+        try:
+            try:
+                filehandle = open(options.output, 'w')
+                grl.write(filehandle, format=extension)
+            finally:
+                filehandle.close()
+        except Exception, ex:
+            print ex
