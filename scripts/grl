@@ -101,11 +101,11 @@ elif hasattr(options, 'grl'):
         sys.exit("Could not parse GRL")
     if options.op is not None:
         kwargs = dict(options._get_kwargs())
+        del kwargs['grl']
+        del kwargs['op']
         try:
             del kwargs['output']
             del kwargs['format']
-            del kwargs['grl']
-            del kwargs['op']
         except KeyError:
             pass
         grl = options.op(grl, **kwargs)
