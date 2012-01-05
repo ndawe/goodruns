@@ -9,6 +9,7 @@ import goodruns
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers()
 
+
 def output_arg(parser):
 
     parser.add_argument('-o', '--output',
@@ -19,9 +20,11 @@ def output_arg(parser):
                              ', '.join(goodruns.GRL.formats),
                         default='xml')
 
+
 def mult_grl_arg(parser):
-    
+
     parser.add_argument('grls', nargs='*')
+
 
 def grl_arg(parser):
 
@@ -68,10 +71,12 @@ parser_clip.set_defaults(op=goodruns.clipped)
 
 parser_runs = subparsers.add_parser('runs')
 
+
 def print_runs(grl):
 
     for run in grl:
         print run
+
 
 grl_arg(parser_runs)
 parser_runs.set_defaults(op=print_runs)
