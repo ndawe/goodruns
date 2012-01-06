@@ -601,16 +601,22 @@ class GRL(object):
         self.write(filehandle=str_io, format=format)
         return str_io.getvalue()
 
-    def save(self, name, format='xml'):
+    def save(self, name):
         """
-        Save GRL to file by name in the specified format
+        Save GRL to file by name. Determine format from
+        extension.
 
         *name*: str
-
-        *format*: str
         """
+        _, ext = os.path.splitext(name)
+        # ignore period
+        ext = ext[1:]
+        if ext not in GRL.formats:
+            raise NameError("Filename %s does not have "
+                            "a valid GRL extension." %
+                            name)
         with open(name, 'w') as filehandle:
-            self.write(filehandle, format=format)
+            self.write(filehandle, format=ext)
 
     def write(self, filehandle, format='xml'):
         """
