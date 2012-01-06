@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 
 import nose
+from nose.tools import assert_raises
 import os
 from goodruns import GRL
 
+
 DIRNAME = os.path.dirname(__file__)
+
 
 def str_init_test():
 
@@ -12,7 +15,6 @@ def str_init_test():
 
     assert (180225, 87) in grl
     assert (180225, 1) not in grl
-
 
 
 def dict_init_test():
@@ -27,6 +29,14 @@ def file_init_test():
     with open(os.path.join(DIRNAME, 'grlA.xml')) as f:
         grl = GRL(f)
         assert (180225, 87) in grl
+
+
+def save_test():
+
+    grl = GRL(os.path.join(DIRNAME, 'grlA.xml'))
+    grl.save('testA.xml')
+    os.unlink('testA.xml')
+    assert_raises(NameError, grl.save, 'testB.badext')
 
 
 if __name__ == '__main__':
