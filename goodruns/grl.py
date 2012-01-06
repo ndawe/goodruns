@@ -43,7 +43,7 @@ __all__ = [
 def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
     """
     Return a clipped GRL between startrun, startlb and
-    endrun, endlb (inclusive)
+    endrun, endlb (inclusive).
 
     *grl*: GRL
 

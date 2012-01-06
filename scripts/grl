@@ -23,40 +23,50 @@ def output_arg(parser):
 
 def mult_grl_arg(parser):
 
-    parser.add_argument('grls', nargs='*')
+    parser.add_argument('grls', nargs='*',
+                        metavar='GRL',
+                        help='GRL filename or URL (must begin with http://)')
 
 
 def grl_arg(parser):
 
-    parser.add_argument('grl', nargs='?', default=None)
+    parser.add_argument('grl', nargs='?', default=None,
+                        metavar='GRL',
+                        help='GRL filename or URL (must begin with http://)')
 
 
-parser_and = subparsers.add_parser('and')
+parser_and = subparsers.add_parser('and',
+                        description=goodruns.anded.__doc__.split('\n\n')[0])
 output_arg(parser_and)
 mult_grl_arg(parser_and)
 parser_and.set_defaults(op=goodruns.anded)
 
-parser_or = subparsers.add_parser('or')
+parser_or = subparsers.add_parser('or',
+                        description=goodruns.ored.__doc__.split('\n\n')[0])
 output_arg(parser_or)
 mult_grl_arg(parser_or)
 parser_or.set_defaults(op=goodruns.ored)
 
-parser_xor = subparsers.add_parser('xor')
+parser_xor = subparsers.add_parser('xor',
+                        description=goodruns.xored.__doc__.split('\n\n')[0])
 output_arg(parser_xor)
 mult_grl_arg(parser_xor)
 parser_xor.set_defaults(op=goodruns.xored)
 
-parser_diff = subparsers.add_parser('diff')
+parser_diff = subparsers.add_parser('diff',
+                        description=goodruns.diffed.__doc__.split('\n\n')[0])
 output_arg(parser_diff)
 mult_grl_arg(parser_diff)
 parser_diff.set_defaults(op=goodruns.diffed)
 
-parser_conv = subparsers.add_parser('convert')
+parser_conv = subparsers.add_parser('convert',
+                        description="Convert a GRL into the desired format.")
 output_arg(parser_conv)
 grl_arg(parser_conv)
 parser_conv.set_defaults(op=None)
 
-parser_clip = subparsers.add_parser('clip')
+parser_clip = subparsers.add_parser('clip',
+                        description=goodruns.clipped.__doc__.split('\n\n')[0])
 output_arg(parser_clip)
 grl_arg(parser_clip)
 parser_clip.add_argument('--startrun', type=int,
@@ -69,7 +79,8 @@ parser_clip.add_argument('--endlb', type=int,
                          help="End lumiblock", default=None)
 parser_clip.set_defaults(op=goodruns.clipped)
 
-parser_runs = subparsers.add_parser('runs')
+parser_runs = subparsers.add_parser('runs',
+                        description="List the runs contained in a GRL.")
 
 
 def print_runs(grl):
