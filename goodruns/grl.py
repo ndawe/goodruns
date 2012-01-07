@@ -242,7 +242,7 @@ class GRL(object):
                     grl = root_file.Get(path)
                     if not grl:
                         raise ValueError('Path %s does not exist in '
-                                         'ROOT file %s:' % (path, filename))
+                                         'ROOT file %s' % (path, filename))
                     if not isinstance(grl, ROOT.TObjString):
                         raise TypeError('Object at %s is not a '
                                         'ROOT.TObjString' % path)
