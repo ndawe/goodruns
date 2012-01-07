@@ -134,7 +134,7 @@ def _dict_to_grl(d):
     """
     o = {}
     for run, lbranges in d.items():
-        o[run] = [LumiblockRange(a) for a in lbranges]
+        o[run] = [LumiblockRange(*a) for a in lbranges]
     return o
 
 
@@ -156,11 +156,13 @@ class LumiblockRange(tuple):
     A 2-tuple consisting of the lower and upper
     bounds of a lumiblock range
     """
-    def __new__(cls, args):
+    def __new__(cls, *args):
         """
         *args*: [ tuple | list ]
             2-tuple/list of lumiblock numbers in ascending order
         """
+        if len(args) == 1 and isinstance(args[0], tuple):
+            args = args[0]
         if len(args) != 2:
             raise ValueError('lbrange must contain exactly 2 elements: %s' % \
                              (args,))
@@ -172,16 +174,23 @@ class LumiblockRange(tuple):
 
         return super(LumiblockRange, cls).__new__(cls, args)
 
-    def __cmp__(self, lumiblock):
+    def __contains__(self, lbn):
         """
-        Determine whether this lumiblock should be placed
-        to the right or left of another lumiblock
+        Determine whether a lumiblock is contained by this
+        lumiblock range
         """
-        if lumiblock < self[0]:
-            return 1
-        if lumiblock > self[1]:
-            return -1
-        return 0
+        return self[0] <= lbn <= self[1]
+
+    def __cmp__(self, other):
+        """
+        Determine whether this lumiblock range should be placed
+        to the right or left of another lumiblock number or range
+        """
+        if type(other) is int:
+            if other in self:
+                return 0
+            return cmp(self[0], other)
+        return super(LumiblockRange, cls).__cmp__(other)
 
 
 class GRL(object):
@@ -302,8 +311,8 @@ class GRL(object):
             lbs = lbcol.findall('LBRange')
             for lumiblock in lbs:
                 self.insert(run,
-                    LumiblockRange((int(lumiblock.attrib['Start']),
-                                    int(lumiblock.attrib['End']))))
+                    LumiblockRange(int(lumiblock.attrib['Start']),
+                                   int(lumiblock.attrib['End'])))
 
     def __copy__(self):
 
@@ -365,7 +374,7 @@ class GRL(object):
             lbranges = self.__grl[run]
             # Locate the LumiblockRange containing lbn
             i = bisect.bisect_left(lbranges, lbn)
-            if i != len(lbranges) and lbranges[i] == lbn:
+            if (i != len(lbranges)) and (lbn in lbranges[i]):
                 return True
         return False
 
@@ -415,10 +424,10 @@ class GRL(object):
         if not isinstance(run, int):
             raise TypeError('run must be an integer')
         if not isinstance(lbrange, LumiblockRange):
-            lbrange = LumiblockRange(lbrange)
+            lbrange = LumiblockRange(*lbrange)
         try:
             lbranges = self.__grl[run]
-            i = bisect.bisect(lbranges, lbrange[0])
+            i = bisect.bisect(lbranges, lbrange)
             lbranges.insert(i, lbrange)
             self.__optimize(run)
         except KeyError:
@@ -434,7 +443,7 @@ class GRL(object):
         """
         if run in self.__grl:
             if not isinstance(lbrange, LumiblockRange):
-                lbrange = LumiblockRange(lbrange)
+                lbrange = LumiblockRange(*lbrange)
             lbranges = self.__grl[run]
             for mylbrange in lbranges[:]:
                 if lbrange[1] < mylbrange[0]:
@@ -444,10 +453,10 @@ class GRL(object):
                     break
                 elif lbrange[0] > mylbrange[0] and lbrange[1] < mylbrange[1]:
                     # embedded: must split
-                    left_lbrange = LumiblockRange((mylbrange[0],
-                                                   lbrange[0] - 1))
-                    right_lbrange = LumiblockRange((lbrange[1] + 1,
-                                                    mylbrange[1]))
+                    left_lbrange = LumiblockRange(mylbrange[0],
+                                                  lbrange[0] - 1)
+                    right_lbrange = LumiblockRange(lbrange[1] + 1,
+                                                   mylbrange[1])
                     index = lbranges.index(mylbrange)
                     lbranges[index] = left_lbrange
                     lbranges.insert(index + 1, right_lbrange)
@@ -460,7 +469,7 @@ class GRL(object):
                         if len(lbranges) == 0:
                             break
                         continue
-                    newlbrange = LumiblockRange((min(diff), max(diff)))
+                    newlbrange = LumiblockRange(min(diff), max(diff))
                     lbranges[lbranges.index(mylbrange)] = newlbrange
                 elif mylbrange[0] > lbrange[1]:
                     break
@@ -493,7 +502,7 @@ class GRL(object):
                                  startlb <= lbrange[1]:
                                 self.__grl[run][
                                     self.__grl[run].index(lbrange)
-                                    ] = LumiblockRange((startlb, lbrange[1]))
+                                    ] = LumiblockRange(startlb, lbrange[1])
                         if len(self.__grl[run]) == 0:
                             del self[run]
             if endrun is not None:
@@ -508,7 +517,7 @@ class GRL(object):
                             elif endlb >= lbrange[0] and endlb <= lbrange[1]:
                                 self[run][
                                     self[run].index(lbrange)
-                                    ] = LumiblockRange((lbrange[0], endlb))
+                                    ] = LumiblockRange(lbrange[0], endlb)
                         if len(self[run]) == 0:
                             del self[run]
 
@@ -534,8 +543,8 @@ class GRL(object):
                     merged = True
                     break
                 elif lbranges[first][1] + 1 >= lbranges[_next][0]:
-                    lbranges[first] = LumiblockRange((lbranges[first][0],
-                                                      lbranges[_next][1]))
+                    lbranges[first] = LumiblockRange(lbranges[first][0],
+                                                     lbranges[_next][1])
                     for index in xrange(first + 1, _next + 1):
                         lbranges.pop(_next)
                     merged = True
@@ -547,12 +556,7 @@ class GRL(object):
 
     def __eq__(self, other):
 
-        if self.runs() != other.runs():
-            return False
-        for run in self:
-            if self[run] != other[run]:
-                return False
-        return True
+        return self.__grl == other.__grl
 
     def __add__(self, other):
 
@@ -657,9 +661,9 @@ class GRL(object):
         # ignore period
         ext = ext[1:]
         if ext not in GRL.formats:
-            raise NameError("Filename %s does not have "
-                            "a valid GRL extension." %
-                            name)
+            raise ValueError("Filename %s does not have "
+                             "a valid GRL extension." %
+                             name)
         with open(name, 'w') as filehandle:
             self.write(filehandle, format=ext)
 

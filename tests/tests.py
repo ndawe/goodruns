@@ -16,9 +16,15 @@ def grl_logic_test():
     a = GRL(grlA)
     b = GRL(grlB)
 
-    assert a ^ b == (a | b) - (a & b)
+    assert a == a
 
-    assert a - b == (a + b) - b
+    assert b == b
+
+    assert a != b
+
+    assert (a ^ b) == ((a | b) - (a & b))
+
+    assert (a - b) == ((a + b) - b)
 
     assert (not a - a) == True
 
@@ -69,7 +75,7 @@ def save_test():
     grl = GRL(grlA)
     grl.save('testA.xml')
     os.unlink('testA.xml')
-    assert_raises(NameError, grl.save, 'testB.badext')
+    assert_raises(ValueError, grl.save, 'testB.badext')
 
 
 def from_string_test():
