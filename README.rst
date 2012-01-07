@@ -247,4 +247,4 @@ grl runs
 
 Quickly print the runs contained in a GRL from a URL::
 
-    > grl runs http://atlasdqm.web.cern.ch/atlasdqm/grlgen/path/to/grl.xml
+    > grl runs http://atlasdqm.web.cern.ch/path/to/grl.xml
