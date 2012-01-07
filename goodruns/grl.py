@@ -237,7 +237,11 @@ class GRL(object):
                 self.from_xml(tree)
             elif ext == '.yml':
                 if USE_YAML:
-                    self.from_dict(yaml.load(grl))
+                    if isinstance(grl, file):
+                        self.from_dict(yaml.load(grl))
+                    else:
+                        with open(grl) as grl_file:
+                            self.from_dict(yaml.load(grl_file))
                 else:
                     raise ImportError("PyYAML module not found")
             else:
@@ -299,7 +303,7 @@ class GRL(object):
         Convert self to dict
         """
         o = {}
-        for run, lbranges in g.items():
+        for run, lbranges in self.items():
             o[run] = [(a[0], a[1]) for a in lbranges]
         return o
 
@@ -376,6 +380,12 @@ class GRL(object):
     def items(self):
         """
         Iterate over (run, lbranges) in GRL
+        """
+        return self.__grl.items()
+
+    def iterlbranges(self):
+        """
+        Iterate over (run, lbrange) in GRL
         """
         for run, lbranges in self.__grl.items():
             for lbrange in lbranges:
@@ -556,7 +566,7 @@ class GRL(object):
 
         if isinstance(other, basestring):
             other = GRL(other, from_string=True)
-        for run, lbrange in other.items():
+        for run, lbrange in other.iterlbranges():
             self.insert(run, lbrange)
         return self
 
@@ -570,7 +580,7 @@ class GRL(object):
 
         if isinstance(other, basestring):
             other = GRL(other, from_string=True)
-        for run, lbrange in other.items():
+        for run, lbrange in other.iterlbranges():
             self.remove(run, lbrange)
         return self
 
@@ -698,7 +708,7 @@ class GRL(object):
                                           ET.tostring(tree.getroot(), 'utf-8'))
                 filehandle.write(xml.toprettyxml(indent='   '))
         elif format in ('yml', 'yaml'):
-            filehandle.write(yaml.dump(_grl_to_dict(self)))
+            filehandle.write(yaml.dump(self.to_dict()))
         elif format == 'txt':
             filehandle.write(str(self) + '\n')
         elif format in ('py', 'python'):
