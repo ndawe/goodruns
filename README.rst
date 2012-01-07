@@ -62,8 +62,8 @@ An example of how to use goodruns::
    grl = GRL('grl.xml')
    # or:
    grl = GRL('http://atlasdqm.web.cern.ch/atlasdqm/grlgen/path/to/grl.xml')
-   # or (if 'lumi' is a ROOT.TObjString in data.root):
-   grl = GRL('data.root:/lumi')
+   # or (if '/path/to/grl' is a ROOT.TObjString in data.root):
+   grl = GRL('data.root:/path/to/grl')
 
    # check if the GRL contains the lumiblock 231 in run 186356:
    if (186356, 231) in grl:
@@ -144,6 +144,10 @@ and XOR (exclusive OR)::
 Again, these commands can be combined arbitrarily::
 
     grl and A.xml B.xml | grl or C.xml | grl xor D.xml > E.xml
+
+and any GRL argument can also be a ROOT file or URL::
+
+    grl and data.root:/path/to/grl http://atlasdqm.web.cern.ch/path/to/grl.xml
 
 grl clip
 ~~~~~~~~
