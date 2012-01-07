@@ -373,7 +373,7 @@ class GRL(object):
         """
         Iterate over runs in GRL
         """
-        return iter(self.iterruns())
+        return self.iterruns()
 
     def items(self):
         """
@@ -544,6 +544,15 @@ class GRL(object):
             last = len(lbranges) - 1
             if not merged:
                 first += 1
+
+    def __eq__(self, other):
+
+        if self.runs() != other.runs():
+            return False
+        for run in self:
+            if self[run] != other[run]:
+                return False
+        return True
 
     def __add__(self, other):
 
