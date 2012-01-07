@@ -556,6 +556,10 @@ class GRL(object):
 
         return self.__grl == other.__grl
 
+    def __ne__(self, other):
+
+        return not self.__eq__(other)
+
     def __add__(self, other):
 
         grlcopy = copy.deepcopy(self)
