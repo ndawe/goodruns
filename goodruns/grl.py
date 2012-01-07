@@ -125,6 +125,8 @@ class LumiblockRange(tuple):
         """
         Determine whether a lumiblock is contained by this
         lumiblock range
+
+        *lbn*: int
         """
         return self[0] <= lbn <= self[1]
 
@@ -132,6 +134,8 @@ class LumiblockRange(tuple):
         """
         Determine whether this lumiblock range should be placed
         to the right or left of another lumiblock number or range
+
+        *other*: LumiblockRange
         """
         if type(other) is int:
             if other in self:
@@ -145,13 +149,9 @@ class LumiblockRange(tuple):
 
         *lbrange*: LumiblockRange
         """
-        if self[0] >= lbrange[0] and self[0] <= lbrange[1]:
+        if lbrange[0] in self or lbrange[1] in self:
             return True
-        if self[1] >= lbrange[0] and self[1] <= lbrange[1]:
-            return True
-        if lbrange[0] >= self[0] and lbrange[0] <= self[1]:
-            return True
-        if lbrange[1] >= self[0] and lbrange[1] <= self[1]:
+        if self[0] in lbrange or self[1] in lbrange:
             return True
         return False
 
