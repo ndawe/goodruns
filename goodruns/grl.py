@@ -27,6 +27,7 @@ from .sorteddict import SortedDict
 import bisect
 import datetime
 import cStringIO
+import re
 
 
 __all__ = [
@@ -213,8 +214,7 @@ class GRL(object):
             self.__grl = SortedDict(_dict_to_grl(grl))
             return
         if isinstance(grl, basestring) and from_string:
-            tree = ET.fromstring(grl)
-            self.from_xml(tree)
+            self.from_string(grl)
             return
         elif from_string:
             raise TypeError("grl is non-string type %s while "
@@ -222,8 +222,35 @@ class GRL(object):
         elif isinstance(grl, (basestring, file)):
             filename = grl
             if isinstance(grl, basestring):
+                # is grl a URL?
                 if grl.startswith("http://"):
                     grl = urllib2.urlopen(grl)
+                # is grl a ROOT file path?
+                elif re.search('.root:/', grl):
+                    # the one place goodruns requires ROOT
+                    try:
+                        import ROOT
+                        ROOT.PyConfig.IgnoreCommandLineOptions = True
+                    except ImportError:
+                        raise ImportError('Specified GRL in ROOT file '
+                                          'but cannot import ROOT.')
+                    filename, _, path = grl.partition(':/')
+                    root_file = ROOT.TFile.Open(filename)
+                    if not root_file:
+                        raise IOError('Could not open ROOT file: %s' %
+                                      filename)
+                    grl = root_file.Get(path)
+                    if not grl:
+                        raise ValueError('Path %s does not exist in '
+                                         'ROOT file %s:' % (path, filename))
+                    if not isinstance(grl, ROOT.TObjString):
+                        raise TypeError('Object at %s is not a '
+                                        'ROOT.TObjString' % path)
+                    self.from_string(str(grl.GetString()))
+                    for run in self.iterruns():
+                        self.__grl[run].sort()
+                        self.__optimize(run)
+                    return
             elif isinstance(grl, file):
                 filename = grl.name
             name, ext = os.path.splitext(filename)
@@ -245,9 +272,18 @@ class GRL(object):
             return
         raise TypeError("Unable to initialize GRL from a %s" % type(grl))
 
+    def from_string(self, string):
+        """
+        Insert runs and lumiblocks from XML string
+
+        *string*: str
+        """
+        tree = ET.fromstring(string)
+        self.from_xml(tree)
+
     def from_xml(self, tree):
         """
-        Insert runs and lumiblocks from xml
+        Insert runs and lumiblocks from XML
 
         *tree*: ElementTree
         """
