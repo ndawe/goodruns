@@ -567,7 +567,7 @@ class GRL(object):
         if isinstance(other, basestring):
             other = GRL(other, from_string=True)
         for run, lbrange in other.iterlbranges():
-            self.insert(run, lbrange)
+            self.insert(run, LumiblockRange(lbrange))
         return self
 
     def __sub__(self, other):

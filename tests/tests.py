@@ -24,9 +24,23 @@ def grl_logic_test():
 
     assert (a ^ b) == ((a | b) - (a & b))
 
+    d = (a ^ b).to_dict()
+    e = ((a | b) - (a & b)).to_dict()
+
+    assert (d == e)
+    assert not (d != e)
+
+    d = (a ^ b)
+    e = ((a | b) - (a & b))
+
+    assert not (d != e)
+    assert (d == e)
+
     assert (a - b) == ((a + b) - b)
 
-    assert (not a - a) == True
+    assert (not (a - a)) == True
+
+    assert (not (a ^ a)) == True
 
     a & b
     a ^ b
