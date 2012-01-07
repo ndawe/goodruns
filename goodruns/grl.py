@@ -98,59 +98,6 @@ def xored(*args):
     return reduce(xor, args)
 
 
-def _lbrange_intersects(lbrange1, lbrange2):
-    """
-    Determine if two lumiblock ranges intersect
-
-    *lbrange1*: LumiblockRange
-
-    *lbrange2*: LumiblockRange
-    """
-    if lbrange1[0] >= lbrange2[0] and lbrange1[0] <= lbrange2[1]:
-        return True
-    if lbrange1[1] >= lbrange2[0] and lbrange1[1] <= lbrange2[1]:
-        return True
-    if lbrange2[0] >= lbrange1[0] and lbrange2[0] <= lbrange1[1]:
-        return True
-    if lbrange2[1] >= lbrange1[0] and lbrange2[1] <= lbrange1[1]:
-        return True
-    return False
-
-
-def _lbrange_as_set(lbrange):
-    """
-    Convert lumiblock range to set of lumiblocks
-
-    *lbrange*: LumiblockRange
-    """
-    return set(range(lbrange[0], lbrange[1] + 1))
-
-
-def _dict_to_grl(d):
-    """
-    Convert tuples to LumiblockRanges
-
-    *d*: dict
-    """
-    o = {}
-    for run, lbranges in d.items():
-        o[run] = [LumiblockRange(*a) for a in lbranges]
-    return o
-
-
-def _grl_to_dict(g):
-    """
-    Convert tuples to LumiblockRanges
-
-    *g*: GRL
-    """
-    o = {}
-    for run in g.iterruns():
-        lbranges = g[run]
-        o[run] = [(a[0], a[1]) for a in lbranges]
-    return o
-
-
 class LumiblockRange(tuple):
     """
     A 2-tuple consisting of the lower and upper
@@ -192,6 +139,28 @@ class LumiblockRange(tuple):
             return cmp(self[0], other)
         return super(LumiblockRange, cls).__cmp__(other)
 
+    def intersects(self, lbrange):
+        """
+        Determine if self intersects with another lumiblock range
+
+        *lbrange*: LumiblockRange
+        """
+        if self[0] >= lbrange[0] and self[0] <= lbrange[1]:
+            return True
+        if self[1] >= lbrange[0] and self[1] <= lbrange[1]:
+            return True
+        if lbrange[0] >= self[0] and lbrange[0] <= self[1]:
+            return True
+        if lbrange[1] >= self[0] and lbrange[1] <= self[1]:
+            return True
+        return False
+
+    def as_set(self):
+        """
+        Convert self to set of lumiblocks
+        """
+        return set(range(self[0], self[1] + 1))
+
 
 class GRL(object):
     """
@@ -220,7 +189,7 @@ class GRL(object):
         if not grl:
             return
         if isinstance(grl, dict):
-            self.__grl = SortedDict(_dict_to_grl(grl))
+            self.from_dict(grl)
             return
         if isinstance(grl, basestring) and from_string:
             self.from_string(grl)
@@ -268,7 +237,7 @@ class GRL(object):
                 self.from_xml(tree)
             elif ext == '.yml':
                 if USE_YAML:
-                    self.__grl = SortedDict(_dict_to_grl(grl))
+                    self.from_dict(yaml.load(grl))
                 else:
                     raise ImportError("PyYAML module not found")
             else:
@@ -313,6 +282,26 @@ class GRL(object):
                 self.insert(run,
                     LumiblockRange(int(lumiblock.attrib['Start']),
                                    int(lumiblock.attrib['End'])))
+
+    def from_dict(self, d):
+        """
+        Convert dict to GRL
+
+        *d*: dict
+        """
+        o = {}
+        for run, lbranges in d.items():
+            o[run] = [LumiblockRange(*a) for a in lbranges]
+        self.__grl.update(o)
+
+    def to_dict(self):
+        """
+        Convert self to dict
+        """
+        o = {}
+        for run, lbranges in g.items():
+            o[run] = [(a[0], a[1]) for a in lbranges]
+        return o
 
     def __copy__(self):
 
@@ -461,9 +450,8 @@ class GRL(object):
                     lbranges[index] = left_lbrange
                     lbranges.insert(index + 1, right_lbrange)
                     break
-                elif _lbrange_intersects(lbrange, mylbrange):
-                    diff = _lbrange_as_set(mylbrange).difference(
-                        _lbrange_as_set(lbrange))
+                elif lbrange.intersects(mylbrange):
+                    diff = mylbrange.as_set().difference(lbrange.as_set())
                     if not diff:  # empty set
                         lbranges.remove(mylbrange)
                         if len(lbranges) == 0:
