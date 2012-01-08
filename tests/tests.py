@@ -7,27 +7,21 @@ from goodruns import GRL
 
 
 DIRNAME = os.path.dirname(__file__)
-grlA = os.path.join(DIRNAME, 'grlA.xml')
-grlB = os.path.join(DIRNAME, 'grlB.xml')
+GRLA = os.path.join(DIRNAME, 'grlA.xml')
+GRLB = os.path.join(DIRNAME, 'grlB.xml')
 
 
 def grl_logic_test():
 
-    a = GRL(grlA)
-    b = GRL(grlB)
+    a = GRL(GRLA)
+    b = GRL(GRLB)
 
     assert a == a
-
     assert b == b
-
     assert a != b
-
     assert (a ^ b) == ((a | b) - (a & b))
-
     assert (a - b) == ((a + b) - b)
-
     assert (not (a - a)) == True
-
     assert (not (a ^ a)) == True
 
     a & b
@@ -45,14 +39,14 @@ def grl_logic_test():
 
 def iter_test():
 
-    grl = GRL(grlA)
+    grl = GRL(GRLA)
     for run in grl:
         lumiblocks = grl[run]
 
 
 def str_init_test():
 
-    grl = GRL(grlA)
+    grl = GRL(GRLA)
 
     assert (180225, 87) in grl
     assert (180225, 1) not in grl
@@ -67,14 +61,14 @@ def dict_init_test():
 
 def file_init_test():
 
-    with open(grlA) as f:
+    with open(GRLA) as f:
         grl = GRL(f)
         assert (180225, 87) in grl
 
 
 def save_test():
 
-    grl = GRL(grlA)
+    grl = GRL(GRLA)
     grl.save('testA.xml')
     os.unlink('testA.xml')
     assert_raises(ValueError, grl.save, 'testB.badext')
@@ -82,7 +76,7 @@ def save_test():
 
 def from_string_test():
 
-    with open(grlA) as f:
+    with open(GRLA) as f:
         lines = f.readlines()
     grl_string = ''.join(lines)
     grl = GRL(grl_string, from_string=True)
@@ -93,6 +87,15 @@ def from_string_test():
     grlb = GRL(grl.str(), from_string=True)
 
     assert grlb == grl
+
+
+def test_read_yaml():
+
+    grl = GRL(GRLA)
+    grl.save('test.yml')
+    grl2 = GRL('test.yml')
+    assert grl == grl2
+    os.unlink('test.yml')
 
 
 if __name__ == '__main__':
