@@ -98,5 +98,19 @@ def test_read_yaml():
     os.unlink('test.yml')
 
 
+def test_ROOT():
+
+    import ROOT
+    filename = os.path.join(DIRNAME, 'test.root')
+    root_file = ROOT.TFile.Open(filename, 'recreate')
+    root_file.Close()
+
+    grl = GRL(GRLA)
+    grl.save(filename + ':/lumi')
+    grl2 = GRL(filename + ':/lumi')
+    assert grl == grl2
+
+    os.unlink(filename)
+
 if __name__ == '__main__':
     nose.runmodule()

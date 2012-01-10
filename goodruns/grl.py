@@ -213,6 +213,7 @@ class GRL(object):
                         raise ImportError('Specified GRL in ROOT file '
                                           'but cannot import ROOT. Are ROOT '
                                           'and PyROOT installed?')
+                    cwd = ROOT.gDirectory
                     filename, _, path = grl.partition(':/')
                     root_file = ROOT.TFile.Open(filename)
                     if not root_file:
@@ -226,6 +227,9 @@ class GRL(object):
                         raise TypeError('Object at %s is not a '
                                         'ROOT.TObjString' % path)
                     self.from_string(str(grl.GetString()))
+                    root_file.Close()
+                    # return to previous directory
+                    cwd.cd()
                     for run in self.iterruns():
                         self.__grl[run].sort()
                         self.__optimize(run)
@@ -680,8 +684,9 @@ class GRL(object):
                 raise ImportError('Attempting to save GRL in ROOT file '
                                   'but cannot import ROOT. Are ROOT and PyROOT '
                                   'installed?')
-            filename, _, path = grl.partition(':/')
-            root_file = ROOT.TFile.Open(filename)
+            cwd = ROOT.gDirectory
+            filename, _, path = name.partition(':/')
+            root_file = ROOT.TFile.Open(filename, 'UPDATE')
             if not root_file:
                 raise IOError('Could not open ROOT file: %s' %
                               filename)
@@ -691,6 +696,9 @@ class GRL(object):
                                  (head, filename))
             xml_string = ROOT.TObjString(self.str())
             xml_string.Write(tail)
+            root_file.Close()
+            # return to previous directory
+            cwd.cd()
         else:
             _, ext = os.path.splitext(name)
             # ignore period
