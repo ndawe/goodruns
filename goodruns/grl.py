@@ -205,13 +205,14 @@ class GRL(object):
                     grl = urllib2.urlopen(grl)
                 # is grl a ROOT file path?
                 elif re.search('.root:/', grl):
-                    # the one place goodruns requires ROOT
+                    # one place where goodruns requires ROOT
                     try:
                         import ROOT
                         ROOT.PyConfig.IgnoreCommandLineOptions = True
                     except ImportError:
                         raise ImportError('Specified GRL in ROOT file '
-                                          'but cannot import ROOT.')
+                                          'but cannot import ROOT. Are ROOT '
+                                          'and PyROOT installed?')
                     filename, _, path = grl.partition(':/')
                     root_file = ROOT.TFile.Open(filename)
                     if not root_file:
@@ -669,15 +670,37 @@ class GRL(object):
 
         *name*: str
         """
-        _, ext = os.path.splitext(name)
-        # ignore period
-        ext = ext[1:]
-        if ext not in GRL.formats:
-            raise ValueError("Filename %s does not have "
-                             "a valid GRL extension." %
-                             name)
-        with open(name, 'w') as filehandle:
-            self.write(filehandle, format=ext)
+        # is name a ROOT file path?
+        if re.search('.root:/', name):
+            # one place where goodruns requires ROOT
+            try:
+                import ROOT
+                ROOT.PyConfig.IgnoreCommandLineOptions = True
+            except ImportError:
+                raise ImportError('Attempting to save GRL in ROOT file '
+                                  'but cannot import ROOT. Are ROOT and PyROOT '
+                                  'installed?')
+            filename, _, path = grl.partition(':/')
+            root_file = ROOT.TFile.Open(filename)
+            if not root_file:
+                raise IOError('Could not open ROOT file: %s' %
+                              filename)
+            head, tail = os.path.split(os.path.normpath(path))
+            if head and not root_file.cd(head):
+                raise ValueError('Path %s does not exist in file %s' %
+                                 (head, filename))
+            xml_string = ROOT.TObjString(self.str())
+            xml_string.Write(tail)
+        else:
+            _, ext = os.path.splitext(name)
+            # ignore period
+            ext = ext[1:]
+            if ext not in GRL.formats:
+                raise ValueError("Filename %s does not have "
+                                 "a valid GRL extension." %
+                                 name)
+            with open(name, 'w') as filehandle:
+                self.write(filehandle, format=ext)
 
     def write(self, filehandle, format='xml'):
         """
