@@ -310,6 +310,11 @@ class GRL(object):
             o[run] = [(a[0], a[1]) for a in lbranges]
         return o
 
+    def __merge_metadata(self, other=None):
+
+        # drop metadata for now
+        self.metadata = []
+
     def __copy__(self):
 
         return copy.deepcopy(self)
@@ -575,6 +580,7 @@ class GRL(object):
             other = GRL(other, from_string=True)
         for run, lbrange in other.iterlbranges():
             self.insert(run, LumiblockRange(lbrange))
+        self.__merge_metadata(other)
         return self
 
     def __sub__(self, other):
@@ -589,6 +595,7 @@ class GRL(object):
             other = GRL(other, from_string=True)
         for run, lbrange in other.iterlbranges():
             self.remove(run, lbrange)
+        self.__merge_metadata(other)
         return self
 
     def __and__(self, other):
