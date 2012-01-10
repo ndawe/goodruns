@@ -269,16 +269,19 @@ class GRL(object):
 
         *tree*: ElementTree
         """
-        root = tree
-        name = root.find('NamedLumiRange/Name')
+        name = tree.find('NamedLumiRange/Name')
         if name is not None:
             self.name = name.text
-        version = root.find('NamedLumiRange/Version')
+        version = tree.find('NamedLumiRange/Version')
         if version is not None:
             self.version = version.text
-        self.metadata += root.findall('NamedLumiRange/Metadata')
-        lbcols = root.findall(
+        metadata = tree.findall('NamedLumiRange/Metadata')
+        if metadata is not None:
+            self.metadata = metadata
+        lbcols = tree.findall(
             'NamedLumiRange/LumiBlockCollection')
+        if lbcols is None:
+            return
         for lbcol in lbcols:
             run = int(lbcol.find('Run').text)
             lbs = lbcol.findall('LBRange')
