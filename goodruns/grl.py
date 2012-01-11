@@ -114,8 +114,8 @@ class LumiblockRange(tuple):
             raise ValueError('lbrange must contain exactly 2 elements: %s' % \
                              (args,))
         for lumiblock in args:
-            if not isinstance(lumiblock, int):
-                raise TypeError('lbrange must contain integers only')
+            if not isinstance(lumiblock, (int, long)):
+                raise TypeError('lbrange must contain integers or longs only')
         if args[0] > args[1]:
             raise ValueError('lbrange in wrong order: %s' % (args,))
         return super(LumiblockRange, cls).__new__(cls, args)
@@ -136,7 +136,7 @@ class LumiblockRange(tuple):
 
         *other*: LumiblockRange
         """
-        if isinstance(other, int):
+        if isinstance(other, (int, long)):
             if other in self:
                 return 0
             return cmp(self[0], other)
