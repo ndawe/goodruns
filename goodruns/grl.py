@@ -141,7 +141,7 @@ class LumiblockRange(tuple):
             if other in self:
                 return 0
             return cmp(self[0], other)
-        return super(LumiblockRange, cls).__cmp__(other)
+        return super(LumiblockRange, self).__cmp__(other)
 
     def intersects(self, lbrange):
         """
