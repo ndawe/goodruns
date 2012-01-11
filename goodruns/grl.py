@@ -118,7 +118,6 @@ class LumiblockRange(tuple):
                 raise TypeError('lbrange must contain integers only')
         if args[0] > args[1]:
             raise ValueError('lbrange in wrong order: %s' % (args,))
-
         return super(LumiblockRange, cls).__new__(cls, args)
 
     def __contains__(self, lbn):
@@ -137,7 +136,7 @@ class LumiblockRange(tuple):
 
         *other*: LumiblockRange
         """
-        if type(other) is int:
+        if isinstance(other, int):
             if other in self:
                 return 0
             return cmp(self[0], other)
