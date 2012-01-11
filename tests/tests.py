@@ -3,7 +3,7 @@
 import nose
 from nose.tools import assert_raises
 import os
-from goodruns import GRL
+from goodruns import GRL, LumiblockRange
 
 
 DIRNAME = os.path.dirname(__file__)
@@ -35,6 +35,15 @@ def grl_logic_test():
     a |= b
     a += b
     a -= b
+
+
+def lumiblock_test():
+
+    a = LumiblockRange(1, 10)
+    b = LumiblockRange(5, 50)
+    assert b > a
+    assert b.intersects(a)
+    assert a.intersects(b)
 
 
 def iter_test():
