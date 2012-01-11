@@ -110,7 +110,21 @@ def test_ROOT():
     grl2 = GRL(filename + ':/lumi')
     assert grl == grl2
 
+    root_file = ROOT.TFile.Open(filename, 'recreate')
+    root_file.mkdir('dir')
+    root_file.Close()
+
+    grl = GRL(GRLA)
+    grl.save(filename + ':/dir/lumi')
+    grl2 = GRL(filename + ':/dir/lumi')
+    assert grl == grl2
+
+    root_file = ROOT.TFile.Open(filename)
+    tobj = root_file.Get('dir/lumi')
+    assert isinstance(tobj, ROOT.TObjString)
+    root_file.Close()
     os.unlink(filename)
+
 
 if __name__ == '__main__':
     nose.runmodule()
