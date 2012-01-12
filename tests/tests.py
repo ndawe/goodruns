@@ -23,6 +23,9 @@ def grl_logic_test():
     assert (a - b) == ((a + b) - b)
     assert (not (a - a)) == True
     assert (not (a ^ a)) == True
+    assert a & b == b & a
+    assert a | b == b | a
+    assert a ^ b == b ^ a
 
     a & b
     a ^ b
