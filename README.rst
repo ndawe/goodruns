@@ -11,7 +11,8 @@ Requirements
 ------------
 
 goodruns requires at least Python 2.5 and only depends on modules in the standard library.
-Unlike the standard ATLAS GoodRunsLists package, goodruns does not depend in any way on `ROOT <http://root.cern.ch/>`_.
+Unlike the standard ATLAS GoodRunsLists package, goodruns does not depend on `ROOT <http://root.cern.ch/>`_
+for XML processing unless you are reading from or writing to a ROOT file (see below).
 For better XML reading/writing goodruns will optionally use `lxml <http://pypi.python.org/pypi/lxml/2.3>`_
 if installed. Install `PyYAML <http://pypi.python.org/pypi/PyYAML/>`_ if you would
 like to convert GRLs into YAML format.
