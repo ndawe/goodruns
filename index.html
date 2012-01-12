@@ -45,7 +45,8 @@ reader/writer in Python, and collection of useful command-line tools.</p>
 <div class="section" id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
 <p>goodruns requires at least Python 2.5 and only depends on modules in the standard library.
-Unlike the standard ATLAS GoodRunsLists package, goodruns does not depend in any way on <a class="reference external" href="http://root.cern.ch/">ROOT</a>.
+Unlike the standard ATLAS GoodRunsLists package, goodruns does not depend on <a class="reference external" href="http://root.cern.ch/">ROOT</a>
+for XML processing unless you are reading from or writing to a ROOT file (see below).
 For better XML reading/writing goodruns will optionally use <a class="reference external" href="http://pypi.python.org/pypi/lxml/2.3">lxml</a>
 if installed. Install <a class="reference external" href="http://pypi.python.org/pypi/PyYAML/">PyYAML</a> if you would
 like to convert GRLs into YAML format.</p>
