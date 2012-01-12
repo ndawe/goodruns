@@ -25,14 +25,16 @@ def mult_grl_arg(parser):
 
     parser.add_argument('grls', nargs='*',
                         metavar='GRL',
-                        help='GRL filename or URL (must begin with http://)')
+                        help=('GRL filename, URL (must begin with http://) '
+                              'or ROOT file (data.root:/path/to/grl)'))
 
 
 def grl_arg(parser):
 
     parser.add_argument('grl', nargs='?', default=None,
                         metavar='GRL',
-                        help='GRL filename or URL (must begin with http://)')
+                        help=('GRL filename, URL (must begin with http://) '
+                              'or ROOT file (data.root:/path/to/grl)'))
 
 
 parser_and = subparsers.add_parser('and',
