@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>goodruns.grl &mdash; goodruns 1.5 documentation</title>
+    <title>goodruns.grl &mdash; goodruns 2.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/clean.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '1.5',
+        VERSION:     '2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="goodruns 1.5 documentation" href="../../index.html" />
+    <link rel="top" title="goodruns 2.0 documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
           <div class="body">
             
   <h1>Source code for goodruns.grl</h1><div class="highlight"><pre>
-<span class="c"># Author: E. Noel Dawe &lt;Noel.Dawe@cern.ch&gt;</span>
+<span class="c"># Author: Noel Dawe &lt;Noel.Dawe@cern.ch&gt;</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module provides the main GRL class and utility functions</span>
@@ -58,6 +58,7 @@
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">USE_YAML</span> <span class="o">=</span> <span class="bp">False</span>
 
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">urllib2</span>
 <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
@@ -66,11 +67,34 @@
 <span class="kn">import</span> <span class="nn">bisect</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">cStringIO</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">&#39;clipped&#39;</span><span class="p">,</span>
+    <span class="s">&#39;diffed&#39;</span><span class="p">,</span>
+    <span class="s">&#39;ored&#39;</span><span class="p">,</span>
+    <span class="s">&#39;anded&#39;</span><span class="p">,</span>
+    <span class="s">&#39;xored&#39;</span><span class="p">,</span>
+    <span class="s">&#39;LumiblockRange&#39;</span><span class="p">,</span>
+    <span class="s">&#39;GRL&#39;</span><span class="p">,</span>
+<span class="p">]</span>
 
 
 <div class="viewcode-block" id="clipped"><a class="viewcode-back" href="../../index.html#goodruns.grl.clipped">[docs]</a><span class="k">def</span> <span class="nf">clipped</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="n">startrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">startlb</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endlb</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Clip a GRL between startrun, startlb and endrun, endlb (inclusive)</span>
+<span class="sd">    Return a clipped GRL between startrun, startlb and</span>
+<span class="sd">    endrun, endlb (inclusive).</span>
+
+<span class="sd">    *grl*: GRL</span>
+
+<span class="sd">    *startrun*: [ int | None ]</span>
+
+<span class="sd">    *startlb*: [ int | None ]</span>
+
+<span class="sd">    *endrun*: [ int | None ]</span>
+
+<span class="sd">    *endlb*: [ int | None ]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">grl_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">grl</span><span class="p">)</span>
     <span class="n">grl_copy</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">startrun</span><span class="o">=</span><span class="n">startrun</span><span class="p">,</span> <span class="n">startlb</span><span class="o">=</span><span class="n">startlb</span><span class="p">,</span>
@@ -81,6 +105,8 @@
 <div class="viewcode-block" id="diffed"><a class="viewcode-back" href="../../index.html#goodruns.grl.diffed">[docs]</a><span class="k">def</span> <span class="nf">diffed</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the difference of multiple GRLs: (((A-B)-C)-D)...)</span>
+
+<span class="sd">    *args*: tuple of GRLs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 
@@ -88,6 +114,8 @@
 <div class="viewcode-block" id="ored"><a class="viewcode-back" href="../../index.html#goodruns.grl.ored">[docs]</a><span class="k">def</span> <span class="nf">ored</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the OR of multiple GRLs: A | B | C...</span>
+
+<span class="sd">    *args*: tuple of GRLs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">or_</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 
@@ -95,6 +123,8 @@
 <div class="viewcode-block" id="anded"><a class="viewcode-back" href="../../index.html#goodruns.grl.anded">[docs]</a><span class="k">def</span> <span class="nf">anded</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the AND of multiple GRLs: A &amp; B &amp; C...</span>
+
+<span class="sd">    *args*: tuple of GRLs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">and_</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 
@@ -102,88 +132,94 @@
 <div class="viewcode-block" id="xored"><a class="viewcode-back" href="../../index.html#goodruns.grl.xored">[docs]</a><span class="k">def</span> <span class="nf">xored</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the XOR of multiple GRLs: A ^ B ^ C...</span>
+
+<span class="sd">    *args*: tuple of GRLs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">xor</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 
 </div>
-<span class="k">def</span> <span class="nf">_lbrange_intersects</span><span class="p">(</span><span class="n">lbrange1</span><span class="p">,</span> <span class="n">lbrange2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Determine if two lumiblock ranges intersect</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">lbrange1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">lbrange2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">lbrange1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">lbrange2</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">True</span>
-    <span class="k">if</span> <span class="n">lbrange1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">lbrange2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">lbrange1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">lbrange2</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">True</span>
-    <span class="k">if</span> <span class="n">lbrange2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">lbrange1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">lbrange2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">lbrange1</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">True</span>
-    <span class="k">if</span> <span class="n">lbrange2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">lbrange1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">lbrange2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">lbrange1</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">True</span>
-    <span class="k">return</span> <span class="bp">False</span>
-
-
-<span class="k">def</span> <span class="nf">_lbrange_as_set</span><span class="p">(</span><span class="n">lbrange</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert lumiblock range to set of lumiblocks</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-
-
-<span class="k">def</span> <span class="nf">_dict_to_grl</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert tuples to LumiblockRanges</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">o</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbranges</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">o</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">LumiblockRange</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">lbranges</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">o</span>
-
-
-<span class="k">def</span> <span class="nf">_grl_to_dict</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert tuples to LumiblockRanges</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">o</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">iterruns</span><span class="p">():</span>
-        <span class="n">lbranges</span> <span class="o">=</span> <span class="n">g</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
-        <span class="n">o</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">lbranges</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">o</span>
-
-
 <div class="viewcode-block" id="LumiblockRange"><a class="viewcode-back" href="../../index.html#goodruns.grl.LumiblockRange">[docs]</a><span class="k">class</span> <span class="nc">LumiblockRange</span><span class="p">(</span><span class="nb">tuple</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A 2-tuple consisting of the lower and upper</span>
 <span class="sd">    bounds of a lumiblock range</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *args*: [ tuple | list ]</span>
+<span class="sd">            2-tuple/list of lumiblock numbers in ascending order</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;lbrange must contain exactly 2 elements: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> \
                              <span class="p">(</span><span class="n">args</span><span class="p">,))</span>
         <span class="k">for</span> <span class="n">lumiblock</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lumiblock</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;lbrange must contain integers only&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lumiblock</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">long</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;lbrange must contain integers or longs only&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;lbrange in wrong order: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">args</span><span class="p">,))</span>
-
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">LumiblockRange</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__cmp__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lumiblock</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lbn</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determine whether a lumiblock is contained by this</span>
+<span class="sd">        lumiblock range</span>
 
-        <span class="k">if</span> <span class="n">lumiblock</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="n">lumiblock</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="k">return</span> <span class="mi">0</span>
+<span class="sd">        *lbn*: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">lbn</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
+    <span class="k">def</span> <span class="nf">__cmp__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determine whether this lumiblock range should be placed</span>
+<span class="sd">        to the right or left of another lumiblock number or range</span>
+
+<span class="sd">        *other*: LumiblockRange</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">long</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">other</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="nb">cmp</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">LumiblockRange</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__cmp__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LumiblockRange.intersects"><a class="viewcode-back" href="../../index.html#goodruns.grl.LumiblockRange.intersects">[docs]</a>    <span class="k">def</span> <span class="nf">intersects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determine if self intersects with another lumiblock range</span>
+
+<span class="sd">        *lbrange*: LumiblockRange</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span> <span class="ow">or</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">lbrange</span> <span class="ow">or</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">lbrange</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="bp">False</span>
 </div>
+<div class="viewcode-block" id="LumiblockRange.as_set"><a class="viewcode-back" href="../../index.html#goodruns.grl.LumiblockRange.as_set">[docs]</a>    <span class="k">def</span> <span class="nf">as_set</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert self to set of lumiblocks</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+</div></div>
 <div class="viewcode-block" id="GRL"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL">[docs]</a><span class="k">class</span> <span class="nc">GRL</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The main GRL class holds a python dictionary</span>
 <span class="sd">    mapping runs to a list of lumiblock ranges (2-tuples)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grl</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s">&#39;xml&#39;</span><span class="p">,</span>
+        <span class="s">&#39;yml&#39;</span><span class="p">,</span>
+        <span class="s">&#39;txt&#39;</span><span class="p">,</span>
+        <span class="s">&#39;py&#39;</span><span class="p">,</span>
+        <span class="s">&#39;cut&#39;</span>
+    <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grl</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">from_string</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        grl may be a file name or URL of a valid GRL file, or None</span>
+<span class="sd">        *grl*: [ dict | str | None ]</span>
+
+<span class="sd">        *from_string*: bool</span>
+<span class="sd">            If True, interpret grl as xml string and not filename</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;GRL&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="s">&#39;1.0&#39;</span>
@@ -192,47 +228,136 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">grl</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span> <span class="o">=</span> <span class="n">SortedDict</span><span class="p">(</span><span class="n">_dict_to_grl</span><span class="p">(</span><span class="n">grl</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">grl</span><span class="p">)</span>
             <span class="k">return</span>
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">grl</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">file</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">)</span> <span class="ow">and</span> <span class="n">from_string</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">grl</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">elif</span> <span class="n">from_string</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;grl is non-string type </span><span class="si">%s</span><span class="s"> while &quot;</span>
+                            <span class="s">&quot;using from_string&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">grl</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="p">(</span><span class="nb">basestring</span><span class="p">,</span> <span class="nb">file</span><span class="p">)):</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="n">grl</span>
-            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">grl</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+                <span class="c"># is grl a URL?</span>
                 <span class="k">if</span> <span class="n">grl</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;http://&quot;</span><span class="p">):</span>
                     <span class="n">grl</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">grl</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">grl</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">file</span><span class="p">:</span>
+                <span class="c"># is grl a ROOT file path?</span>
+                <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&#39;.root:/&#39;</span><span class="p">,</span> <span class="n">grl</span><span class="p">):</span>
+                    <span class="c"># one place where goodruns requires ROOT</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="kn">import</span> <span class="nn">ROOT</span>
+                        <span class="n">ROOT</span><span class="o">.</span><span class="n">PyConfig</span><span class="o">.</span><span class="n">IgnoreCommandLineOptions</span> <span class="o">=</span> <span class="bp">True</span>
+                    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s">&#39;Specified GRL in ROOT file &#39;</span>
+                                          <span class="s">&#39;but cannot import ROOT. Are ROOT &#39;</span>
+                                          <span class="s">&#39;and PyROOT installed?&#39;</span><span class="p">)</span>
+                    <span class="n">cwd</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">gDirectory</span>
+                    <span class="n">filename</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">grl</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s">&#39;:/&#39;</span><span class="p">)</span>
+                    <span class="n">root_file</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TFile</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">root_file</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s">&#39;Could not open ROOT file: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span>
+                                      <span class="n">filename</span><span class="p">)</span>
+                    <span class="n">grl</span> <span class="o">=</span> <span class="n">root_file</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">grl</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Path </span><span class="si">%s</span><span class="s"> does not exist in &#39;</span>
+                                         <span class="s">&#39;ROOT file </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TObjString</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;Object at </span><span class="si">%s</span><span class="s"> is not a &#39;</span>
+                                        <span class="s">&#39;ROOT.TObjString&#39;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">grl</span><span class="o">.</span><span class="n">GetString</span><span class="p">()))</span>
+                    <span class="n">root_file</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+                    <span class="c"># return to previous directory</span>
+                    <span class="n">cwd</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+                    <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterruns</span><span class="p">():</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">__optimize</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+                    <span class="k">return</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="nb">file</span><span class="p">):</span>
                 <span class="n">filename</span> <span class="o">=</span> <span class="n">grl</span><span class="o">.</span><span class="n">name</span>
-            <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s">&quot;&lt;stdin&gt;&quot;</span> <span class="ow">or</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.xml&#39;</span><span class="p">)</span> <span class="ow">or</span> \
-                    <span class="n">filename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;http://&quot;</span><span class="p">):</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s">&quot;&lt;stdin&gt;&quot;</span> <span class="ow">or</span> <span class="n">ext</span> <span class="o">==</span> <span class="s">&#39;.xml&#39;</span><span class="p">:</span>
                 <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">grl</span><span class="p">)</span>
-                <span class="n">root</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;NamedLumiRange/Name&#39;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">text</span>
-                <span class="n">version</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;NamedLumiRange/Version&#39;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span><span class="o">.</span><span class="n">text</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&#39;NamedLumiRange/Metadata&#39;</span><span class="p">)</span>
-                <span class="n">lbcols</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span>
-                    <span class="s">&#39;NamedLumiRange/LumiBlockCollection&#39;</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">lbcol</span> <span class="ow">in</span> <span class="n">lbcols</span><span class="p">:</span>
-                    <span class="n">run</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lbcol</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;Run&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-                    <span class="n">lbs</span> <span class="o">=</span> <span class="n">lbcol</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&#39;LBRange&#39;</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">lumiblock</span> <span class="ow">in</span> <span class="n">lbs</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">run</span><span class="p">,</span>
-                            <span class="n">LumiblockRange</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">lumiblock</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;Start&#39;</span><span class="p">]),</span>
-                                            <span class="nb">int</span><span class="p">(</span><span class="n">lumiblock</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;End&#39;</span><span class="p">]))))</span>
-            <span class="k">elif</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.yml&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">from_xml</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s">&#39;.yml&#39;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">USE_YAML</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span> <span class="o">=</span> <span class="n">SortedDict</span><span class="p">(</span><span class="n">_dict_to_grl</span><span class="p">(</span><span class="n">grl</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="nb">file</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">grl</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">grl</span><span class="p">)</span> <span class="k">as</span> <span class="n">grl_file</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">grl_file</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s">&quot;PyYAML module not found&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s">&quot;File </span><span class="si">%s</span><span class="s"> is not recognized as a valid GRL format&quot;</span>
-                    <span class="o">%</span> <span class="n">filename</span><span class="p">)</span>
+                    <span class="s">&quot;File </span><span class="si">%s</span><span class="s"> does not have valid GRL extension: </span><span class="si">%s</span><span class="s">&quot;</span>
+                    <span class="o">%</span> <span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">ext</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterruns</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__optimize</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;Unable to initialize GRL from a </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">grl</span><span class="p">))</span>
+
+<div class="viewcode-block" id="GRL.from_string"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.from_string">[docs]</a>    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Insert runs and lumiblocks from XML string</span>
+
+<span class="sd">        *string*: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">from_xml</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="GRL.from_xml"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.from_xml">[docs]</a>    <span class="k">def</span> <span class="nf">from_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Insert runs and lumiblocks from XML</span>
+
+<span class="sd">        *tree*: ElementTree</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;NamedLumiRange/Name&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">text</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;NamedLumiRange/Version&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span><span class="o">.</span><span class="n">text</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&#39;NamedLumiRange/Metadata&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">metadata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span>
+        <span class="n">lbcols</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span>
+            <span class="s">&#39;NamedLumiRange/LumiBlockCollection&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lbcols</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">for</span> <span class="n">lbcol</span> <span class="ow">in</span> <span class="n">lbcols</span><span class="p">:</span>
+            <span class="n">run</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lbcol</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&#39;Run&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">lbs</span> <span class="o">=</span> <span class="n">lbcol</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&#39;LBRange&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">lumiblock</span> <span class="ow">in</span> <span class="n">lbs</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">run</span><span class="p">,</span>
+                    <span class="n">LumiblockRange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">lumiblock</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;Start&#39;</span><span class="p">]),</span>
+                                   <span class="nb">int</span><span class="p">(</span><span class="n">lumiblock</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;End&#39;</span><span class="p">])))</span>
+</div>
+<div class="viewcode-block" id="GRL.from_dict"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.from_dict">[docs]</a>    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert dict to GRL</span>
+
+<span class="sd">        *d*: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbranges</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">o</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">LumiblockRange</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">lbranges</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="GRL.to_dict"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert self to dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbranges</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">o</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">lbranges</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">o</span>
+</div>
+    <span class="k">def</span> <span class="nf">__merge_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+        <span class="c"># drop metadata for now</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
@@ -269,25 +394,32 @@
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return list of lumiblock ranges for a run</span>
+
+<span class="sd">        *run*: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove run and associated lumiblock ranges from GRL</span>
+
+<span class="sd">        *run*: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runlb</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Pass the tuple (run, lbn)</span>
+<span class="sd">        Returns True if this GRL contains a run and lumiblock</span>
+
+<span class="sd">        *runlb*: tuple</span>
+<span class="sd">            2-tuple of ints containing run number and lumiblock number</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">run</span><span class="p">,</span> <span class="n">lbn</span> <span class="o">=</span> <span class="n">runlb</span>
         <span class="k">if</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">:</span>
             <span class="n">lbranges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
             <span class="c"># Locate the LumiblockRange containing lbn</span>
             <span class="n">i</span> <span class="o">=</span> <span class="n">bisect</span><span class="o">.</span><span class="n">bisect_left</span><span class="p">(</span><span class="n">lbranges</span><span class="p">,</span> <span class="n">lbn</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lbranges</span><span class="p">)</span> <span class="ow">and</span> <span class="n">lbranges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">lbn</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lbranges</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">lbn</span> <span class="ow">in</span> <span class="n">lbranges</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
                 <span class="k">return</span> <span class="bp">True</span>
         <span class="k">return</span> <span class="bp">False</span>
 
@@ -295,11 +427,17 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Iterate over runs in GRL</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterruns</span><span class="p">())</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterruns</span><span class="p">()</span>
 
 <div class="viewcode-block" id="GRL.items"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.items">[docs]</a>    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Iterate over (run, lbranges) in GRL</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="GRL.iterlbranges"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.iterlbranges">[docs]</a>    <span class="k">def</span> <span class="nf">iterlbranges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iterate over (run, lbrange) in GRL</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbranges</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">lbrange</span> <span class="ow">in</span> <span class="n">lbranges</span><span class="p">:</span>
@@ -321,20 +459,26 @@
 <div class="viewcode-block" id="GRL.has_run"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.has_run">[docs]</a>    <span class="k">def</span> <span class="nf">has_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns True if run is in GRL, else False</span>
+
+<span class="sd">        *run*: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span>
 </div>
 <div class="viewcode-block" id="GRL.insert"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.insert">[docs]</a>    <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Insert a lumiblock range into a run</span>
+
+<span class="sd">        *run*: int</span>
+
+<span class="sd">        *lbrange*: [ LumiblockRange | tuple ]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;run must be an integer&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lbrange</span><span class="p">,</span> <span class="n">LumiblockRange</span><span class="p">):</span>
-            <span class="n">lbrange</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">(</span><span class="n">lbrange</span><span class="p">)</span>
+            <span class="n">lbrange</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">(</span><span class="o">*</span><span class="n">lbrange</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">lbranges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
-            <span class="n">i</span> <span class="o">=</span> <span class="n">bisect</span><span class="o">.</span><span class="n">bisect</span><span class="p">(</span><span class="n">lbranges</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">bisect</span><span class="o">.</span><span class="n">bisect</span><span class="p">(</span><span class="n">lbranges</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">)</span>
             <span class="n">lbranges</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__optimize</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
@@ -343,10 +487,14 @@
 <div class="viewcode-block" id="GRL.remove"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove a lumiblock range from a run</span>
+
+<span class="sd">        *run*: int</span>
+
+<span class="sd">        *lbrange*: LumiblockRange</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lbrange</span><span class="p">,</span> <span class="n">LumiblockRange</span><span class="p">):</span>
-                <span class="n">lbrange</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">(</span><span class="n">lbrange</span><span class="p">)</span>
+                <span class="n">lbrange</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">(</span><span class="o">*</span><span class="n">lbrange</span><span class="p">)</span>
             <span class="n">lbranges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">mylbrange</span> <span class="ow">in</span> <span class="n">lbranges</span><span class="p">[:]:</span>
                 <span class="k">if</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">mylbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
@@ -356,23 +504,22 @@
                     <span class="k">break</span>
                 <span class="k">elif</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">mylbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">mylbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                     <span class="c"># embedded: must split</span>
-                    <span class="n">left_lbrange</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">((</span><span class="n">mylbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                                                   <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
-                    <span class="n">right_lbrange</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">((</span><span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-                                                    <span class="n">mylbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                    <span class="n">left_lbrange</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">(</span><span class="n">mylbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                  <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">right_lbrange</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">(</span><span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                                                   <span class="n">mylbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
                     <span class="n">index</span> <span class="o">=</span> <span class="n">lbranges</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">mylbrange</span><span class="p">)</span>
                     <span class="n">lbranges</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">left_lbrange</span>
                     <span class="n">lbranges</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">right_lbrange</span><span class="p">)</span>
                     <span class="k">break</span>
-                <span class="k">elif</span> <span class="n">_lbrange_intersects</span><span class="p">(</span><span class="n">lbrange</span><span class="p">,</span> <span class="n">mylbrange</span><span class="p">):</span>
-                    <span class="n">diff</span> <span class="o">=</span> <span class="n">_lbrange_as_set</span><span class="p">(</span><span class="n">mylbrange</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span>
-                        <span class="n">_lbrange_as_set</span><span class="p">(</span><span class="n">lbrange</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">lbrange</span><span class="o">.</span><span class="n">intersects</span><span class="p">(</span><span class="n">mylbrange</span><span class="p">):</span>
+                    <span class="n">diff</span> <span class="o">=</span> <span class="n">mylbrange</span><span class="o">.</span><span class="n">as_set</span><span class="p">()</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">lbrange</span><span class="o">.</span><span class="n">as_set</span><span class="p">())</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">diff</span><span class="p">:</span>  <span class="c"># empty set</span>
                         <span class="n">lbranges</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mylbrange</span><span class="p">)</span>
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lbranges</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                             <span class="k">break</span>
                         <span class="k">continue</span>
-                    <span class="n">newlbrange</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">((</span><span class="nb">min</span><span class="p">(</span><span class="n">diff</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">diff</span><span class="p">)))</span>
+                    <span class="n">newlbrange</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">diff</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span>
                     <span class="n">lbranges</span><span class="p">[</span><span class="n">lbranges</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">mylbrange</span><span class="p">)]</span> <span class="o">=</span> <span class="n">newlbrange</span>
                 <span class="k">elif</span> <span class="n">mylbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                     <span class="k">break</span>
@@ -382,6 +529,14 @@
 <div class="viewcode-block" id="GRL.clip"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.clip">[docs]</a>    <span class="k">def</span> <span class="nf">clip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">startrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">startlb</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endlb</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clip the GRL between startrun, startlb and endrun, endlb (inclusive)</span>
+
+<span class="sd">        *startrun*: [ int | None ]</span>
+
+<span class="sd">        *startlb*: [ int | None ]</span>
+
+<span class="sd">        *endrun*: [ int | None ]</span>
+
+<span class="sd">        *endlb*: [ int | None ]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runs</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">startrun</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -397,7 +552,7 @@
                                  <span class="n">startlb</span> <span class="o">&lt;=</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">][</span>
                                     <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">lbrange</span><span class="p">)</span>
-                                    <span class="p">]</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">((</span><span class="n">startlb</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                                    <span class="p">]</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">(</span><span class="n">startlb</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                             <span class="k">del</span> <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">endrun</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -412,13 +567,15 @@
                             <span class="k">elif</span> <span class="n">endlb</span> <span class="o">&gt;=</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">endlb</span> <span class="o">&lt;=</span> <span class="n">lbrange</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                                 <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">][</span>
                                     <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">lbrange</span><span class="p">)</span>
-                                    <span class="p">]</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">((</span><span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">endlb</span><span class="p">))</span>
+                                    <span class="p">]</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">(</span><span class="n">lbrange</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">endlb</span><span class="p">)</span>
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                             <span class="k">del</span> <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
 </div>
     <span class="k">def</span> <span class="nf">__optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Merge lumiblock ranges</span>
+
+<span class="sd">        *run*: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">lbranges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lbranges</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -436,8 +593,8 @@
                     <span class="n">merged</span> <span class="o">=</span> <span class="bp">True</span>
                     <span class="k">break</span>
                 <span class="k">elif</span> <span class="n">lbranges</span><span class="p">[</span><span class="n">first</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="n">lbranges</span><span class="p">[</span><span class="n">_next</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
-                    <span class="n">lbranges</span><span class="p">[</span><span class="n">first</span><span class="p">]</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">((</span><span class="n">lbranges</span><span class="p">[</span><span class="n">first</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                                                      <span class="n">lbranges</span><span class="p">[</span><span class="n">_next</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+                    <span class="n">lbranges</span><span class="p">[</span><span class="n">first</span><span class="p">]</span> <span class="o">=</span> <span class="n">LumiblockRange</span><span class="p">(</span><span class="n">lbranges</span><span class="p">[</span><span class="n">first</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                                                     <span class="n">lbranges</span><span class="p">[</span><span class="n">_next</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
                     <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">first</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">_next</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
                         <span class="n">lbranges</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">_next</span><span class="p">)</span>
                     <span class="n">merged</span> <span class="o">=</span> <span class="bp">True</span>
@@ -447,6 +604,14 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">merged</span><span class="p">:</span>
                 <span class="n">first</span> <span class="o">+=</span> <span class="mi">1</span>
 
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">__grl</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 
         <span class="n">grlcopy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -455,8 +620,11 @@
 
     <span class="k">def</span> <span class="nf">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 
-        <span class="k">for</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbrange</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">GRL</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">from_string</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbrange</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">iterlbranges</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="n">LumiblockRange</span><span class="p">(</span><span class="n">lbrange</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__merge_metadata</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
@@ -467,26 +635,50 @@
 
     <span class="k">def</span> <span class="nf">__isub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 
-        <span class="k">for</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbrange</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">GRL</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">from_string</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbrange</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">iterlbranges</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="n">lbrange</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__merge_metadata</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 
         <span class="k">return</span> <span class="bp">self</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span> <span class="o">-</span> <span class="n">other</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">__iand__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+
+        <span class="bp">self</span> <span class="o">-=</span> <span class="p">(</span><span class="bp">self</span> <span class="o">-</span> <span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
     <span class="k">def</span> <span class="nf">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 
         <span class="k">return</span> <span class="bp">self</span> <span class="o">+</span> <span class="n">other</span>
+
+    <span class="k">def</span> <span class="nf">__ior__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+
+        <span class="bp">self</span> <span class="o">+=</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">__xor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
 
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span> <span class="o">|</span> <span class="n">other</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span> <span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">__ixor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+
+        <span class="n">grlcopy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span> <span class="o">|=</span> <span class="n">other</span>
+        <span class="bp">self</span> <span class="o">-=</span> <span class="p">(</span><span class="n">grlcopy</span> <span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
 <div class="viewcode-block" id="GRL.cut"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.cut">[docs]</a>    <span class="k">def</span> <span class="nf">cut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runname</span><span class="o">=</span><span class="s">&#39;RunNumber&#39;</span><span class="p">,</span> <span class="n">lbname</span><span class="o">=</span><span class="s">&#39;lbn&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert this GRL into a TCut expression.</span>
 <span class="sd">        This method is really meant to be a joke and should be of no use.</span>
+
+<span class="sd">        *runname*: str</span>
+
+<span class="sd">        *lbname*: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cut</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
         <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterruns</span><span class="p">():</span>
@@ -504,25 +696,66 @@
                 <span class="n">cut</span> <span class="o">=</span> <span class="n">newcut</span>
         <span class="k">return</span> <span class="n">cut</span>
 </div>
-    <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s">&#39;xml&#39;</span><span class="p">,</span>
-        <span class="s">&#39;yml&#39;</span><span class="p">,</span>
-        <span class="s">&#39;txt&#39;</span><span class="p">,</span>
-        <span class="s">&#39;py&#39;</span><span class="p">,</span>
-        <span class="s">&#39;cut&#39;</span>
-    <span class="p">]</span>
-
 <div class="viewcode-block" id="GRL.str"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.str">[docs]</a>    <span class="k">def</span> <span class="nf">str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;xml&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return string repr of self in specified format</span>
-<span class="sd">        &quot;&quot;&quot;</span> 
-        <span class="n">str_io</span> <span class="o">=</span> <span class="n">cStringIO</span><span class="o">.</span><span class="n">cStringIO</span><span class="p">()</span>
+<span class="sd">        Return string repr of self in the specified format</span>
+
+<span class="sd">        *format*: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">str_io</span> <span class="o">=</span> <span class="n">cStringIO</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filehandle</span><span class="o">=</span><span class="n">str_io</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="n">format</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">str_io</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
-    </div>
+</div>
+<div class="viewcode-block" id="GRL.save"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save GRL to file by name. Determine format from</span>
+<span class="sd">        extension.</span>
+
+<span class="sd">        *name*: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># is name a ROOT file path?</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&#39;.root:/&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+            <span class="c"># one place where goodruns requires ROOT</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">ROOT</span>
+                <span class="n">ROOT</span><span class="o">.</span><span class="n">PyConfig</span><span class="o">.</span><span class="n">IgnoreCommandLineOptions</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s">&#39;Attempting to save GRL in ROOT file &#39;</span>
+                                  <span class="s">&#39;but cannot import ROOT. Are ROOT and PyROOT &#39;</span>
+                                  <span class="s">&#39;installed?&#39;</span><span class="p">)</span>
+            <span class="n">cwd</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">gDirectory</span>
+            <span class="n">filename</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s">&#39;:/&#39;</span><span class="p">)</span>
+            <span class="n">root_file</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TFile</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;UPDATE&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">root_file</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s">&#39;Could not open ROOT file: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span>
+                              <span class="n">filename</span><span class="p">)</span>
+            <span class="n">head</span><span class="p">,</span> <span class="n">tail</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">head</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">root_file</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="n">head</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Path </span><span class="si">%s</span><span class="s"> does not exist in file </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span>
+                                 <span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+            <span class="n">xml_string</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TObjString</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">str</span><span class="p">())</span>
+            <span class="n">xml_string</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">tail</span><span class="p">)</span>
+            <span class="n">root_file</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+            <span class="c"># return to previous directory</span>
+            <span class="n">cwd</span><span class="o">.</span><span class="n">cd</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="c"># ignore period</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">ext</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">if</span> <span class="n">ext</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">GRL</span><span class="o">.</span><span class="n">formats</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Filename </span><span class="si">%s</span><span class="s"> does not have &quot;</span>
+                                 <span class="s">&quot;a valid GRL extension.&quot;</span> <span class="o">%</span>
+                                 <span class="n">name</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">filehandle</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filehandle</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="n">ext</span><span class="p">)</span>
+</div>
 <div class="viewcode-block" id="GRL.write"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filehandle</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;xml&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Write the GRL in a specified format to the file object.</span>
+<span class="sd">        Write the GRL in the specified format to the file object.</span>
+
+<span class="sd">        *filehandle*: file</span>
+
+<span class="sd">        *format*: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">format</span> <span class="o">==</span> <span class="s">&#39;xml&#39;</span><span class="p">:</span>
             <span class="n">root</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s">&#39;LumiRangeCollection&#39;</span><span class="p">)</span>
@@ -542,9 +775,12 @@
                     <span class="n">lbrange</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">lbcol</span><span class="p">,</span> <span class="s">&#39;LBRange&#39;</span><span class="p">)</span>
                     <span class="n">lbrange</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;Start&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">lumiblock</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
                     <span class="n">lbrange</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;End&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">lumiblock</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S&quot;</span><span class="p">)</span>
-            <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;&#39;&#39;&lt;!DOCTYPE LumiRangeCollection SYSTEM &quot;http://atlas-runquery.cern.ch/LumiRangeCollection.dtd&quot;&gt;</span><span class="se">\n</span><span class="s">&#39;&#39;&#39;</span>
-                    <span class="sd">&#39;&#39;&#39;&lt;!-- This document is created by goodruns: http://pypi.python.org/pypi/goodruns/ on %s --&gt;\n&#39;&#39;&#39;</span> <span class="o">%</span> <span class="n">date</span><span class="p">)</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y-%m-</span><span class="si">%d</span><span class="s"> at %H:%M:%S&quot;</span><span class="p">)</span>
+            <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sd">&#39;&#39;&#39;&lt;!DOCTYPE LumiRangeCollection SYSTEM &#39;&#39;&#39;</span>
+            <span class="sd">&#39;&#39;&#39;&quot;http://atlas-runquery.cern.ch/LumiRangeCollection.dtd&quot;&gt;\n&#39;&#39;&#39;</span>
+            <span class="sd">&#39;&#39;&#39;&lt;!-- This document was created by goodruns: &#39;&#39;&#39;</span>
+            <span class="sd">&#39;&#39;&#39;http://pypi.python.org/pypi/goodruns/ on %s --&gt;\n&#39;&#39;&#39;</span> <span class="o">%</span> <span class="n">date</span><span class="p">)</span>
             <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">ElementTree</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">USE_LXML</span><span class="p">:</span>
                 <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&lt;?xml version=&quot;1.0&quot;?&gt;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
@@ -552,10 +788,11 @@
                 <span class="n">tree</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filehandle</span><span class="p">,</span> <span class="n">pretty_print</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c"># get pretty XML from ElementTree</span>
-                <span class="n">xml</span> <span class="o">=</span> <span class="n">minidom</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">meta</span> <span class="o">+</span> <span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">(),</span> <span class="s">&#39;utf-8&#39;</span><span class="p">))</span>
+                <span class="n">xml</span> <span class="o">=</span> <span class="n">minidom</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">meta</span> <span class="o">+</span>
+                                          <span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">(),</span> <span class="s">&#39;utf-8&#39;</span><span class="p">))</span>
                 <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">xml</span><span class="o">.</span><span class="n">toprettyxml</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="s">&#39;   &#39;</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">format</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;yml&#39;</span><span class="p">,</span> <span class="s">&#39;yaml&#39;</span><span class="p">):</span>
-            <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">_grl_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
+            <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()))</span>
         <span class="k">elif</span> <span class="n">format</span> <span class="o">==</span> <span class="s">&#39;txt&#39;</span><span class="p">:</span>
             <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">format</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;py&#39;</span><span class="p">,</span> <span class="s">&#39;python&#39;</span><span class="p">):</span>
