@@ -174,6 +174,8 @@ class GRL(object):
         'cut'
     ]
 
+    ROOT_PATTERN = re.compile('\.root(\.[\d]+)?:/')
+
     def __init__(self, grl=None, from_string=False):
         """
         *grl*: [ dict | str | None ]
@@ -203,7 +205,7 @@ class GRL(object):
                 if grl.startswith("http://"):
                     grl = urllib2.urlopen(grl)
                 # is grl a ROOT file path?
-                elif re.search('.root:/', grl):
+                elif re.search(self.ROOT_PATTERN, grl):
                     # one place where goodruns requires ROOT
                     try:
                         import ROOT
@@ -674,7 +676,7 @@ class GRL(object):
         *name*: str
         """
         # is name a ROOT file path?
-        if re.search('.root:/', name):
+        if re.search(self.ROOT_PATTERN, name):
             # one place where goodruns requires ROOT
             try:
                 import ROOT
