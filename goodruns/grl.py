@@ -215,7 +215,7 @@ class GRL(object):
                                           'but cannot import ROOT. Are ROOT '
                                           'and PyROOT installed?')
                     cwd = ROOT.gDirectory
-                    filename, _, path = grl.partition(':/')
+                    filename, _, path = grl.rpartition(':/')
                     root_file = ROOT.TFile.Open(filename)
                     if not root_file:
                         raise IOError('Could not open ROOT file: %s' %
@@ -686,7 +686,7 @@ class GRL(object):
                                   'but cannot import ROOT. Are ROOT and PyROOT '
                                   'installed?')
             cwd = ROOT.gDirectory
-            filename, _, path = name.partition(':/')
+            filename, _, path = name.rpartition(':/')
             root_file = ROOT.TFile.Open(filename, 'UPDATE')
             if not root_file:
                 raise IOError('Could not open ROOT file: %s' %
