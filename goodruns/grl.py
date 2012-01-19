@@ -174,7 +174,7 @@ class GRL(object):
         'cut'
     ]
 
-    ROOT_PATTERN = re.compile('\.root(\.[\d]+)?:/')
+    ROOT_PATTERN = re.compile('\.root(\..+)?:/')
 
     def __init__(self, grl=None, from_string=False):
         """
