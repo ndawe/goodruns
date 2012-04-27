@@ -1,25 +1,53 @@
 #!/usr/bin/env python
 
-from distribute_setup import use_setuptools
-use_setuptools()
-
-from setuptools import setup
+import os
+import sys
 from glob import glob
 
+
+requires = ['python>=2.5', 'argparse']
+
+if os.getenv('GOODRUNS_USE_LXML') in ('1', 'true'):
+    requires.append('lxml')
+
+if os.getenv('GOODRUNS_USE_YAML') in ('1', 'true'):
+    requires.append('PyYAML')
+
+kw = {}
+if os.getenv('GOODRUNS_NO_DISTRIBUTE') in ('1', 'true'):
+    from distutils.core import setup
+    packages = ['goodruns']
+    if sys.version_info >= (2, 5):
+        kw['requires'] = requires
+else:
+    from distribute_setup import use_setuptools
+    use_setuptools()
+    from setuptools import setup, find_packages
+    packages = find_packages()
+    kw['install_requires'] = requires
+
 execfile('goodruns/info.py')
+open('version.txt', 'w').write(__version__)
+
+if os.getenv('GOODRUNS_AFS_INSTALL') in ('1', 'true'):
+    prefix = '/afs/cern.ch/atlas/software/tools/goodruns/'
+else:
+    prefix = 'etc/goodruns'
+
+if 'install' in sys.argv:
+    print __doc__
 
 setup(name='goodruns',
-      version=__VERSION__,
+      version=__version__,
       author='Noel Dawe',
       author_email='noel.dawe@cern.ch',
       description='ATLAS "good run list" utilities',
       long_description=open('README.rst').read(),
-      url=__URL__,
-      download_url=__DOWNLOAD_URL__,
+      url=__url__,
+      download_url=__download_url__,
       license='GPLv3',
-      packages=['goodruns'],
+      packages=packages,
       scripts=glob('scripts/*'),
-      install_requires = ['python>=2.5', 'argparse'],
       classifiers=[
         "Programming Language :: Python",
         "Topic :: Text Processing :: Markup :: XML",
@@ -30,5 +58,7 @@ setup(name='goodruns',
         "Intended Audience :: Science/Research",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: GNU General Public License (GPL)"
-      ]
+      ],
+      **kw
     )
+os.unlink('version.txt')

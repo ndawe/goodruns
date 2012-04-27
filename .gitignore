@@ -1,3 +1,4 @@
+version.txt
 distribute-*
 *.egg-info
 *.pyc
