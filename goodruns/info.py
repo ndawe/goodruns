@@ -15,3 +15,7 @@ __repo_url__ = 'https://github.com/ndawe/goodruns/'
 __download_url__ = 'http://pypi.python.org/packages/source/g/goodruns/' \
                    'goodruns-%s.tar.gz' % __version__
 __doc__ = __doc__ % __version__
+
+# optional dependencies
+USE_LXML = False
+USE_YAML = False

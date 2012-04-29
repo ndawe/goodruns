@@ -4,19 +4,16 @@
 This module provides the main GRL class and utility functions
 """
 
-USE_LXML = True
-try:
+from .info import USE_LXML, USE_YAML
+
+if USE_LXML:
     import lxml.etree as ET
-except ImportError:
+else:
     import xml.etree.ElementTree as ET
     import xml.dom.minidom as minidom
-    USE_LXML = False
 
-USE_YAML = True
-try:
+if USE_YAML:
     import yaml
-except ImportError:
-    USE_YAML = False
 
 import os
 import copy

@@ -7,10 +7,12 @@ from glob import glob
 
 requires = ['python>=2.5', 'argparse']
 
-if os.getenv('GOODRUNS_USE_LXML') in ('1', 'true'):
+execfile('goodruns/info.py')
+
+if USE_LXML:
     requires.append('lxml')
 
-if os.getenv('GOODRUNS_USE_YAML') in ('1', 'true'):
+if USE_YAML:
     requires.append('PyYAML')
 
 kw = {}
@@ -26,7 +28,6 @@ else:
     packages = find_packages()
     kw['install_requires'] = requires
 
-execfile('goodruns/info.py')
 open('version.txt', 'w').write(__version__)
 
 if os.getenv('GOODRUNS_AFS_INSTALL') in ('1', 'true'):
