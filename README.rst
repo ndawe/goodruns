@@ -73,7 +73,7 @@ before installing. This enables the dependency on `lxml <http://lxml.de/>`_
 for XML parsing and formatting. `iLumiCalc <https://atlas-lumicalc.cern.ch/>`_
 unfortunately treats whitespace as significant in text-only nodes like `<Run> 123456 </Run>`
 which you will see if using Python's built-in libraries (see
-`issue 4147 <http://bugs.python.org/issue4147>`_). To avoid issues with
+`issue 4147 <http://bugs.python.org/issue4147>`_). To avoid problems with
 iLumiCalc please enable lxml support before installing goodruns.
 
 
