@@ -19,9 +19,13 @@ For better XML reading/writing goodruns will optionally use `lxml <http://pypi.p
 if installed. Install `PyYAML <http://pypi.python.org/pypi/PyYAML/>`_ if you would
 like to convert GRLs into YAML format.
 
+To enable the dependency on lxml and/or PyYAML change `False` to `True` on the
+appropriate line(s) in `goodruns/info.py` and perform a manual installation
+as described below.
 
-Installation
-------------
+
+Automatic Installation
+----------------------
 
 The easiest way to install goodruns is with ``pip``.
 To install for all users::
@@ -31,6 +35,10 @@ To install for all users::
 To install in your user site-packages directory (also see below)::
 
     pip install --user goodruns
+
+
+Manual Installation
+-------------------
 
 If you have obtained a copy of goodruns yourself use the ``setup.py``
 script to install. To install for all users::
