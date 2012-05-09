@@ -65,7 +65,7 @@ change this in `goodruns/info.py`::
 
     USE_LXML = False
 
-to
+to::
 
     USE_LXML = True
 
