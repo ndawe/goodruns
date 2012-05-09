@@ -11,6 +11,8 @@ if USE_LXML:
 else:
     import xml.etree.ElementTree as ET
     import xml.dom.minidom as minidom
+    # minidom toprettyxml replacement
+    from xml.dom.ext import PrettyPrint
 
 if USE_YAML:
     import yaml
@@ -749,7 +751,7 @@ class GRL(object):
                 # get pretty XML from ElementTree
                 xml = minidom.parseString(meta +
                                           ET.tostring(tree.getroot(), 'utf-8'))
-                filehandle.write(xml.toprettyxml(indent='   '))
+                PrettyPrint(xml, stream=filehandle, encoding='utf-8')
         elif format in ('yml', 'yaml'):
             filehandle.write(yaml.dump(self.to_dict()))
         elif format == 'txt':

@@ -11,6 +11,8 @@ execfile('goodruns/info.py')
 
 if USE_LXML:
     requires.append('lxml')
+else:
+    requires.append('PyXML')
 
 if USE_YAML:
     requires.append('PyYAML')
