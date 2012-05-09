@@ -69,7 +69,7 @@ to::
 
     USE_LXML = True
 
-before installing. This enables the dependency on `lxml <http://lxml.de/>`_
+before installing. This enables the dependency on `lxml`_
 for XML parsing and formatting. `iLumiCalc <https://atlas-lumicalc.cern.ch/>`_
 unfortunately treats whitespace as significant in text-only nodes like `<Run> 123456 </Run>`
 which you will see if using Python's built-in libraries (see
