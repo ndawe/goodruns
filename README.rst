@@ -39,18 +39,42 @@ or to install in your user base directory::
 
     python setup.py install --user
 
+To install the optional dependencies::
+
+    pip install -U -r optional-requirements.txt
+
+
+Post-Installation
+-----------------
+
 If installing in your user site-packages directory be sure to add `~/.local/bin` to your
 `$PATH`::
 
     export PATH=${HOME}/.local/bin${PATH:+:$PATH}
 
-You may specify a different location for your user site-packages directory by::
+You may specify a different location for your user site-packages directory with::
 
     export PYTHONUSERBASE=/path/to/alternate/.local
 
-To install the optional dependencies::
 
-    pip install -U -r optional-requirements.txt
+Warning
+-------
+
+goodruns uses Python's built-in XML libraries by default unless you first
+change this in `goodruns/info.py`::
+
+    USE_LXML = False
+
+to
+
+    USE_LXML = True
+
+before installing. This enables the dependency on `lxml <http://lxml.de/>`_
+for XML parsing and formatting. `iLumiCalc <https://atlas-lumicalc.cern.ch/>`_
+unfortunately treats whitespace as significant in text-only nodes like `<Run> 123456 </Run>`
+which you will see if using Python's built-in libraries (see
+`issue 4147 <http://bugs.python.org/issue4147>`_). To avoid issues with
+iLumiCalc please enable lxml support before installing goodruns.
 
 
 Usage
