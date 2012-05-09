@@ -19,7 +19,7 @@ For better XML reading/writing goodruns will optionally use `lxml <http://pypi.p
 if installed. Install `PyYAML <http://pypi.python.org/pypi/PyYAML/>`_ if you would
 like to convert GRLs into YAML format.
 
-To enable the dependency on lxml and/or PyYAML change `False` to `True` on the
+To enable the dependency on lxml and/or PyYAML change ``False`` to ``True`` on the
 appropriate line(s) in `goodruns/info.py` and perform a manual installation
 as described below.
 
@@ -27,44 +27,52 @@ as described below.
 Automatic Installation
 ----------------------
 
-The easiest way to install goodruns is with ``pip``.
-To install for all users::
-
-    sudo pip install goodruns
-
-To install in your user site-packages directory (also see below)::
+Automatically install the latest version of goodruns with
+`pip <http://pypi.python.org/pypi/pip>`_::
 
     pip install --user goodruns
+
+or with ``easy_install``::
+
+    easy_install --user goodruns
+
+Omit the ``--user`` for a system-wide installation (requires root privileges).
+Add ``${HOME}/.local/bin`` to your ``${PATH}`` if using ``--user`` and if
+it is not there already (put this in your .bashrc)::
+
+   export PATH=${HOME}/.local/bin${PATH:+:$PATH}
+
+To upgrade an existing installation use the ``-U``
+option in the ``pip`` or ``easy_install`` commands above.
 
 
 Manual Installation
 -------------------
 
-If you have obtained a copy of goodruns yourself use the ``setup.py``
-script to install. To install for all users::
+Get the latest tarball on `PyPI <http://pypi.python.org/pypi/goodruns/>`_
 
-    sudo python setup.py install
+Untar and install (replace X appropriately)::
 
-or to install in your user base directory::
+   tar -zxvf goodruns-X.tar.gz
+   cd goodruns-X
 
-    python setup.py install --user
+To install goodruns into your home directory
+if using at least Python 2.6::
+
+   python setup.py install --user
+
+or with older Python versions::
+
+   python setup.py install --prefix=~/.local
+
+Add ``${HOME}/.local/bin`` to your ``${PATH}`` if it is not there already (put this
+in your .bashrc)::
+
+   export PATH=${HOME}/.local/bin${PATH:+:$PATH}
 
 To install the optional dependencies::
 
     pip install -U -r optional-requirements.txt
-
-
-Post-Installation
------------------
-
-If installing in your user site-packages directory be sure to add `~/.local/bin` to your
-`$PATH`::
-
-    export PATH=${HOME}/.local/bin${PATH:+:$PATH}
-
-You may specify a different location for your user site-packages directory with::
-
-    export PYTHONUSERBASE=/path/to/alternate/.local
 
 
 Usage
