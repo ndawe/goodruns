@@ -10,7 +10,9 @@ reader/writer in Python, and collection of useful command-line tools.
 Requirements
 ------------
 
-goodruns requires at least Python 2.5 and only depends on modules in the standard library.
+goodruns requires at least Python 2.5,
+`argparse <http://pypi.python.org/pypi/argparse>`_,
+and `PyXML <http://pypi.python.org/pypi/PyXML/0.8.4>`_.
 Unlike the standard ATLAS GoodRunsLists package, goodruns does not depend on `ROOT <http://root.cern.ch/>`_
 for XML processing unless you are reading from or writing to a ROOT file (see below).
 For better XML reading/writing goodruns will optionally use `lxml <http://pypi.python.org/pypi/lxml/2.3>`_
@@ -55,27 +57,6 @@ If installing in your user site-packages directory be sure to add `~/.local/bin`
 You may specify a different location for your user site-packages directory with::
 
     export PYTHONUSERBASE=/path/to/alternate/.local
-
-
-Warning
--------
-
-goodruns uses Python's built-in XML libraries by default unless you first
-change this in `goodruns/info.py`::
-
-    USE_LXML = False
-
-to::
-
-    USE_LXML = True
-
-before installing. This enables the dependency on `lxml`_
-for XML parsing and formatting. `iLumiCalc <https://atlas-lumicalc.cern.ch/>`_
-unfortunately treats whitespace as significant in text-only nodes like `<Run> 123456 </Run>`
-which you will see if using Python's built-in libraries (see
-`issue 4147 <http://bugs.python.org/issue4147>`_ and this
-`blog post <http://ronrothman.com/public/leftbraned/xml-dom-minidom-toprettyxml-and-silly-whitespace/>`_).
-To avoid problems with iLumiCalc please enable lxml support before installing goodruns.
 
 
 Usage
