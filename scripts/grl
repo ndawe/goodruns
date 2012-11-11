@@ -103,7 +103,16 @@ if hasattr(options, 'grls'):
         sys.exit("Need at least two arguments or one pipe "
                  "and one or more arguments")
     try:
-        grls = [goodruns.GRL(grl) for grl in options.grls]
+        grls = []
+        for grl in options.grls:
+            if grl == sys.stdin:
+                # try to read from stdin
+                # protect against fake stdin issue with xargs
+                grl = sys.stdin.read()
+                if grl:
+                    grls.append(goodruns.GRL(grl, from_string=True))
+            else:
+                grls.append(goodruns.GRL(grl))
     except Exception, e:
         sys.exit("Could not parse GRL: \n%s" % e)
     grl = options.op(*grls)
