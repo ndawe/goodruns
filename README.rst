@@ -10,18 +10,21 @@ reader/writer in Python, and collection of useful command-line tools.
 Requirements
 ------------
 
-goodruns requires at least Python 2.5,
-`argparse <http://pypi.python.org/pypi/argparse>`_,
-and `PyXML <http://pypi.python.org/pypi/PyXML/0.8.4>`_.
-Unlike the standard ATLAS GoodRunsLists package, goodruns does not depend on `ROOT <http://root.cern.ch/>`_
-for XML processing unless you are reading from or writing to a ROOT file (see below).
-For better XML reading/writing goodruns will optionally use `lxml <http://pypi.python.org/pypi/lxml/2.3>`_
-if installed. Install `PyYAML <http://pypi.python.org/pypi/PyYAML/>`_ if you would
-like to convert GRLs into YAML format.
+goodruns requires at least Python 2.5.
+Unlike the standard ATLAS GoodRunsLists package, goodruns does not depend on
+`ROOT <http://root.cern.ch/>`_ for XML processing unless you are reading from
+or writing to a ROOT file (see below). For better XML reading/writing goodruns
+will optionally use `lxml <http://pypi.python.org/pypi/lxml/2.3>`_ if installed.
+Install `PyYAML <http://pypi.python.org/pypi/PyYAML/>`_ if you would like to
+convert GRLs into YAML format.
 
-To enable the dependency on lxml and/or PyYAML change ``False`` to ``True`` on the
-appropriate line(s) in `goodruns/info.py` and perform a manual installation
+To enable the dependency on lxml and/or PyYAML change ``False`` to ``True`` on
+the appropriate line(s) in `goodruns/info.py` and perform a manual installation
 as described below.
+
+.. Note::
+
+    For pretty XML output, lxml is required.
 
 
 Automatic Installation
@@ -65,8 +68,8 @@ or with older Python versions::
 
    python setup.py install --prefix=~/.local
 
-Add ``${HOME}/.local/bin`` to your ``${PATH}`` if it is not there already (put this
-in your .bashrc)::
+Add ``${HOME}/.local/bin`` to your ``${PATH}`` if it is not there already
+(put this in your .bashrc)::
 
    export PATH=${HOME}/.local/bin${PATH:+:$PATH}
 
@@ -130,12 +133,14 @@ GRLs may be XML files, URLs, or in ROOT files.
 grl diff
 ~~~~~~~~
 
-Use ``grl diff`` to determine the GRL containing the runs/lumiblocks in ``A.xml`` but not in ``B.xml``::
+Use ``grl diff`` to determine the GRL containing the runs/lumiblocks in
+``A.xml`` but not in ``B.xml``::
     
     grl diff A.xml B.xml
 
 In other words, ``B.xml`` is subtracted from ``A.xml``.
-All command-line tools print on stdout. Redirect stdout to a file to save the result::
+All command-line tools print on stdout. Redirect stdout to a file to save
+the result::
 
     grl diff A.xml B.xml > C.xml
 
@@ -147,7 +152,8 @@ which results in the GRL E=((A-B)-C)-D). This is equivalent to::
 
     grl diff A.xml B.xml | grl diff C.xml | grl diff D.xml > E.xml
 
-The output of one command can be piped into any of the other commands in goodruns.
+The output of one command can be piped into any of the other commands
+in goodruns.
 
 grl and, grl or, grl xor
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -175,7 +181,8 @@ and any GRL argument can also be a ROOT file or URL::
 grl clip
 ~~~~~~~~
 
-Use ``grl clip`` to truncate a GRL between a starting run/lumiblock and ending run/lumiblock::
+Use ``grl clip`` to truncate a GRL between a starting run/lumiblock and ending
+run/lumiblock::
 
     > grl clip --help
     usage: grl clip [-h] [-o OUTPUT] [-f FORMAT] [--startrun STARTRUN]
@@ -255,12 +262,14 @@ or plain text::
       173 - 176
     ...
 
-``grl convert`` will also convert a GRL into Python code (dict of lists of tuples) or (as a joke) a ROOT TCut expression.
+``grl convert`` will also convert a GRL into Python code (dict of lists of
+tuples) or (as a joke) a ROOT TCut expression.
 
 grl runs
 ~~~~~~~~
 
-``grl runs`` simply prints the run numbers, one per line, contained within a GRL::
+``grl runs`` simply prints the run numbers, one per line, contained
+within a GRL::
 
     > grl runs A.xml
     186178

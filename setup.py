@@ -4,15 +4,19 @@ import os
 import sys
 from glob import glob
 
+if sys.version_info < (2, 5):
+    raise RuntimeError("goodruns supports python 2.5 and above")
 
-requires = ['python>=2.5', 'argparse']
+local_path = os.path.dirname(os.path.abspath(__file__))
+# setup.py can be called from outside the rootpy directory
+os.chdir(local_path)
+sys.path.insert(0, local_path)
 
 execfile('goodruns/info.py')
 
+requires = []
 if USE_LXML:
     requires.append('lxml')
-else:
-    requires.append('PyXML')
 
 if USE_YAML:
     requires.append('PyYAML')
@@ -20,9 +24,11 @@ if USE_YAML:
 kw = {}
 if os.getenv('GOODRUNS_NO_DISTRIBUTE') in ('1', 'true'):
     from distutils.core import setup
-    packages = ['goodruns']
-    if sys.version_info >= (2, 5):
-        kw['requires'] = requires
+    packages = [
+        'goodruns',
+        'goodruns.tests',
+        'goodruns.extern']
+    kw['requires'] = requires
 else:
     from distribute_setup import use_setuptools
     use_setuptools()

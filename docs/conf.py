@@ -12,6 +12,11 @@
 # serve to show the default.
 
 import sys, os
+
+local_path = os.path.dirname(os.path.abspath(__file__))
+# setup.py can be called from outside the rootpy directory
+os.chdir(local_path)
+sys.path.insert(0, local_path)
 sys.path.append(os.path.abspath('_themes'))
 execfile('../goodruns/info.py')
 
@@ -56,9 +61,9 @@ copyright = u'2011, Noel Dawe'
 # built documents.
 #
 # The short X.Y version.
-version = __VERSION__
+version = __version__
 # The full version, including alpha/beta/rc tags.
-release = __VERSION__
+release = __version__
 
 autoclass_content = "both"
 

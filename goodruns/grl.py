@@ -11,8 +11,6 @@ if USE_LXML:
 else:
     import xml.etree.ElementTree as ET
     import xml.dom.minidom as minidom
-    # minidom toprettyxml replacement
-    from xml.dom.ext import PrettyPrint
 
 if USE_YAML:
     import yaml
@@ -748,11 +746,13 @@ class GRL(object):
                 filehandle.write(meta)
                 tree.write(filehandle, pretty_print=True)
             else:
-                # get pretty XML from ElementTree
-                xml = minidom.parseString(meta +
-                                          ET.tostring(tree.getroot(), 'utf-8'))
-                PrettyPrint(xml, stream=filehandle, encoding='utf-8')
+                xml = minidom.parseString(
+                    meta + ET.tostring(tree.getroot(), 'utf-8'))
+                filehandle.write(xml.toxml())
         elif format in ('yml', 'yaml'):
+            if not USE_YAML:
+                raise RuntimeError(
+                        'goodruns was not installed with YAML support')
             filehandle.write(yaml.dump(self.to_dict()))
         elif format == 'txt':
             filehandle.write(str(self) + '\n')
