@@ -38,6 +38,15 @@ __all__ = [
 ]
 
 
+class _MetadataTreeBuilder(ET.TreeBuilder):
+    """
+    Implements doctype() as required to avoid deprecation warnings with
+    >=python-2.7.
+    """
+    def doctype(self, name, pubid, system):
+        pass
+
+
 def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
     """
     Return a clipped GRL between startrun, startlb and
@@ -236,7 +245,8 @@ class GRL(object):
                 filename = grl.name
             name, ext = os.path.splitext(filename)
             if filename == "<stdin>" or ext == '.xml':
-                tree = ET.parse(grl)
+                tree = ET.parse(grl, parser=ET.XMLParser(
+                    target=_MetadataTreeBuilder()))
                 self.from_xml(tree)
             elif ext == '.yml':
                 if USE_YAML:
@@ -263,7 +273,8 @@ class GRL(object):
 
         *string*: str
         """
-        tree = ET.fromstring(string)
+        tree = ET.XML(string, parser=ET.XMLParser(
+            target=_MetadataTreeBuilder()))
         self.from_xml(tree)
 
     def from_xml(self, tree):
