@@ -15,6 +15,7 @@ else:
 if USE_YAML:
     import yaml
 
+import sys
 import os
 import copy
 import urllib2
@@ -245,8 +246,11 @@ class GRL(object):
                 filename = grl.name
             name, ext = os.path.splitext(filename)
             if filename == "<stdin>" or ext == '.xml':
-                tree = ET.parse(grl, parser=ET.XMLParser(
-                    target=_MetadataTreeBuilder()))
+                if sys.version_info >= (2, 7):
+                    tree = ET.parse(grl, parser=ET.XMLParser(
+                        target=_MetadataTreeBuilder()))
+                else:
+                    tree = ET.parse(grl)
                 self.from_xml(tree)
             elif ext == '.yml':
                 if USE_YAML:
@@ -273,8 +277,12 @@ class GRL(object):
 
         *string*: str
         """
-        tree = ET.XML(string, parser=ET.XMLParser(
-            target=_MetadataTreeBuilder()))
+        if sys.version_info >= (2, 7):
+            tree = ET.XML(string, parser=ET.XMLParser(
+                target=_MetadataTreeBuilder()))
+        else:
+            tree = ET.fromstring(string)
+
         self.from_xml(tree)
 
     def from_xml(self, tree):
