@@ -170,11 +170,13 @@ elif hasattr(options, 'grl'):
     grls = collect_grls([options.grl],
         path=options.path,
         pattern=options.pattern)
-    grl = goodruns.ored(grls)
+    grl = goodruns.ored(*grls)
     if options.op is not None:
         kwargs = dict(options._get_kwargs())
         del kwargs['grl']
         del kwargs['op']
+        del kwargs['pattern']
+        del kwargs['path']
         try:
             del kwargs['output']
             del kwargs['format']
@@ -182,7 +184,7 @@ elif hasattr(options, 'grl'):
             pass
         grl = options.op(grl, **kwargs)
 
-if hasattr(options, 'output'):
+if hasattr(options, 'output') and grl is not None:
     if options.output is None:
         grl.write(sys.stdout, format=options.format)
     else:
