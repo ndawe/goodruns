@@ -39,7 +39,8 @@ def pretty_xml(doc):
     http://stackoverflow.com/questions/749796/pretty-printing-xml-in-python
     http://stackoverflow.com/a/3367423/1002176
     """
-    return XML_WHITESPACE.sub('>\g<1></', doc.toprettyxml(indent='  '))
+    xml = XML_WHITESPACE.sub('>\g<1></', doc.toprettyxml(indent='  '))
+    return xml[len('<?xml version="1.0" ?>') + 1:]
 
 
 def get_tree_builder():
@@ -782,14 +783,13 @@ class GRL(object):
             '''"http://atlas-runquery.cern.ch/LumiRangeCollection.dtd">\n'''
             '''<!-- This document was created by goodruns: '''
             '''http://pypi.python.org/pypi/goodruns/ on %s -->\n''' % date)
+            filehandle.write('<?xml version="1.0"?>\n')
+            filehandle.write(meta)
             tree = ET.ElementTree(root)
             if info.USE_LXML:
-                filehandle.write('<?xml version="1.0"?>\n')
-                filehandle.write(meta)
                 tree.write(filehandle, pretty_print=True)
             else:
-                xml = minidom.parseString(
-                    meta + ET.tostring(tree.getroot(), 'utf-8'))
+                xml = minidom.parseString(ET.tostring(tree.getroot(), 'utf-8'))
                 filehandle.write(pretty_xml(xml))
         elif format in ('yml', 'yaml'):
             if not info.USE_YAML:
