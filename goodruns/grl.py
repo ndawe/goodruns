@@ -31,6 +31,17 @@ __all__ = [
 ]
 
 
+XML_WHITESPACE = re.compile('>\n\s+([^<>\s].*?)\n\s+</', re.DOTALL)
+
+
+def pretty_xml(doc):
+    """
+    http://stackoverflow.com/questions/749796/pretty-printing-xml-in-python
+    http://stackoverflow.com/a/3367423/1002176
+    """
+    return XML_WHITESPACE.sub('>\g<1></', doc.toprettyxml(indent='  '))
+
+
 def get_tree_builder():
     if info.USE_LXML:
         import lxml.etree as ET
@@ -779,7 +790,7 @@ class GRL(object):
             else:
                 xml = minidom.parseString(
                     meta + ET.tostring(tree.getroot(), 'utf-8'))
-                filehandle.write(xml.toxml())
+                filehandle.write(pretty_xml(xml))
         elif format in ('yml', 'yaml'):
             if not info.USE_YAML:
                 raise RuntimeError(
