@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import nose
-from nose.tools import assert_raises
+from nose.tools import assert_raises, assert_equal, assert_true
 from nose.exc import SkipTest
 import os
 from goodruns import GRL, LumiblockRange
@@ -19,22 +19,22 @@ def grl_logic_test():
     a = GRL(GRLA)
     b = GRL(GRLB)
 
-    assert a == a
-    assert b == b
-    assert a != b
-    assert (a ^ b) == ((a | b) - (a & b))
-    assert (a - b) == ((a + b) - b)
-    assert (not (a - a)) == True
-    assert (not (a ^ a)) == True
-    assert a & b == b & a
-    assert a | b == b | a
-    assert a ^ b == b ^ a
-
     a & b
     a ^ b
     a | b
     a + b
     a - b
+
+    assert_equal(a, a)
+    assert_equal(b, b)
+    assert_true(a != b)
+    assert_equal((a ^ b), ((a | b) - (a & b)))
+    assert_equal((a - b), ((a + b) - b))
+    assert_true(not (a - a))
+    assert_true(not (a ^ a))
+    assert_equal(a & b, b & a)
+    assert_equal(a | b, b | a)
+    assert_equal(a ^ b, b ^ a)
 
     a &= b
     a ^= b
@@ -47,9 +47,9 @@ def lumiblock_test():
 
     a = LumiblockRange(1, 10)
     b = LumiblockRange(5, 50)
-    assert b > a
-    assert b.intersects(a)
-    assert a.intersects(b)
+    assert_true(b > a)
+    assert_true(b.intersects(a))
+    assert_true(a.intersects(b))
 
 
 def iter_test():
@@ -63,22 +63,22 @@ def str_init_test():
 
     grl = GRL(GRLA)
 
-    assert (180225, 87) in grl
-    assert (180225, 1) not in grl
+    assert_true((180225, 87) in grl)
+    assert_true((180225, 1) not in grl)
 
 
 def dict_init_test():
 
     a = {1234: [(1,2), (4,5)]}
     grl = GRL(a)
-    assert (1234, 1) in grl
+    assert_true((1234, 1) in grl)
 
 
 def file_init_test():
 
     with open(GRLA) as f:
         grl = GRL(f)
-        assert (180225, 87) in grl
+        assert_true((180225, 87) in grl)
 
 
 def save_test():
@@ -101,7 +101,7 @@ def from_string_test():
 
     grlb = GRL(grl.str(), from_string=True)
 
-    assert grlb == grl
+    assert_equal(grlb, grl)
 
 
 def test_read_yaml():
@@ -114,7 +114,7 @@ def test_read_yaml():
     grl = GRL(GRLA)
     grl.save('test.yml')
     grl2 = GRL('test.yml')
-    assert grl == grl2
+    assert_equal(grl, grl2)
     os.unlink('test.yml')
 
 
@@ -132,7 +132,7 @@ def test_ROOT():
     grl = GRL(GRLA)
     grl.save(filename + ':/lumi')
     grl2 = GRL(filename + ':/lumi')
-    assert grl == grl2
+    assert_equal(grl, grl2)
 
     root_file = ROOT.TFile.Open(filename, 'recreate')
     root_file.mkdir('dir')
@@ -141,11 +141,11 @@ def test_ROOT():
     grl = GRL(GRLA)
     grl.save(filename + ':/dir/lumi')
     grl2 = GRL(filename + ':/dir/lumi')
-    assert grl == grl2
+    assert_equal(grl, grl2)
 
     root_file = ROOT.TFile.Open(filename)
     tobj = root_file.Get('dir/lumi')
-    assert isinstance(tobj, ROOT.TObjString)
+    assert_true(isinstance(tobj, ROOT.TObjString))
     root_file.Close()
     os.unlink(filename)
 
