@@ -162,7 +162,7 @@ def collect_grls(grls, pattern=None, path=None):
         # is this a directory?
         elif os.path.isdir(grl):
             for dirpath, dirnames, filenames in os.walk(grl):
-                for filename in filenames:
+                for filename in sorted(filenames):
                     if pattern is None or fnmatch(filename, pattern):
                         fullpath = os.path.join(dirpath, filename)
                         try:
