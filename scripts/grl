@@ -86,13 +86,13 @@ parser_clip = subparsers.add_parser('clip',
 output_arg(parser_clip)
 grl_arg(parser_clip)
 parser_clip.add_argument('--startrun', type=int,
-                         help="Start run", default=None)
+                         help="Start run number", default=None)
 parser_clip.add_argument('--startlb', type=int,
-                         help="Start lumiblock", default=None)
+                         help="Start lumiblock number", default=None)
 parser_clip.add_argument('--endrun', type=int,
-                         help="End run", default=None)
+                         help="End run number", default=None)
 parser_clip.add_argument('--endlb', type=int,
-                         help="End lumiblock", default=None)
+                         help="End lumiblock number", default=None)
 parser_clip.set_defaults(op=goodruns.clipped)
 
 parser_runs = subparsers.add_parser('runs',
@@ -107,6 +107,30 @@ def print_runs(grl):
 
 grl_arg(parser_runs)
 parser_runs.set_defaults(op=print_runs)
+
+parser_find = subparsers.add_parser('find',
+                        description="Find the file containing a certain run "
+                                    "and lumiblock number.")
+
+
+def find(filenames, grls, run, lb=None):
+    
+    if lb is not None:
+        for filename, grl in zip(filenames, grls):
+            if (run, lb) in grl:
+                print filename
+    else:
+        for filename, grl in zip(filenames, grls):
+            if grl.has_run(run):
+                print filename
+
+
+mult_grl_arg(parser_find)
+parser_find.add_argument('--run', type=int,
+                         help="Run number", required=True)
+parser_find.add_argument('--lb', type=int,
+                         help="Lumiblock number", default=None)
+parser_find.set_defaults(op=find)
 
 options = parser.parse_args()
 
@@ -124,6 +148,7 @@ def maybe_root(filename, path=None):
 
 def collect_grls(grls, pattern=None, path=None):
     
+    files = []
     out_grls = []
     for grl in grls:
         # is this a pipe?
@@ -133,6 +158,7 @@ def collect_grls(grls, pattern=None, path=None):
             grl = sys.stdin.read()
             if grl:
                 out_grls.append(goodruns.GRL(grl, from_string=True))
+                files.append('STDIN')
         # is this a directory?
         elif os.path.isdir(grl):
             for dirpath, dirnames, filenames in os.walk(grl):
@@ -143,31 +169,40 @@ def collect_grls(grls, pattern=None, path=None):
                             out_grls.append(goodruns.GRL(maybe_root(fullpath, path=path)))
                         except Exception, e:
                             sys.exit("Could not parse GRL %s\n%s" % (fullpath, e))
+                        files.append(fullpath)
         # this must be a file
         else:
+            filename = maybe_root(grl, path=path)
             try:
-                out_grls.append(goodruns.GRL(maybe_root(grl, path=path)))
+                out_grls.append(goodruns.GRL(filename))
             except Exception, e:
                 sys.exit("Could not parse GRL %s\n%s" % (grl, e))
-    return out_grls
+            files.append(filename)
+    return files, out_grls
 
 
 if hasattr(options, 'grls'):
     if not sys.stdin.isatty():
         options.grls.insert(0, sys.stdin)
-    if len(options.grls) < 2:
+    if options.op != find and len(options.grls) < 2:
         sys.exit("Need at least two arguments or one pipe "
                  "and one or more arguments")
-    grl = options.op(*collect_grls(options.grls,
+    elif not options.grls:
+        sys.exit("Need at least one argument or one pipe")
+    filenames, grls = collect_grls(options.grls,
         path=options.path,
-        pattern=options.pattern))
+        pattern=options.pattern)
+    if options.op == find:
+        find(filenames, grls, run=options.run, lb=options.lb)
+    else:
+        grl = options.op(*grls)
 
 elif hasattr(options, 'grl'):
     if not sys.stdin.isatty() and options.grl is None:
         options.grl = sys.stdin
     if options.grl is None:
         sys.exit("Need exactly one argument or one pipe")
-    grls = collect_grls([options.grl],
+    _, grls = collect_grls([options.grl],
         path=options.path,
         pattern=options.pattern)
     grl = goodruns.ored(*grls)
