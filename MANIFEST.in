@@ -3,4 +3,3 @@ include COPYING
 include README
 include README.rst
 include scripts/*
-prune tests
