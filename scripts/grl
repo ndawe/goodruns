@@ -16,6 +16,9 @@ except ImportError:
 
 
 parser = argparse.ArgumentParser()
+parser.add_argument('--lxml', action='store_true', default=False,
+                    help="Use lxml for XML reading and writing "
+                         "(requires lxml to be installed)")
 subparsers = parser.add_subparsers()
 
 
@@ -140,6 +143,9 @@ parser_find.add_argument('--lb', type=int,
 parser_find.set_defaults(op=find)
 
 options = parser.parse_args()
+if options.lxml:
+    from goodruns import info
+    info.USE_LXML = True
 
 ROOT_PATTERN = re.compile(r'\.root[^ \t\n\r\f\v:/]*(:/)?')
 
@@ -215,6 +221,7 @@ elif hasattr(options, 'grl'):
     grl = goodruns.ored(*grls)
     if options.op is not None:
         kwargs = dict(options._get_kwargs())
+        del kwargs['lxml']
         del kwargs['grl']
         del kwargs['op']
         del kwargs['pattern']
