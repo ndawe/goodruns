@@ -7,6 +7,13 @@ from fnmatch import fnmatch
 from goodruns.extern import argparse
 import goodruns
 
+try:
+    import ROOT
+    ROOT.PyConfig.IgnoreCommandLineOptions = True
+    ROOT.gErrorIgnoreLevel = ROOT.kFatal
+except ImportError:
+    pass
+
 
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers()
