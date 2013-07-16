@@ -214,11 +214,11 @@ class GRL(object):
                     # one place where goodruns requires ROOT
                     try:
                         import ROOT
-                        ROOT.PyConfig.IgnoreCommandLineOptions = True
                     except ImportError:
-                        raise ImportError('Specified GRL in ROOT file '
-                                          'but cannot import ROOT. Are ROOT '
-                                          'and PyROOT installed?')
+                        raise ImportError(
+                            'Specified a GRL in a ROOT file '
+                            'but cannot import ROOT. Is ROOT installed '
+                            'with PyROOT enabled?')
                     cwd = ROOT.gDirectory
                     filename, _, path = grl.rpartition(':/')
                     root_file = ROOT.TFile.Open(filename)
