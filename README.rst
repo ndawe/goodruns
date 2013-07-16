@@ -22,10 +22,6 @@ To enable the dependency on lxml and/or PyYAML change ``False`` to ``True`` on
 the appropriate line(s) in `goodruns/info.py` and perform a manual installation
 as described below.
 
-.. Note::
-
-    For pretty XML output, lxml is required.
-
 
 Automatic Installation
 ----------------------
