@@ -1,5 +1,5 @@
 include *.py
-include LICENSE
+include COPYING
 include README
 include README.rst
 include scripts/*
