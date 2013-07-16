@@ -106,7 +106,11 @@ def from_string_test():
 
 def test_read_yaml():
 
-    raise SkipTest()
+    try:
+        import yaml
+    except ImportError:
+        raise SkipTest
+
     grl = GRL(GRLA)
     grl.save('test.yml')
     grl2 = GRL('test.yml')
@@ -116,7 +120,11 @@ def test_read_yaml():
 
 def test_ROOT():
 
-    import ROOT
+    try:
+        import ROOT
+    except ImportError:
+        raise SkipTest
+
     filename = os.path.join(DIRNAME, 'test.root')
     root_file = ROOT.TFile.Open(filename, 'recreate')
     root_file.Close()

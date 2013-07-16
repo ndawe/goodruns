@@ -1,11 +1,19 @@
 #!/usr/bin/env python
 
-import os
 import sys
-from glob import glob
 
 if sys.version_info < (2, 5):
     raise RuntimeError("goodruns supports python 2.5 and above")
+
+from glob import glob
+import os
+# Prevent distutils from trying to create hard links
+# which are not allowed on AFS between directories.
+# This is a hack to force copying.
+try:
+    del os.link
+except AttributeError:
+    pass
 
 local_path = os.path.dirname(os.path.abspath(__file__))
 # setup.py can be called from outside the rootpy directory

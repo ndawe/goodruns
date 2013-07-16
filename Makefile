@@ -1,24 +1,21 @@
-# simple makefile to simplify repetetive build env management tasks under posix
+# simple makefile to simplify repetitive build env management tasks under posix
 
 PYTHON ?= python
 NOSETESTS ?= nosetests
-CTAGS ?= ctags
 
 all: clean inplace test
 
 clean-pyc:
-	find goodruns -name "*.pyc" | xargs rm -f
-
-clean-so:
-	find goodruns -name "*.so" | xargs rm -f
+	find . -name "*.pyc" -exec rm {} \;
 
 clean-build:
 	rm -rf build
 
-clean-ctags:
-	rm -f tags
+clean-distribute:
+	rm -f distribute-*.egg
+	rm -f distribute-*.tar.gz
 
-clean: clean-build clean-pyc clean-so clean-ctags
+clean: clean-build clean-pyc clean-distribute
 
 in: inplace # just a shortcut
 inplace:
@@ -40,7 +37,7 @@ upload: clean
 	$(PYTHON) setup.py sdist upload --release
 
 test-code: in
-	$(NOSETESTS) -s goodruns --nologcapture
+	$(NOSETESTS) -v -s goodruns --nologcapture
 
 test-doc:
 	$(NOSETESTS) -s --with-doctest --doctest-tests --doctest-extension=rst \

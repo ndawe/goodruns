@@ -4,16 +4,7 @@
 This module provides the main GRL class and utility functions
 """
 
-from .info import USE_LXML, USE_YAML
-
-if USE_LXML:
-    import lxml.etree as ET
-else:
-    import xml.etree.ElementTree as ET
-    import xml.dom.minidom as minidom
-
-if USE_YAML:
-    import yaml
+from . import info
 
 import sys
 import os
@@ -26,6 +17,7 @@ import bisect
 import datetime
 import cStringIO
 import re
+import xml.etree.ElementTree as _ET
 
 
 __all__ = [
@@ -39,13 +31,19 @@ __all__ = [
 ]
 
 
-class _MetadataTreeBuilder(ET.TreeBuilder):
-    """
-    Implements doctype() as required to avoid deprecation warnings with
-    >=python-2.7.
-    """
-    def doctype(self, name, pubid, system):
-        pass
+def get_tree_builder():
+    if info.USE_LXML:
+        import lxml.etree as ET
+    else:
+        import xml.etree.ElementTree as ET
+    class _MetadataTreeBuilder(ET.TreeBuilder):
+        """
+        Implements doctype() as required to avoid deprecation warnings with
+        >=python-2.7.
+        """
+        def doctype(self, name, pubid, system):
+            pass
+    return _MetadataTreeBuilder()
 
 
 def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
@@ -71,7 +69,7 @@ def clipped(grl, startrun=None, startlb=None, endrun=None, endlb=None):
 
 def diffed(*args):
     """
-    Return the difference of multiple GRLs: (((A-B)-C)-D)...)
+    Return the difference of multiple GRLs: (((A-B)-C)-D) ...)
 
     *args*: tuple of GRLs
     """
@@ -80,7 +78,7 @@ def diffed(*args):
 
 def ored(*args):
     """
-    Return the OR of multiple GRLs: A | B | C...
+    Return the OR of multiple GRLs: A | B | C ...
 
     *args*: tuple of GRLs
     """
@@ -89,7 +87,7 @@ def ored(*args):
 
 def anded(*args):
     """
-    Return the AND of multiple GRLs: A & B & C...
+    Return the AND of multiple GRLs: A & B & C ...
 
     *args*: tuple of GRLs
     """
@@ -98,7 +96,7 @@ def anded(*args):
 
 def xored(*args):
     """
-    Return the XOR of multiple GRLs: A ^ B ^ C...
+    Return the XOR of multiple GRLs: A ^ B ^ C ...
 
     *args*: tuple of GRLs
     """
@@ -246,14 +244,19 @@ class GRL(object):
                 filename = grl.name
             name, ext = os.path.splitext(filename)
             if filename == "<stdin>" or ext == '.xml':
+                if info.USE_LXML:
+                    import lxml.etree as ET
+                else:
+                    import xml.etree.ElementTree as ET
                 if sys.version_info >= (2, 7):
                     tree = ET.parse(grl, parser=ET.XMLParser(
-                        target=_MetadataTreeBuilder()))
+                        target=get_tree_builder()))
                 else:
                     tree = ET.parse(grl)
                 self.from_xml(tree)
             elif ext == '.yml':
-                if USE_YAML:
+                if info.USE_YAML:
+                    import yaml
                     if isinstance(grl, file):
                         self.from_dict(yaml.load(grl))
                     else:
@@ -277,9 +280,13 @@ class GRL(object):
 
         *string*: str
         """
+        if info.USE_LXML:
+            import lxml.etree as ET
+        else:
+            import xml.etree.ElementTree as ET
         if sys.version_info >= (2, 7):
             tree = ET.XML(string, parser=ET.XMLParser(
-                target=_MetadataTreeBuilder()))
+                target=get_tree_builder()))
         else:
             tree = ET.fromstring(string)
 
@@ -736,6 +743,11 @@ class GRL(object):
         *format*: str
         """
         if format == 'xml':
+            if info.USE_LXML:
+                import lxml.etree as ET
+            else:
+                import xml.etree.ElementTree as ET
+                import xml.dom.minidom as minidom
             root = ET.Element('LumiRangeCollection')
             subroot = ET.SubElement(root, 'NamedLumiRange')
             name = ET.SubElement(subroot, 'Name')
@@ -760,7 +772,7 @@ class GRL(object):
             '''<!-- This document was created by goodruns: '''
             '''http://pypi.python.org/pypi/goodruns/ on %s -->\n''' % date)
             tree = ET.ElementTree(root)
-            if USE_LXML:
+            if info.USE_LXML:
                 filehandle.write('<?xml version="1.0"?>\n')
                 filehandle.write(meta)
                 tree.write(filehandle, pretty_print=True)
@@ -769,9 +781,11 @@ class GRL(object):
                     meta + ET.tostring(tree.getroot(), 'utf-8'))
                 filehandle.write(xml.toxml())
         elif format in ('yml', 'yaml'):
-            if not USE_YAML:
+            if not info.USE_YAML:
                 raise RuntimeError(
-                        'goodruns was not installed with YAML support')
+                    "goodruns was not installed with YAML support")
+            else:
+                import yaml
             filehandle.write(yaml.dump(self.to_dict()))
         elif format == 'txt':
             filehandle.write(str(self) + '\n')

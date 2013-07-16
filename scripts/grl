@@ -2,6 +2,8 @@
 
 import sys
 import os
+import re
+from fnmatch import fnmatch
 from goodruns.extern import argparse
 import goodruns
 
@@ -21,20 +23,32 @@ def output_arg(parser):
                         default='xml')
 
 
-def mult_grl_arg(parser):
+def input_arg(parser):
 
+    parser.add_argument('--pattern', '-e', default=None,
+                        help="If an argument is a directory, files under this "
+                             "directory matching this pattern will be included")
+    parser.add_argument('--path', '-p', default=None,
+                        help="For each argument that is a ROOT file, this path will "
+                             "specify the location of the GRL fragment within each file") 
+    
+    
+def mult_grl_arg(parser):
+    
+    input_arg(parser)
     parser.add_argument('grls', nargs='*',
                         metavar='GRL',
-                        help=('GRL filename, URL (must begin with http://) '
-                              'or ROOT file (data.root:/path/to/grl)'))
+                        help="GRL filename, URL (must begin with http://) "
+                             "or ROOT file (data.root:/path/to/grl)")
 
 
 def grl_arg(parser):
-
+    
+    input_arg(parser)
     parser.add_argument('grl', nargs='?', default=None,
                         metavar='GRL',
-                        help=('GRL filename, URL (must begin with http://) '
-                              'or ROOT file (data.root:/path/to/grl)'))
+                        help="GRL filename, URL (must begin with http://) "
+                             "or ROOT file (data.root:/path/to/grl)")
 
 
 parser_and = subparsers.add_parser('and',
@@ -96,36 +110,67 @@ parser_runs.set_defaults(op=print_runs)
 
 options = parser.parse_args()
 
+ROOT_PATTERN = re.compile(r'\.root[^ \t\n\r\f\v:/]*(:/)?')
+
+
+def maybe_root(filename, path=None):
+    if re.search(ROOT_PATTERN, filename):
+        if path is not None:
+            if ':/' not in filename:
+                filename += ':/'
+            filename = os.path.join(filename, path)
+    return filename
+
+
+def collect_grls(grls, pattern=None, path=None):
+    
+    out_grls = []
+    for grl in grls:
+        # is this a pipe?
+        if grl == sys.stdin:
+            # try to read from stdin
+            # protect against fake stdin issue with xargs
+            grl = sys.stdin.read()
+            if grl:
+                out_grls.append(goodruns.GRL(grl, from_string=True))
+        # is this a directory?
+        elif os.path.isdir(grl):
+            for dirpath, dirnames, filenames in os.walk(grl):
+                for filename in filenames:
+                    if pattern is None or fnmatch(filename, pattern):
+                        fullpath = os.path.join(dirpath, filename)
+                        try:
+                            out_grls.append(goodruns.GRL(maybe_root(fullpath, path=path)))
+                        except Exception, e:
+                            sys.exit("Could not parse GRL %s\n%s" % (fullpath, e))
+        # this must be a file
+        else:
+            try:
+                out_grls.append(goodruns.GRL(maybe_root(grl, path=path)))
+            except Exception, e:
+                sys.exit("Could not parse GRL %s\n%s" % (grl, e))
+    return out_grls
+
+
 if hasattr(options, 'grls'):
     if not sys.stdin.isatty():
         options.grls.insert(0, sys.stdin)
     if len(options.grls) < 2:
         sys.exit("Need at least two arguments or one pipe "
                  "and one or more arguments")
-    try:
-        grls = []
-        for grl in options.grls:
-            if grl == sys.stdin:
-                # try to read from stdin
-                # protect against fake stdin issue with xargs
-                grl = sys.stdin.read()
-                if grl:
-                    grls.append(goodruns.GRL(grl, from_string=True))
-            else:
-                grls.append(goodruns.GRL(grl))
-    except Exception, e:
-        sys.exit("Could not parse GRL: \n%s" % e)
-    grl = options.op(*grls)
+    grl = options.op(*collect_grls(options.grls,
+        path=options.path,
+        pattern=options.pattern))
 
 elif hasattr(options, 'grl'):
     if not sys.stdin.isatty() and options.grl is None:
         options.grl = sys.stdin
     if options.grl is None:
         sys.exit("Need exactly one argument or one pipe")
-    try:
-        grl = goodruns.GRL(options.grl)
-    except Exception, e:
-        sys.exit("Could not parse GRL: \n%s" % e)
+    grls = collect_grls([options.grl],
+        path=options.path,
+        pattern=options.pattern)
+    grl = goodruns.ored(grls)
     if options.op is not None:
         kwargs = dict(options._get_kwargs())
         del kwargs['grl']
