@@ -32,14 +32,27 @@ __all__ = [
 
 
 XML_WHITESPACE = re.compile('>\n\s+([^<>\s].*?)\n\s+</', re.DOTALL)
+LBRANGE_ORDER = re.compile('<LBRange End="(?P<end>\d+)" Start="(?P<start>\d+)"/>')
+
+
+def fix_attr_order(match):
+    return '<LBRange Start="%s" End="%s"/>' % (
+        match.group('start'),
+        match.group('end'))
 
 
 def pretty_xml(doc):
     """
+    Fix-up minidom's toprettyxml() output
+
     http://stackoverflow.com/questions/749796/pretty-printing-xml-in-python
     http://stackoverflow.com/a/3367423/1002176
     """
+    # remove extra whitespace created by minidom
     xml = XML_WHITESPACE.sub('>\g<1></', doc.toprettyxml(indent='  '))
+    # preserve order of Start and End attributes (although the order of XML
+    # node attributes is not important and should not be depended on)
+    xml = LBRANGE_ORDER.sub(fix_attr_order, xml)
     return xml[len('<?xml version="1.0" ?>') + 1:]
 
 
