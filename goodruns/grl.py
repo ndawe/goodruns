@@ -206,7 +206,7 @@ class GRL(object):
 
     ROOT_PATTERN = re.compile(r'\.root[^ \t\n\r\f\v:/]*:/')
 
-    def __init__(self, grl=None, from_string=False):
+    def __init__(self, grl=None, from_string=False, format=None):
         """
         *grl*: [ dict | str | None ]
 
@@ -268,7 +268,7 @@ class GRL(object):
             elif isinstance(grl, file):
                 filename = grl.name
             name, ext = os.path.splitext(filename)
-            if filename == "<stdin>" or ext == '.xml':
+            if filename == '<stdin>' or ext == '.xml' or format == 'xml':
                 if info.USE_LXML:
                     import lxml.etree as ET
                 else:
@@ -279,7 +279,7 @@ class GRL(object):
                 else:
                     tree = ET.parse(grl)
                 self.from_xml(tree)
-            elif ext == '.yml':
+            elif ext == '.yml' or format == 'yml':
                 if info.USE_YAML:
                     import yaml
                     if isinstance(grl, file):

@@ -41,7 +41,12 @@ def input_arg(parser):
     parser.add_argument('--path', '-p', default=None,
                         help="For each argument that is a ROOT file, this path will "
                              "specify the location of the GRL fragment within each file") 
-    
+    parser.add_argument('--input-format',
+                        help="xml or yml. "
+                             "Otherwise infer the format from the file "
+                             "extension if not specified.",
+                        default=None)
+
     
 def mult_grl_arg(parser):
     
@@ -159,7 +164,7 @@ def maybe_root(filename, path=None):
     return filename
 
 
-def collect_grls(grls, pattern=None, path=None):
+def collect_grls(grls, pattern=None, path=None, format=None):
     
     files = []
     out_grls = []
@@ -170,7 +175,9 @@ def collect_grls(grls, pattern=None, path=None):
             # protect against fake stdin issue with xargs
             grl = sys.stdin.read()
             if grl:
-                out_grls.append(goodruns.GRL(grl, from_string=True))
+                out_grls.append(goodruns.GRL(grl,
+                    from_string=True,
+                    format=format))
                 files.append('STDIN')
         # is this a directory?
         elif os.path.isdir(grl):
@@ -179,7 +186,9 @@ def collect_grls(grls, pattern=None, path=None):
                     if pattern is None or fnmatch(filename, pattern):
                         fullpath = os.path.join(dirpath, filename)
                         try:
-                            out_grls.append(goodruns.GRL(maybe_root(fullpath, path=path)))
+                            out_grls.append(goodruns.GRL(
+                                maybe_root(fullpath, path=path),
+                                format=format))
                         except Exception, e:
                             sys.exit("Could not parse GRL %s\n%s" % (fullpath, e))
                         files.append(fullpath)
@@ -187,7 +196,7 @@ def collect_grls(grls, pattern=None, path=None):
         else:
             filename = maybe_root(grl, path=path)
             try:
-                out_grls.append(goodruns.GRL(filename))
+                out_grls.append(goodruns.GRL(filename, format=format))
             except Exception, e:
                 sys.exit("Could not parse GRL %s\n%s" % (grl, e))
             files.append(filename)
@@ -204,7 +213,8 @@ if hasattr(options, 'grls'):
         sys.exit("Need at least one argument or one pipe")
     filenames, grls = collect_grls(options.grls,
         path=options.path,
-        pattern=options.pattern)
+        pattern=options.pattern,
+        format=options.input_format)
     if options.op == find:
         find(filenames, grls, run=options.run, lb=options.lb)
     else:
@@ -226,6 +236,7 @@ elif hasattr(options, 'grl'):
         del kwargs['op']
         del kwargs['pattern']
         del kwargs['path']
+        del kwargs['input_format']
         try:
             del kwargs['output']
             del kwargs['format']
