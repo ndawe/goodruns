@@ -9,7 +9,7 @@
  Author: Noel Dawe
 
 """
-__version__ = '2.7'
+__version__ = '2.8.0'
 __url__ = 'http://ndawe.github.com/goodruns'
 __repo_url__ = 'https://github.com/ndawe/goodruns/'
 __download_url__ = 'http://pypi.python.org/packages/source/g/goodruns/' \
