@@ -11,11 +11,7 @@ clean-pyc:
 clean-build:
 	rm -rf build
 
-clean-distribute:
-	rm -f distribute-*.egg
-	rm -f distribute-*.tar.gz
-
-clean: clean-build clean-pyc clean-distribute
+clean: clean-build clean-pyc
 
 in: inplace # just a shortcut
 inplace:
@@ -60,9 +56,6 @@ ctags:
 
 doc: inplace
 	make -C docs/ html
-
-update-distribute:
-	curl -O http://python-distribute.org/distribute_setup.py
 
 check-rst:
 	python setup.py --long-description | rst2html.py > __output.html
