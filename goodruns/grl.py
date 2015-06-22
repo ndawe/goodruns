@@ -19,6 +19,12 @@ import cStringIO
 import re
 import xml.etree.ElementTree as _ET
 
+try:
+    import yaml
+    USE_YAML = True
+except ImportError:
+    USE_YAML = False
+
 
 __all__ = [
     'clipped',
@@ -31,12 +37,14 @@ __all__ = [
 ]
 
 
-XML_WHITESPACE = re.compile('>\n\s+([^<>\s].*?)\n\s+</', re.DOTALL)
-LBRANGE_ORDER = re.compile('<LBRange End="(?P<end>\d+)" Start="(?P<start>\d+)"/>')
+XML_WHITESPACE = re.compile(
+    '>\n\s+([^<>\s].*?)\n\s+</', re.DOTALL)
+LBRANGE_ORDER = re.compile(
+    '<LBRange End="(?P<end>\d+)" Start="(?P<start>\d+)"/>')
 
 
 def fix_attr_order(match):
-    return '<LBRange Start="%s" End="%s"/>' % (
+    return '<LBRange Start="{0}" End="{1}"/>'.format(
         match.group('start'),
         match.group('end'))
 
@@ -131,7 +139,7 @@ def xored(*args):
 class LumiblockRange(tuple):
     """
     A 2-tuple consisting of the lower and upper
-    bounds of a lumiblock range
+    bounds of a lumiblock range.
     """
     def __new__(cls, *args):
         """
@@ -141,13 +149,13 @@ class LumiblockRange(tuple):
         if len(args) == 1 and isinstance(args[0], tuple):
             args = args[0]
         if len(args) != 2:
-            raise ValueError('lbrange must contain exactly 2 elements: %s' % \
-                             (args,))
+            raise ValueError(
+                "lbrange must contain exactly 2 elements: {0}".format((args,)))
         for lumiblock in args:
             if not isinstance(lumiblock, (int, long)):
-                raise TypeError('lbrange must contain integers or longs only')
+                raise TypeError("lbrange must contain integers or longs only")
         if args[0] > args[1]:
-            raise ValueError('lbrange in wrong order: %s' % (args,))
+            raise ValueError("lbrange in wrong order: {0}".format((args,)))
         return super(LumiblockRange, cls).__new__(cls, args)
 
     def __contains__(self, lbn):
@@ -226,13 +234,13 @@ class GRL(object):
             self.from_string(grl)
             return
         elif from_string:
-            raise TypeError("grl is non-string type %s while "
-                            "using from_string" % type(grl))
+            raise TypeError("grl is non-string type '{0}' while "
+                            "using from_string=True".format(type(grl)))
         elif isinstance(grl, (basestring, file)):
             filename = grl
             if isinstance(grl, basestring):
                 # is grl a URL?
-                if grl.startswith("http://"):
+                if re.match('^http(s)?://', grl) is not None:
                     grl = urllib2.urlopen(grl)
                 # is grl a ROOT file path?
                 elif re.search(self.ROOT_PATTERN, grl):
@@ -241,22 +249,24 @@ class GRL(object):
                         import ROOT
                     except ImportError:
                         raise ImportError(
-                            'Specified a GRL in a ROOT file '
-                            'but cannot import ROOT. Is ROOT installed '
-                            'with PyROOT enabled?')
+                            "Specified a GRL in a ROOT file "
+                            "but cannot import ROOT. Is ROOT installed "
+                            "with PyROOT enabled?")
                     cwd = ROOT.gDirectory
                     filename, _, path = grl.rpartition(':/')
                     root_file = ROOT.TFile.Open(filename)
                     if not root_file:
-                        raise IOError('Could not open ROOT file: %s' %
-                                      filename)
+                        raise IOError(
+                            "Could not open ROOT file: {0}".format(filename))
                     grl = root_file.Get(path)
                     if not grl:
-                        raise ValueError('Path %s does not exist in '
-                                         'ROOT file %s' % (path, filename))
+                        raise ValueError(
+                            "Path {0} does not exist in ROOT file {1}".format(
+                                path, filename))
                     if not isinstance(grl, ROOT.TObjString):
-                        raise TypeError('Object at %s is not a '
-                                        'ROOT.TObjString' % path)
+                        raise TypeError(
+                            "Object at {0} is not a ROOT.TObjString".format(
+                                path))
                     self.from_string(str(grl.GetString()))
                     root_file.Close()
                     # return to previous directory
@@ -274,14 +284,14 @@ class GRL(object):
                 else:
                     import xml.etree.ElementTree as ET
                 if sys.version_info >= (2, 7):
-                    tree = ET.parse(grl, parser=ET.XMLParser(
+                    tree = ET.parse(
+                        grl, parser=ET.XMLParser(
                         target=get_tree_builder()))
                 else:
                     tree = ET.parse(grl)
                 self.from_xml(tree)
             elif ext == '.yml' or format == 'yml':
-                if info.USE_YAML:
-                    import yaml
+                if USE_YAML:
                     if isinstance(grl, file):
                         self.from_dict(yaml.load(grl))
                     else:
@@ -291,13 +301,14 @@ class GRL(object):
                     raise ImportError("PyYAML module not found")
             else:
                 raise ValueError(
-                    "File %s does not have valid GRL extension: %s"
-                    % (filename, ext))
+                    "{0} does not have valid GRL extension: {1}".format(
+                        filename, ext))
             for run in self.iterruns():
                 self.__grl[run].sort()
                 self.__optimize(run)
             return
-        raise TypeError("Unable to initialize GRL from a %s" % type(grl))
+        raise TypeError(
+            "Unable to initialize GRL from a '{0}'".format(type(grl)))
 
     def from_string(self, string):
         """
@@ -653,29 +664,35 @@ class GRL(object):
         return self
 
     def __and__(self, other):
-
+        """ Create a new GRL that is the overlap between two GRLs
+        """
         return self - (self - other)
 
     def __iand__(self, other):
-
+        """ Update this GRL by only including the overlap with another GRL
+        """
         self -= (self - other)
         return self
 
     def __or__(self, other):
-
+        """ Merge two GRLs
+        """
         return self + other
 
     def __ior__(self, other):
-
+        """ Update this GRL by adding the logical OR with another GRL
+        """
         self += other
         return self
 
     def __xor__(self, other):
-
+        """ Exclusive OR (XOR) between two GRLs
+        """
         return (self | other) - (self & other)
 
     def __ixor__(self, other):
-
+        """ Update this GRL by removing overlap with another GRL
+        """
         grlcopy = copy.deepcopy(self)
         self |= other
         self -= (grlcopy & other)
@@ -684,7 +701,6 @@ class GRL(object):
     def cut(self, runname='RunNumber', lbname='lbn'):
         """
         Convert this GRL into a TCut expression.
-        This method is really meant to be a joke and should be of no use.
 
         *runname*: str
 
@@ -694,14 +710,15 @@ class GRL(object):
         for run in self.iterruns():
             lbcut = ''
             for lbrange in self[run]:
-                newcut = (lbname + '>=%i&&' + lbname + '<=%i') % lbrange
+                newcut = (lbname + '>={0:d}&&' +
+                          lbname + '<={1:d}').format(*lbrange)
                 if lbcut:
-                    lbcut = '(%s)|(%s)' % (lbcut, newcut)
+                    lbcut = '({0})|({1})'.format(lbcut, newcut)
                 else:
                     lbcut = newcut
-            newcut = '(%s==%i)&&(%s)' % (runname, run, lbcut)
+            newcut = '({0}=={1:d})&&({2})'.format(runname, run, lbcut)
             if cut:
-                cut = '(%s)|(%s)' % (cut, newcut)
+                cut = '({0})|({1})'.format(cut, newcut)
             else:
                 cut = newcut
         return cut
@@ -730,19 +747,20 @@ class GRL(object):
                 import ROOT
                 ROOT.PyConfig.IgnoreCommandLineOptions = True
             except ImportError:
-                raise ImportError('Attempting to save GRL in ROOT file '
-                                  'but cannot import ROOT. Are ROOT and PyROOT '
-                                  'installed?')
+                raise ImportError(
+                    "Attempting to save GRL in ROOT file but cannot import "
+                    "ROOT. Are ROOT and PyROOT installed?")
             cwd = ROOT.gDirectory
             filename, _, path = name.rpartition(':/')
             root_file = ROOT.TFile.Open(filename, 'UPDATE')
             if not root_file:
-                raise IOError('Could not open ROOT file: %s' %
-                              filename)
+                raise IOError(
+                    'Could not open ROOT file: {0}'.format(filename))
             head, tail = os.path.split(os.path.normpath(path))
             if head and not root_file.cd(head):
-                raise ValueError('Path %s does not exist in file %s' %
-                                 (head, filename))
+                raise ValueError(
+                    'Path {0} does not exist in file {1}'.format(
+                        head, filename))
             xml_string = ROOT.TObjString(self.str())
             xml_string.Write(tail)
             root_file.Close()
@@ -753,9 +771,8 @@ class GRL(object):
             # ignore period
             ext = ext[1:]
             if ext not in GRL.formats:
-                raise ValueError("Filename %s does not have "
-                                 "a valid GRL extension." %
-                                 name)
+                raise ValueError(
+                    "{0} does not have a valid GRL extension".format(name))
             with open(name, 'w') as filehandle:
                 self.write(filehandle, format=ext)
 
@@ -795,7 +812,7 @@ class GRL(object):
             '''<!DOCTYPE LumiRangeCollection SYSTEM '''
             '''"http://atlas-runquery.cern.ch/LumiRangeCollection.dtd">\n'''
             '''<!-- This document was created by goodruns: '''
-            '''http://pypi.python.org/pypi/goodruns/ on %s -->\n''' % date)
+            '''http://pypi.python.org/pypi/goodruns/ on {0} -->\n'''.format(date))
             filehandle.write('<?xml version="1.0"?>\n')
             filehandle.write(meta)
             tree = ET.ElementTree(root)
@@ -805,11 +822,9 @@ class GRL(object):
                 xml = minidom.parseString(ET.tostring(tree.getroot(), 'utf-8'))
                 filehandle.write(pretty_xml(xml))
         elif format in ('yml', 'yaml'):
-            if not info.USE_YAML:
+            if not USE_YAML:
                 raise RuntimeError(
-                    "goodruns was not installed with YAML support")
-            else:
-                import yaml
+                    "YAML is not installed (pip install pyyaml)")
             filehandle.write(yaml.dump(self.to_dict()))
         elif format == 'txt':
             filehandle.write(str(self) + '\n')

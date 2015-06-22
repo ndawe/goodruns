@@ -3,37 +3,29 @@
 About
 -----
 
-goodruns provides an implementation of an ATLAS "good run list" (GRL)
+goodruns provides an implementation of an ATLAS Good Run List (GRL)
 reader/writer in Python, and collection of useful command-line tools.
 
 
 Requirements
 ------------
 
-goodruns requires at least Python 2.5.
-Unlike the standard ATLAS GoodRunsLists package, goodruns does not depend on
-`ROOT <http://root.cern.ch/>`_ for XML processing unless you are reading from
-or writing to a ROOT file (see below). For better XML reading/writing goodruns
-will optionally use `lxml <http://pypi.python.org/pypi/lxml/2.3>`_ if installed.
-Install `PyYAML <http://pypi.python.org/pypi/PyYAML/>`_ if you would like to
-convert GRLs into YAML format.
-
-To enable the dependency on lxml and/or PyYAML change ``False`` to ``True`` on
-the appropriate line(s) in `goodruns/info.py` and perform a manual installation
-as described below.
+goodruns requires at least Python 2.5. Unlike the standard ATLAS GoodRunsLists
+package, goodruns does not depend on `ROOT <http://root.cern.ch/>`_ for XML
+processing unless you are reading from or writing to a ROOT file (see below).
+For faster XML reading/writing goodruns will optionally use `lxml
+<http://pypi.python.org/pypi/lxml/2.3>`_ if installed. Install `PyYAML
+<http://pypi.python.org/pypi/PyYAML/>`_ if you would like to convert GRLs into
+YAML format.
 
 
-Automatic Installation
-----------------------
+Installation
+------------
 
-Automatically install the latest version of goodruns with
+Install the latest released version of goodruns with
 `pip <http://pypi.python.org/pypi/pip>`_::
 
-    pip install --user goodruns
-
-or with ``easy_install``::
-
-    easy_install --user goodruns
+   pip install --user goodruns
 
 Omit the ``--user`` for a system-wide installation (requires root privileges).
 Add ``${HOME}/.local/bin`` to your ``${PATH}`` if using ``--user`` and if
@@ -41,37 +33,8 @@ it is not there already (put this in your .bashrc)::
 
    export PATH=${HOME}/.local/bin${PATH:+:$PATH}
 
-To upgrade an existing installation use the ``-U``
-option in the ``pip`` or ``easy_install`` commands above.
-
-
-Manual Installation
--------------------
-
-Get the latest tarball on `PyPI <http://pypi.python.org/pypi/goodruns/>`_
-
-Untar and install (replace X appropriately)::
-
-   tar -zxvf goodruns-X.tar.gz
-   cd goodruns-X
-
-To install goodruns into your home directory
-if using at least Python 2.6::
-
-   python setup.py install --user
-
-or with older Python versions::
-
-   python setup.py install --prefix=~/.local
-
-Add ``${HOME}/.local/bin`` to your ``${PATH}`` if it is not there already
-(put this in your .bashrc)::
-
-   export PATH=${HOME}/.local/bin${PATH:+:$PATH}
-
-To install the optional dependencies::
-
-   pip install -U -r optional-requirements.txt
+To upgrade an existing installation, add the ``-U`` option in the ``pip``
+command above.
 
 
 Usage
@@ -132,7 +95,7 @@ grl diff
 
 Use ``grl diff`` to determine the GRL containing the runs/lumiblocks in
 ``A.xml`` but not in ``B.xml``::
-    
+
     grl diff A.xml B.xml
 
 In other words, ``B.xml`` is subtracted from ``A.xml``.
@@ -200,7 +163,7 @@ run/lumiblock::
       --startrun STARTRUN   Start run
       --startlb STARTLB     Start lumiblock
       --endrun ENDRUN       End run
-      --endlb ENDLB         End lumiblock 
+      --endlb ENDLB         End lumiblock
 
 
 grl convert

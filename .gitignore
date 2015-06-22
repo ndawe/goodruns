@@ -15,3 +15,5 @@ distribute-*
 build
 dist
 *.swp
+.coverage
+coverage

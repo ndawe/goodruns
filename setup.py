@@ -28,9 +28,6 @@ requires = []
 if USE_LXML:
     requires.append('lxml')
 
-if USE_YAML:
-    requires.append('PyYAML')
-
 if 'install' in sys.argv:
     print __doc__
 
@@ -39,7 +36,7 @@ setup(
     version=__version__,
     author='Noel Dawe',
     author_email='noel.dawe@cern.ch',
-    description='ATLAS "good run list" utilities',
+    description='ATLAS Good Run List (GRL) reader and utilities',
     long_description=open('README.rst').read(),
     url=__url__,
     download_url=__download_url__,
@@ -48,13 +45,17 @@ setup(
     scripts=glob('scripts/*'),
     install_requires=requires,
     classifiers=[
-        "Programming Language :: Python",
-        "Topic :: Text Processing :: Markup :: XML",
-        "Topic :: Utilities",
-        "Operating System :: POSIX :: Linux",
-        "Development Status :: 5 - Production/Stable",
-        "Environment :: Other Environment",
-        "Intended Audience :: Science/Research",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU General Public License (GPL)"
+        'Intended Audience :: Science/Research',
+        'Intended Audience :: Developers',
+        'Topic :: Software Development',
+        'Topic :: Scientific/Engineering',
+        'Topic :: Text Processing :: Markup :: XML',
+        'Topic :: Utilities',
+        'Operating System :: POSIX',
+        'Operating System :: Unix',
+        'Operating System :: MacOS',
+        'License :: OSI Approved :: GNU General Public License (GPL)',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Development Status :: 5 - Production/Stable',
     ])

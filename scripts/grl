@@ -23,7 +23,6 @@ subparsers = parser.add_subparsers()
 
 
 def output_arg(parser):
-
     parser.add_argument('-o', '--output',
                         help="Output filename (optional)",
                         default=None)
@@ -34,7 +33,6 @@ def output_arg(parser):
 
 
 def input_arg(parser):
-
     parser.add_argument('--pattern', '-e', default=None,
                         help="If an argument is a directory, files under this "
                              "directory matching this pattern will be included")
@@ -49,7 +47,6 @@ def input_arg(parser):
 
     
 def mult_grl_arg(parser):
-    
     input_arg(parser)
     parser.add_argument('grls', nargs='*',
                         metavar='GRL',
@@ -58,7 +55,6 @@ def mult_grl_arg(parser):
 
 
 def grl_arg(parser):
-    
     input_arg(parser)
     parser.add_argument('grl', nargs='?', default=None,
                         metavar='GRL',
@@ -115,7 +111,6 @@ parser_runs = subparsers.add_parser('runs',
 
 
 def print_runs(grl):
-
     for run in grl:
         print run
 
@@ -129,7 +124,6 @@ parser_find = subparsers.add_parser('find',
 
 
 def find(filenames, grls, run, lb=None):
-    
     if lb is not None:
         for filename, grl in zip(filenames, grls):
             if (run, lb) in grl:
@@ -165,7 +159,6 @@ def maybe_root(filename, path=None):
 
 
 def collect_grls(grls, pattern=None, path=None, format=None):
-    
     files = []
     out_grls = []
     for grl in grls:
