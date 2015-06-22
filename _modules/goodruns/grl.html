@@ -1,41 +1,111 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>goodruns.grl &mdash; goodruns 2.8.1 documentation</title>
+  
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>goodruns.grl &mdash; goodruns 2.0 documentation</title>
-    
-    <link rel="stylesheet" href="../../_static/clean.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '2.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="goodruns 2.0 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
-  </head>
-  <body>
   
   
 
+  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="goodruns 2.8.1 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="../../index.html" class="icon icon-home"> goodruns
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">goodruns</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>goodruns.grl</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
             
   <h1>Source code for goodruns.grl</h1><div class="highlight"><pre>
 <span class="c"># Author: Noel Dawe &lt;Noel.Dawe@cern.ch&gt;</span>
@@ -44,20 +114,9 @@
 <span class="sd">This module provides the main GRL class and utility functions</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="n">USE_LXML</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">lxml.etree</span> <span class="kn">as</span> <span class="nn">ET</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
-    <span class="kn">import</span> <span class="nn">xml.dom.minidom</span> <span class="kn">as</span> <span class="nn">minidom</span>
-    <span class="n">USE_LXML</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">info</span>
 
-<span class="n">USE_YAML</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">yaml</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">USE_YAML</span> <span class="o">=</span> <span class="bp">False</span>
-
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">urllib2</span>
@@ -68,6 +127,13 @@
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">cStringIO</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="kn">as</span> <span class="nn">_ET</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">yaml</span>
+    <span class="n">USE_YAML</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">USE_YAML</span> <span class="o">=</span> <span class="bp">False</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
@@ -79,6 +145,48 @@
     <span class="s">&#39;LumiblockRange&#39;</span><span class="p">,</span>
     <span class="s">&#39;GRL&#39;</span><span class="p">,</span>
 <span class="p">]</span>
+
+
+<span class="n">XML_WHITESPACE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="s">&#39;&gt;</span><span class="se">\n</span><span class="s">\s+([^&lt;&gt;\s].*?)</span><span class="se">\n</span><span class="s">\s+&lt;/&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
+<span class="n">LBRANGE_ORDER</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="s">&#39;&lt;LBRange End=&quot;(?P&lt;end&gt;\d+)&quot; Start=&quot;(?P&lt;start&gt;\d+)&quot;/&gt;&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">fix_attr_order</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">&#39;&lt;LBRange Start=&quot;{0}&quot; End=&quot;{1}&quot;/&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s">&#39;start&#39;</span><span class="p">),</span>
+        <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s">&#39;end&#39;</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">pretty_xml</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fix-up minidom&#39;s toprettyxml() output</span>
+
+<span class="sd">    http://stackoverflow.com/questions/749796/pretty-printing-xml-in-python</span>
+<span class="sd">    http://stackoverflow.com/a/3367423/1002176</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># remove extra whitespace created by minidom</span>
+    <span class="n">xml</span> <span class="o">=</span> <span class="n">XML_WHITESPACE</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&#39;&gt;\g&lt;1&gt;&lt;/&#39;</span><span class="p">,</span> <span class="n">doc</span><span class="o">.</span><span class="n">toprettyxml</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="s">&#39;  &#39;</span><span class="p">))</span>
+    <span class="c"># preserve order of Start and End attributes (although the order of XML</span>
+    <span class="c"># node attributes is not important and should not be depended on)</span>
+    <span class="n">xml</span> <span class="o">=</span> <span class="n">LBRANGE_ORDER</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">fix_attr_order</span><span class="p">,</span> <span class="n">xml</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">xml</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="s">&#39;&lt;?xml version=&quot;1.0&quot; ?&gt;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
+
+
+<span class="k">def</span> <span class="nf">get_tree_builder</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">USE_LXML</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">lxml.etree</span> <span class="kn">as</span> <span class="nn">ET</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
+    <span class="k">class</span> <span class="nc">_MetadataTreeBuilder</span><span class="p">(</span><span class="n">ET</span><span class="o">.</span><span class="n">TreeBuilder</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implements doctype() as required to avoid deprecation warnings with</span>
+<span class="sd">        &gt;=python-2.7.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">doctype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">pubid</span><span class="p">,</span> <span class="n">system</span><span class="p">):</span>
+            <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">_MetadataTreeBuilder</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="clipped"><a class="viewcode-back" href="../../index.html#goodruns.grl.clipped">[docs]</a><span class="k">def</span> <span class="nf">clipped</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="n">startrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">startlb</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endrun</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">endlb</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -104,7 +212,7 @@
 </div>
 <div class="viewcode-block" id="diffed"><a class="viewcode-back" href="../../index.html#goodruns.grl.diffed">[docs]</a><span class="k">def</span> <span class="nf">diffed</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return the difference of multiple GRLs: (((A-B)-C)-D)...)</span>
+<span class="sd">    Return the difference of multiple GRLs: (((A-B)-C)-D) ...)</span>
 
 <span class="sd">    *args*: tuple of GRLs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -113,7 +221,7 @@
 </div>
 <div class="viewcode-block" id="ored"><a class="viewcode-back" href="../../index.html#goodruns.grl.ored">[docs]</a><span class="k">def</span> <span class="nf">ored</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return the OR of multiple GRLs: A | B | C...</span>
+<span class="sd">    Return the OR of multiple GRLs: A | B | C ...</span>
 
 <span class="sd">    *args*: tuple of GRLs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -122,7 +230,7 @@
 </div>
 <div class="viewcode-block" id="anded"><a class="viewcode-back" href="../../index.html#goodruns.grl.anded">[docs]</a><span class="k">def</span> <span class="nf">anded</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return the AND of multiple GRLs: A &amp; B &amp; C...</span>
+<span class="sd">    Return the AND of multiple GRLs: A &amp; B &amp; C ...</span>
 
 <span class="sd">    *args*: tuple of GRLs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -131,7 +239,7 @@
 </div>
 <div class="viewcode-block" id="xored"><a class="viewcode-back" href="../../index.html#goodruns.grl.xored">[docs]</a><span class="k">def</span> <span class="nf">xored</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return the XOR of multiple GRLs: A ^ B ^ C...</span>
+<span class="sd">    Return the XOR of multiple GRLs: A ^ B ^ C ...</span>
 
 <span class="sd">    *args*: tuple of GRLs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -141,7 +249,7 @@
 <div class="viewcode-block" id="LumiblockRange"><a class="viewcode-back" href="../../index.html#goodruns.grl.LumiblockRange">[docs]</a><span class="k">class</span> <span class="nc">LumiblockRange</span><span class="p">(</span><span class="nb">tuple</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A 2-tuple consisting of the lower and upper</span>
-<span class="sd">    bounds of a lumiblock range</span>
+<span class="sd">    bounds of a lumiblock range.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -151,13 +259,13 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="n">args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;lbrange must contain exactly 2 elements: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> \
-                             <span class="p">(</span><span class="n">args</span><span class="p">,))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s">&quot;lbrange must contain exactly 2 elements: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="n">args</span><span class="p">,)))</span>
         <span class="k">for</span> <span class="n">lumiblock</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lumiblock</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">long</span><span class="p">)):</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;lbrange must contain integers or longs only&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;lbrange must contain integers or longs only&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;lbrange in wrong order: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">args</span><span class="p">,))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;lbrange in wrong order: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="n">args</span><span class="p">,)))</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">LumiblockRange</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lbn</span><span class="p">):</span>
@@ -214,7 +322,9 @@
         <span class="s">&#39;cut&#39;</span>
     <span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grl</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">from_string</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="n">ROOT_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;\.root[^ \t\n\r\f\v:/]*:/&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grl</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">from_string</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        *grl*: [ dict | str | None ]</span>
 
@@ -234,37 +344,39 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">grl</span><span class="p">)</span>
             <span class="k">return</span>
         <span class="k">elif</span> <span class="n">from_string</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;grl is non-string type </span><span class="si">%s</span><span class="s"> while &quot;</span>
-                            <span class="s">&quot;using from_string&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">grl</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;grl is non-string type &#39;{0}&#39; while &quot;</span>
+                            <span class="s">&quot;using from_string=True&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">grl</span><span class="p">)))</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="p">(</span><span class="nb">basestring</span><span class="p">,</span> <span class="nb">file</span><span class="p">)):</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="n">grl</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
                 <span class="c"># is grl a URL?</span>
-                <span class="k">if</span> <span class="n">grl</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;http://&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s">&#39;^http(s)?://&#39;</span><span class="p">,</span> <span class="n">grl</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                     <span class="n">grl</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">grl</span><span class="p">)</span>
                 <span class="c"># is grl a ROOT file path?</span>
-                <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&#39;.root:/&#39;</span><span class="p">,</span> <span class="n">grl</span><span class="p">):</span>
+                <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ROOT_PATTERN</span><span class="p">,</span> <span class="n">grl</span><span class="p">):</span>
                     <span class="c"># one place where goodruns requires ROOT</span>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="kn">import</span> <span class="nn">ROOT</span>
-                        <span class="n">ROOT</span><span class="o">.</span><span class="n">PyConfig</span><span class="o">.</span><span class="n">IgnoreCommandLineOptions</span> <span class="o">=</span> <span class="bp">True</span>
                     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s">&#39;Specified GRL in ROOT file &#39;</span>
-                                          <span class="s">&#39;but cannot import ROOT. Are ROOT &#39;</span>
-                                          <span class="s">&#39;and PyROOT installed?&#39;</span><span class="p">)</span>
+                        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                            <span class="s">&quot;Specified a GRL in a ROOT file &quot;</span>
+                            <span class="s">&quot;but cannot import ROOT. Is ROOT installed &quot;</span>
+                            <span class="s">&quot;with PyROOT enabled?&quot;</span><span class="p">)</span>
                     <span class="n">cwd</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">gDirectory</span>
-                    <span class="n">filename</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">grl</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s">&#39;:/&#39;</span><span class="p">)</span>
+                    <span class="n">filename</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">grl</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="s">&#39;:/&#39;</span><span class="p">)</span>
                     <span class="n">root_file</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TFile</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">root_file</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s">&#39;Could not open ROOT file: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span>
-                                      <span class="n">filename</span><span class="p">)</span>
+                        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span>
+                            <span class="s">&quot;Could not open ROOT file: {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
                     <span class="n">grl</span> <span class="o">=</span> <span class="n">root_file</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">grl</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Path </span><span class="si">%s</span><span class="s"> does not exist in &#39;</span>
-                                         <span class="s">&#39;ROOT file </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="s">&quot;Path {0} does not exist in ROOT file {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">path</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TObjString</span><span class="p">):</span>
-                        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;Object at </span><span class="si">%s</span><span class="s"> is not a &#39;</span>
-                                        <span class="s">&#39;ROOT.TObjString&#39;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+                        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                            <span class="s">&quot;Object at {0} is not a ROOT.TObjString&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">path</span><span class="p">))</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">grl</span><span class="o">.</span><span class="n">GetString</span><span class="p">()))</span>
                     <span class="n">root_file</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
                     <span class="c"># return to previous directory</span>
@@ -276,10 +388,19 @@
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="nb">file</span><span class="p">):</span>
                 <span class="n">filename</span> <span class="o">=</span> <span class="n">grl</span><span class="o">.</span><span class="n">name</span>
             <span class="n">name</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s">&quot;&lt;stdin&gt;&quot;</span> <span class="ow">or</span> <span class="n">ext</span> <span class="o">==</span> <span class="s">&#39;.xml&#39;</span><span class="p">:</span>
-                <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">grl</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">filename</span> <span class="o">==</span> <span class="s">&#39;&lt;stdin&gt;&#39;</span> <span class="ow">or</span> <span class="n">ext</span> <span class="o">==</span> <span class="s">&#39;.xml&#39;</span> <span class="ow">or</span> <span class="n">format</span> <span class="o">==</span> <span class="s">&#39;xml&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">USE_LXML</span><span class="p">:</span>
+                    <span class="kn">import</span> <span class="nn">lxml.etree</span> <span class="kn">as</span> <span class="nn">ET</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
+                <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span>
+                    <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span>
+                        <span class="n">grl</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="n">ET</span><span class="o">.</span><span class="n">XMLParser</span><span class="p">(</span>
+                        <span class="n">target</span><span class="o">=</span><span class="n">get_tree_builder</span><span class="p">()))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">grl</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">from_xml</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s">&#39;.yml&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s">&#39;.yml&#39;</span> <span class="ow">or</span> <span class="n">format</span> <span class="o">==</span> <span class="s">&#39;yml&#39;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">USE_YAML</span><span class="p">:</span>
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grl</span><span class="p">,</span> <span class="nb">file</span><span class="p">):</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">grl</span><span class="p">))</span>
@@ -290,13 +411,14 @@
                     <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s">&quot;PyYAML module not found&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s">&quot;File </span><span class="si">%s</span><span class="s"> does not have valid GRL extension: </span><span class="si">%s</span><span class="s">&quot;</span>
-                    <span class="o">%</span> <span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">ext</span><span class="p">))</span>
+                    <span class="s">&quot;{0} does not have valid GRL extension: {1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">filename</span><span class="p">,</span> <span class="n">ext</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterruns</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__grl</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__optimize</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
             <span class="k">return</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;Unable to initialize GRL from a </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">grl</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s">&quot;Unable to initialize GRL from a &#39;{0}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">grl</span><span class="p">)))</span>
 
 <div class="viewcode-block" id="GRL.from_string"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.from_string">[docs]</a>    <span class="k">def</span> <span class="nf">from_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -304,7 +426,16 @@
 
 <span class="sd">        *string*: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">USE_LXML</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">lxml.etree</span> <span class="kn">as</span> <span class="nn">ET</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span>
+            <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">XML</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="n">ET</span><span class="o">.</span><span class="n">XMLParser</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">=</span><span class="n">get_tree_builder</span><span class="p">()))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">from_xml</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="GRL.from_xml"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.from_xml">[docs]</a>    <span class="k">def</span> <span class="nf">from_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span>
@@ -643,29 +774,35 @@
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
+        <span class="sd">&quot;&quot;&quot; Create a new GRL that is the overlap between two GRLs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span> <span class="o">-</span> <span class="n">other</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__iand__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
+        <span class="sd">&quot;&quot;&quot; Update this GRL by only including the overlap with another GRL</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span> <span class="o">-=</span> <span class="p">(</span><span class="bp">self</span> <span class="o">-</span> <span class="n">other</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
+        <span class="sd">&quot;&quot;&quot; Merge two GRLs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span> <span class="o">+</span> <span class="n">other</span>
 
     <span class="k">def</span> <span class="nf">__ior__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
+        <span class="sd">&quot;&quot;&quot; Update this GRL by adding the logical OR with another GRL</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span> <span class="o">+=</span> <span class="n">other</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">__xor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
+        <span class="sd">&quot;&quot;&quot; Exclusive OR (XOR) between two GRLs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span> <span class="o">|</span> <span class="n">other</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span> <span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__ixor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-
+        <span class="sd">&quot;&quot;&quot; Update this GRL by removing overlap with another GRL</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">grlcopy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span> <span class="o">|=</span> <span class="n">other</span>
         <span class="bp">self</span> <span class="o">-=</span> <span class="p">(</span><span class="n">grlcopy</span> <span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span>
@@ -674,7 +811,6 @@
 <div class="viewcode-block" id="GRL.cut"><a class="viewcode-back" href="../../index.html#goodruns.grl.GRL.cut">[docs]</a>    <span class="k">def</span> <span class="nf">cut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runname</span><span class="o">=</span><span class="s">&#39;RunNumber&#39;</span><span class="p">,</span> <span class="n">lbname</span><span class="o">=</span><span class="s">&#39;lbn&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert this GRL into a TCut expression.</span>
-<span class="sd">        This method is really meant to be a joke and should be of no use.</span>
 
 <span class="sd">        *runname*: str</span>
 
@@ -684,14 +820,15 @@
         <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterruns</span><span class="p">():</span>
             <span class="n">lbcut</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
             <span class="k">for</span> <span class="n">lbrange</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">run</span><span class="p">]:</span>
-                <span class="n">newcut</span> <span class="o">=</span> <span class="p">(</span><span class="n">lbname</span> <span class="o">+</span> <span class="s">&#39;&gt;=</span><span class="si">%i</span><span class="s">&amp;&amp;&#39;</span> <span class="o">+</span> <span class="n">lbname</span> <span class="o">+</span> <span class="s">&#39;&lt;=</span><span class="si">%i</span><span class="s">&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="n">lbrange</span>
+                <span class="n">newcut</span> <span class="o">=</span> <span class="p">(</span><span class="n">lbname</span> <span class="o">+</span> <span class="s">&#39;&gt;={0:d}&amp;&amp;&#39;</span> <span class="o">+</span>
+                          <span class="n">lbname</span> <span class="o">+</span> <span class="s">&#39;&lt;={1:d}&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">lbrange</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">lbcut</span><span class="p">:</span>
-                    <span class="n">lbcut</span> <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%s</span><span class="s">)|(</span><span class="si">%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">lbcut</span><span class="p">,</span> <span class="n">newcut</span><span class="p">)</span>
+                    <span class="n">lbcut</span> <span class="o">=</span> <span class="s">&#39;({0})|({1})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lbcut</span><span class="p">,</span> <span class="n">newcut</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">lbcut</span> <span class="o">=</span> <span class="n">newcut</span>
-            <span class="n">newcut</span> <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%s</span><span class="s">==</span><span class="si">%i</span><span class="s">)&amp;&amp;(</span><span class="si">%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">runname</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbcut</span><span class="p">)</span>
+            <span class="n">newcut</span> <span class="o">=</span> <span class="s">&#39;({0}=={1:d})&amp;&amp;({2})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">runname</span><span class="p">,</span> <span class="n">run</span><span class="p">,</span> <span class="n">lbcut</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">cut</span><span class="p">:</span>
-                <span class="n">cut</span> <span class="o">=</span> <span class="s">&#39;(</span><span class="si">%s</span><span class="s">)|(</span><span class="si">%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cut</span><span class="p">,</span> <span class="n">newcut</span><span class="p">)</span>
+                <span class="n">cut</span> <span class="o">=</span> <span class="s">&#39;({0})|({1})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cut</span><span class="p">,</span> <span class="n">newcut</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">cut</span> <span class="o">=</span> <span class="n">newcut</span>
         <span class="k">return</span> <span class="n">cut</span>
@@ -714,25 +851,26 @@
 <span class="sd">        *name*: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># is name a ROOT file path?</span>
-        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&#39;.root:/&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ROOT_PATTERN</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
             <span class="c"># one place where goodruns requires ROOT</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="kn">import</span> <span class="nn">ROOT</span>
                 <span class="n">ROOT</span><span class="o">.</span><span class="n">PyConfig</span><span class="o">.</span><span class="n">IgnoreCommandLineOptions</span> <span class="o">=</span> <span class="bp">True</span>
             <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s">&#39;Attempting to save GRL in ROOT file &#39;</span>
-                                  <span class="s">&#39;but cannot import ROOT. Are ROOT and PyROOT &#39;</span>
-                                  <span class="s">&#39;installed?&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                    <span class="s">&quot;Attempting to save GRL in ROOT file but cannot import &quot;</span>
+                    <span class="s">&quot;ROOT. Are ROOT and PyROOT installed?&quot;</span><span class="p">)</span>
             <span class="n">cwd</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">gDirectory</span>
-            <span class="n">filename</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s">&#39;:/&#39;</span><span class="p">)</span>
+            <span class="n">filename</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="s">&#39;:/&#39;</span><span class="p">)</span>
             <span class="n">root_file</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TFile</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;UPDATE&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">root_file</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s">&#39;Could not open ROOT file: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span>
-                              <span class="n">filename</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span>
+                    <span class="s">&#39;Could not open ROOT file: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
             <span class="n">head</span><span class="p">,</span> <span class="n">tail</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">head</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">root_file</span><span class="o">.</span><span class="n">cd</span><span class="p">(</span><span class="n">head</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Path </span><span class="si">%s</span><span class="s"> does not exist in file </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span>
-                                 <span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s">&#39;Path {0} does not exist in file {1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">head</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
             <span class="n">xml_string</span> <span class="o">=</span> <span class="n">ROOT</span><span class="o">.</span><span class="n">TObjString</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">str</span><span class="p">())</span>
             <span class="n">xml_string</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">tail</span><span class="p">)</span>
             <span class="n">root_file</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
@@ -743,9 +881,8 @@
             <span class="c"># ignore period</span>
             <span class="n">ext</span> <span class="o">=</span> <span class="n">ext</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
             <span class="k">if</span> <span class="n">ext</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">GRL</span><span class="o">.</span><span class="n">formats</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Filename </span><span class="si">%s</span><span class="s"> does not have &quot;</span>
-                                 <span class="s">&quot;a valid GRL extension.&quot;</span> <span class="o">%</span>
-                                 <span class="n">name</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s">&quot;{0} does not have a valid GRL extension&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">filehandle</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filehandle</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="n">ext</span><span class="p">)</span>
 </div>
@@ -758,6 +895,11 @@
 <span class="sd">        *format*: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">format</span> <span class="o">==</span> <span class="s">&#39;xml&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">USE_LXML</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">lxml.etree</span> <span class="kn">as</span> <span class="nn">ET</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
+                <span class="kn">import</span> <span class="nn">xml.dom.minidom</span> <span class="kn">as</span> <span class="nn">minidom</span>
             <span class="n">root</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s">&#39;LumiRangeCollection&#39;</span><span class="p">)</span>
             <span class="n">subroot</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s">&#39;NamedLumiRange&#39;</span><span class="p">)</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">subroot</span><span class="p">,</span> <span class="s">&#39;Name&#39;</span><span class="p">)</span>
@@ -780,18 +922,19 @@
             <span class="sd">&#39;&#39;&#39;&lt;!DOCTYPE LumiRangeCollection SYSTEM &#39;&#39;&#39;</span>
             <span class="sd">&#39;&#39;&#39;&quot;http://atlas-runquery.cern.ch/LumiRangeCollection.dtd&quot;&gt;\n&#39;&#39;&#39;</span>
             <span class="sd">&#39;&#39;&#39;&lt;!-- This document was created by goodruns: &#39;&#39;&#39;</span>
-            <span class="sd">&#39;&#39;&#39;http://pypi.python.org/pypi/goodruns/ on %s --&gt;\n&#39;&#39;&#39;</span> <span class="o">%</span> <span class="n">date</span><span class="p">)</span>
+            <span class="sd">&#39;&#39;&#39;http://pypi.python.org/pypi/goodruns/ on {0} --&gt;\n&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+            <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&lt;?xml version=&quot;1.0&quot;?&gt;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+            <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
             <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">ElementTree</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">USE_LXML</span><span class="p">:</span>
-                <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;&lt;?xml version=&quot;1.0&quot;?&gt;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
-                <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">USE_LXML</span><span class="p">:</span>
                 <span class="n">tree</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filehandle</span><span class="p">,</span> <span class="n">pretty_print</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c"># get pretty XML from ElementTree</span>
-                <span class="n">xml</span> <span class="o">=</span> <span class="n">minidom</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">meta</span> <span class="o">+</span>
-                                          <span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">(),</span> <span class="s">&#39;utf-8&#39;</span><span class="p">))</span>
-                <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">xml</span><span class="o">.</span><span class="n">toprettyxml</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="s">&#39;   &#39;</span><span class="p">))</span>
+                <span class="n">xml</span> <span class="o">=</span> <span class="n">minidom</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">(),</span> <span class="s">&#39;utf-8&#39;</span><span class="p">))</span>
+                <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pretty_xml</span><span class="p">(</span><span class="n">xml</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">format</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;yml&#39;</span><span class="p">,</span> <span class="s">&#39;yaml&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">USE_YAML</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="s">&quot;YAML is not installed (pip install pyyaml)&quot;</span><span class="p">)</span>
             <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()))</span>
         <span class="k">elif</span> <span class="n">format</span> <span class="o">==</span> <span class="s">&#39;txt&#39;</span><span class="p">:</span>
             <span class="n">filehandle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
@@ -805,16 +948,59 @@
 </pre></div>
 
           </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Noel Dawe.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
+
+    </section>
+
+  </div>
   
-    <a href="http://github.com/ndawe/goodruns"><img style="position: fixed; top: 0; right: 0; border: 0;"
-    src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
-  
+
 
   
 
-  </body>
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'2.8.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

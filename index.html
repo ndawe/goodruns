@@ -1,82 +1,159 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>goodruns &mdash; goodruns 2.0 documentation</title>
-    
-    <link rel="stylesheet" href="_static/clean.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '2.0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="goodruns 2.0 documentation" href="#" /> 
-  </head>
-  <body>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
   
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <div class=indexwrapper>
+  <title>goodruns &mdash; goodruns 2.8.1 documentation</title>
   
 
+  
+  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="goodruns 2.8.1 documentation" href="#"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="#" class="icon icon-home"> goodruns
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">goodruns</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#command-line-tools">Command-line Tools</a><ul>
+<li><a class="reference internal" href="#grl-diff">grl diff</a></li>
+<li><a class="reference internal" href="#grl-and-grl-or-grl-xor">grl and, grl or, grl xor</a></li>
+<li><a class="reference internal" href="#grl-clip">grl clip</a></li>
+<li><a class="reference internal" href="#grl-convert">grl convert</a></li>
+<li><a class="reference internal" href="#grl-runs">grl runs</a></li>
+<li><a class="reference internal" href="#grl-find">grl find</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#documentation">Documentation</a><ul>
+<li><a class="reference internal" href="#module-goodruns.grl"><code class="docutils literal"><span class="pre">goodruns.grl</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="#">goodruns</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="#">Docs</a> &raquo;</li>
+      
+    <li>goodruns</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
             
   <div class="section" id="goodruns">
 <h1>goodruns<a class="headerlink" href="#goodruns" title="Permalink to this headline">¶</a></h1>
-<p>goodruns provides an implementation of an ATLAS &#8220;good run list&#8221; (GRL)
+<p>goodruns provides an implementation of an ATLAS Good Run List (GRL)
 reader/writer in Python, and collection of useful command-line tools.</p>
 <div class="section" id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
-<p>goodruns requires at least Python 2.5 and only depends on modules in the standard library.
-Unlike the standard ATLAS GoodRunsLists package, goodruns does not depend on <a class="reference external" href="http://root.cern.ch/">ROOT</a>
-for XML processing unless you are reading from or writing to a ROOT file (see below).
-For better XML reading/writing goodruns will optionally use <a class="reference external" href="http://pypi.python.org/pypi/lxml/2.3">lxml</a>
-if installed. Install <a class="reference external" href="http://pypi.python.org/pypi/PyYAML/">PyYAML</a> if you would
-like to convert GRLs into YAML format.</p>
+<p>goodruns requires at least Python 2.5. Unlike the standard ATLAS GoodRunsLists
+package, goodruns does not depend on <a class="reference external" href="http://root.cern.ch/">ROOT</a> for XML
+processing unless you are reading from or writing to a ROOT file (see below).
+For faster XML reading/writing goodruns will optionally use <a class="reference external" href="http://pypi.python.org/pypi/lxml/2.3">lxml</a> if installed. Install <a class="reference external" href="http://pypi.python.org/pypi/PyYAML/">PyYAML</a> if you would like to convert GRLs into
+YAML format.</p>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>The easiest way to install goodruns is with <tt class="docutils literal"><span class="pre">pip</span></tt>.
-To install for all users:</p>
-<div class="highlight-python"><pre>sudo pip install goodruns</pre>
+<p>Install the latest released version of goodruns with
+<a class="reference external" href="http://pypi.python.org/pypi/pip">pip</a>:</p>
+<div class="highlight-python"><div class="highlight"><pre>pip install --user goodruns
+</pre></div>
 </div>
-<p>To install in your user site-packages directory (also see below):</p>
-<div class="highlight-python"><pre>pip install --user goodruns</pre>
+<p>Omit the <code class="docutils literal"><span class="pre">--user</span></code> for a system-wide installation (requires root privileges).
+Add <code class="docutils literal"><span class="pre">${HOME}/.local/bin</span></code> to your <code class="docutils literal"><span class="pre">${PATH}</span></code> if using <code class="docutils literal"><span class="pre">--user</span></code> and if
+it is not there already (put this in your .bashrc):</p>
+<div class="highlight-python"><div class="highlight"><pre>export PATH=${HOME}/.local/bin${PATH:+:$PATH}
+</pre></div>
 </div>
-<p>If you have obtained a copy of goodruns yourself use the <tt class="docutils literal"><span class="pre">setup.py</span></tt>
-script to install. To install for all users:</p>
-<div class="highlight-python"><pre>sudo python setup.py install</pre>
-</div>
-<p>or to install in your user base directory:</p>
-<div class="highlight-python"><pre>python setup.py install --user</pre>
-</div>
-<p>If installing in your user site-packages directory be sure to add <cite>~/.local/bin</cite> to your
-<cite>$PATH</cite>:</p>
-<div class="highlight-python"><pre>export PATH=${HOME}/.local/bin${PATH:+:$PATH}</pre>
-</div>
-<p>You may specify a different location for your user site-packages directory by:</p>
-<div class="highlight-python"><pre>export PYTHONUSERBASE=/path/to/alternate/.local</pre>
-</div>
-<p>To install the optional dependencies:</p>
-<div class="highlight-python"><pre>pip install -U -r optional-requirements.txt</pre>
-</div>
+<p>To upgrade an existing installation, add the <code class="docutils literal"><span class="pre">-U</span></code> option in the <code class="docutils literal"><span class="pre">pip</span></code>
+command above.</p>
 </div>
 <div class="section" id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
@@ -129,43 +206,56 @@ for combining, manipulating, and inspecting GRLs. As above
 GRLs may be XML files, URLs, or in ROOT files.</p>
 <div class="section" id="grl-diff">
 <h3>grl diff<a class="headerlink" href="#grl-diff" title="Permalink to this headline">¶</a></h3>
-<p>Use <tt class="docutils literal"><span class="pre">grl</span> <span class="pre">diff</span></tt> to determine the GRL containing the runs/lumiblocks in <tt class="docutils literal"><span class="pre">A.xml</span></tt> but not in <tt class="docutils literal"><span class="pre">B.xml</span></tt>:</p>
-<div class="highlight-python"><pre>grl diff A.xml B.xml</pre>
+<p>Use <code class="docutils literal"><span class="pre">grl</span> <span class="pre">diff</span></code> to determine the GRL containing the runs/lumiblocks in
+<code class="docutils literal"><span class="pre">A.xml</span></code> but not in <code class="docutils literal"><span class="pre">B.xml</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>grl diff A.xml B.xml
+</pre></div>
 </div>
-<p>In other words, <tt class="docutils literal"><span class="pre">B.xml</span></tt> is subtracted from <tt class="docutils literal"><span class="pre">A.xml</span></tt>.
-All command-line tools print on stdout. Redirect stdout to a file to save the result:</p>
-<div class="highlight-python"><pre>grl diff A.xml B.xml &gt; C.xml</pre>
+<p>In other words, <code class="docutils literal"><span class="pre">B.xml</span></code> is subtracted from <code class="docutils literal"><span class="pre">A.xml</span></code>.
+All command-line tools print on stdout. Redirect stdout to a file to save
+the result:</p>
+<div class="highlight-python"><div class="highlight"><pre>grl diff A.xml B.xml &gt; C.xml
+</pre></div>
 </div>
-<p>You may supply more than two GRLs to <tt class="docutils literal"><span class="pre">grl</span> <span class="pre">diff</span></tt>:</p>
-<div class="highlight-python"><pre>grl diff A.xml B.xml C.xml D.xml &gt; E.xml</pre>
+<p>You may supply more than two GRLs to <code class="docutils literal"><span class="pre">grl</span> <span class="pre">diff</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre>grl diff A.xml B.xml C.xml D.xml &gt; E.xml
+</pre></div>
 </div>
 <p>which results in the GRL E=((A-B)-C)-D). This is equivalent to:</p>
-<div class="highlight-python"><pre>grl diff A.xml B.xml | grl diff C.xml | grl diff D.xml &gt; E.xml</pre>
+<div class="highlight-python"><div class="highlight"><pre>grl diff A.xml B.xml | grl diff C.xml | grl diff D.xml &gt; E.xml
+</pre></div>
 </div>
-<p>The output of one command can be piped into any of the other commands in goodruns.</p>
+<p>The output of one command can be piped into any of the other commands
+in goodruns.</p>
 </div>
 <div class="section" id="grl-and-grl-or-grl-xor">
 <h3>grl and, grl or, grl xor<a class="headerlink" href="#grl-and-grl-or-grl-xor" title="Permalink to this headline">¶</a></h3>
 <p>These scripts implement logical combinations of GRLs. Logical AND:</p>
-<div class="highlight-python"><pre>grl and A.xml B.xml &gt; C.xml</pre>
+<div class="highlight-python"><div class="highlight"><pre>grl and A.xml B.xml &gt; C.xml
+</pre></div>
 </div>
 <p>OR:</p>
-<div class="highlight-python"><pre>grl or A.xml B.xml &gt; C.xml</pre>
+<div class="highlight-python"><div class="highlight"><pre>grl or A.xml B.xml &gt; C.xml
+</pre></div>
 </div>
 <p>and XOR (exclusive OR):</p>
-<div class="highlight-python"><pre>grl xor A.xml B.xml &gt; C.xml</pre>
+<div class="highlight-python"><div class="highlight"><pre>grl xor A.xml B.xml &gt; C.xml
+</pre></div>
 </div>
 <p>Again, these commands can be combined arbitrarily:</p>
-<div class="highlight-python"><pre>grl and A.xml B.xml | grl or C.xml | grl xor D.xml &gt; E.xml</pre>
+<div class="highlight-python"><div class="highlight"><pre>grl and A.xml B.xml | grl or C.xml | grl xor D.xml &gt; E.xml
+</pre></div>
 </div>
 <p>and any GRL argument can also be a ROOT file or URL:</p>
-<div class="highlight-python"><pre>grl and data.root:/path/to/grl http://atlasdqm.web.cern.ch/path/to/grl.xml</pre>
+<div class="highlight-python"><div class="highlight"><pre>grl and data.root:/path/to/grl http://atlasdqm.web.cern.ch/path/to/grl.xml
+</pre></div>
 </div>
 </div>
 <div class="section" id="grl-clip">
 <h3>grl clip<a class="headerlink" href="#grl-clip" title="Permalink to this headline">¶</a></h3>
-<p>Use <tt class="docutils literal"><span class="pre">grl</span> <span class="pre">clip</span></tt> to truncate a GRL between a starting run/lumiblock and ending run/lumiblock:</p>
-<div class="highlight-python"><pre>&gt; grl clip --help
+<p>Use <code class="docutils literal"><span class="pre">grl</span> <span class="pre">clip</span></code> to truncate a GRL between a starting run/lumiblock and ending
+run/lumiblock:</p>
+<div class="highlight-python"><div class="highlight"><pre>grl clip --help
 usage: grl clip [-h] [-o OUTPUT] [-f FORMAT] [--startrun STARTRUN]
                 [--startlb STARTLB] [--endrun ENDRUN] [--endlb ENDLB]
                 [grl]
@@ -182,13 +272,14 @@ optional arguments:
   --startrun STARTRUN   Start run
   --startlb STARTLB     Start lumiblock
   --endrun ENDRUN       End run
-  --endlb ENDLB         End lumiblock</pre>
+  --endlb ENDLB         End lumiblock
+</pre></div>
 </div>
 </div>
 <div class="section" id="grl-convert">
 <h3>grl convert<a class="headerlink" href="#grl-convert" title="Permalink to this headline">¶</a></h3>
-<p><tt class="docutils literal"><span class="pre">grl</span> <span class="pre">convert</span></tt> can convert a GRL from XML format into YAML:</p>
-<div class="highlight-python"><pre>&gt; grl convert -f yml A.xml
+<p><code class="docutils literal"><span class="pre">grl</span> <span class="pre">convert</span></code> can convert a GRL from XML format into YAML:</p>
+<div class="highlight-python"><div class="highlight"><pre>grl convert -f yml A.xml
 186178:
 - !!python/tuple [125, 156]
 - !!python/tuple [158, 161]
@@ -209,10 +300,11 @@ optional arguments:
 - !!python/tuple [144, 149]
 - !!python/tuple [151, 170]
 - !!python/tuple [173, 176]
-...</pre>
+...
+</pre></div>
 </div>
 <p>or plain text:</p>
-<div class="highlight-python"><pre>&gt; grl convert -f txt A.xml
+<div class="highlight-python"><div class="highlight"><pre>grl convert -f txt A.xml
 ---------------
 RUN: 186178
 LUMIBLOCKS:
@@ -239,32 +331,47 @@ LUMIBLOCKS:
   144 - 149
   151 - 170
   173 - 176
-...</pre>
+...
+</pre></div>
 </div>
-<p><tt class="docutils literal"><span class="pre">grl</span> <span class="pre">convert</span></tt> will also convert a GRL into Python code (dict of lists of tuples) or (as a joke) a ROOT TCut expression.</p>
+<p><code class="docutils literal"><span class="pre">grl</span> <span class="pre">convert</span></code> will also convert a GRL into Python code (dict of lists of
+tuples) or (as a joke) a ROOT TCut expression.</p>
 </div>
 <div class="section" id="grl-runs">
 <h3>grl runs<a class="headerlink" href="#grl-runs" title="Permalink to this headline">¶</a></h3>
-<p><tt class="docutils literal"><span class="pre">grl</span> <span class="pre">runs</span></tt> simply prints the run numbers, one per line, contained within a GRL:</p>
-<div class="highlight-python"><pre>&gt; grl runs A.xml
+<p><code class="docutils literal"><span class="pre">grl</span> <span class="pre">runs</span></code> simply prints the run numbers, one per line, contained
+within a GRL:</p>
+<div class="highlight-python"><div class="highlight"><pre>grl runs A.xml
 186178
 186179
 186180
-...</pre>
+...
+</pre></div>
 </div>
 <p>Quickly print the runs contained in a GRL from a URL:</p>
-<div class="highlight-python"><pre>&gt; grl runs http://atlasdqm.web.cern.ch/path/to/grl.xml</pre>
+<div class="highlight-python"><div class="highlight"><pre>grl runs http://atlasdqm.web.cern.ch/path/to/grl.xml
+</pre></div>
+</div>
+</div>
+<div class="section" id="grl-find">
+<h3>grl find<a class="headerlink" href="#grl-find" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">grl</span> <span class="pre">find</span></code> prints the GRLs containing a run number and lumiblock number (if
+any). The lumiblock number is optional, and if left unset all GRLs containing
+the run will be printed. For example, you can determine which ROOT file contains
+the run 215643 and lumiblock 400 with the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre>grl find --path Lumi/tau --pattern &quot;*.root*&quot; --run 215643 --lb 400 globbed*path*
+</pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="module-goodruns.grl">
-<span id="goodruns-grl"></span><h3><a class="reference internal" href="#module-goodruns.grl" title="goodruns.grl"><tt class="xref py py-mod docutils literal"><span class="pre">goodruns.grl</span></tt></a><a class="headerlink" href="#module-goodruns.grl" title="Permalink to this headline">¶</a></h3>
+<span id="goodruns-grl"></span><h3><a class="reference internal" href="#module-goodruns.grl" title="goodruns.grl"><code class="xref py py-mod docutils literal"><span class="pre">goodruns.grl</span></code></a><a class="headerlink" href="#module-goodruns.grl" title="Permalink to this headline">¶</a></h3>
 <p>This module provides the main GRL class and utility functions</p>
 <dl class="function">
 <dt id="goodruns.grl.clipped">
-<tt class="descclassname">goodruns.grl.</tt><tt class="descname">clipped</tt><big>(</big><em>grl</em>, <em>startrun=None</em>, <em>startlb=None</em>, <em>endrun=None</em>, <em>endlb=None</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#clipped"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.clipped" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">goodruns.grl.</code><code class="descname">clipped</code><span class="sig-paren">(</span><em>grl</em>, <em>startrun=None</em>, <em>startlb=None</em>, <em>endrun=None</em>, <em>endlb=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#clipped"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.clipped" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a clipped GRL between startrun, startlb and
 endrun, endlb (inclusive).</p>
 <p><em>grl</em>: GRL</p>
@@ -276,46 +383,46 @@ endrun, endlb (inclusive).</p>
 
 <dl class="function">
 <dt id="goodruns.grl.diffed">
-<tt class="descclassname">goodruns.grl.</tt><tt class="descname">diffed</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#diffed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.diffed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the difference of multiple GRLs: (((A-B)-C)-D)...)</p>
+<code class="descclassname">goodruns.grl.</code><code class="descname">diffed</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#diffed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.diffed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the difference of multiple GRLs: (((A-B)-C)-D) ...)</p>
 <p><em>args</em>: tuple of GRLs</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="goodruns.grl.ored">
-<tt class="descclassname">goodruns.grl.</tt><tt class="descname">ored</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#ored"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.ored" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the OR of multiple GRLs: A | B | C...</p>
+<code class="descclassname">goodruns.grl.</code><code class="descname">ored</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#ored"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.ored" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the OR of multiple GRLs: A | B | C ...</p>
 <p><em>args</em>: tuple of GRLs</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="goodruns.grl.anded">
-<tt class="descclassname">goodruns.grl.</tt><tt class="descname">anded</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#anded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.anded" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the AND of multiple GRLs: A &amp; B &amp; C...</p>
+<code class="descclassname">goodruns.grl.</code><code class="descname">anded</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#anded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.anded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the AND of multiple GRLs: A &amp; B &amp; C ...</p>
 <p><em>args</em>: tuple of GRLs</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="goodruns.grl.xored">
-<tt class="descclassname">goodruns.grl.</tt><tt class="descname">xored</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#xored"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.xored" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the XOR of multiple GRLs: A ^ B ^ C...</p>
+<code class="descclassname">goodruns.grl.</code><code class="descname">xored</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#xored"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.xored" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the XOR of multiple GRLs: A ^ B ^ C ...</p>
 <p><em>args</em>: tuple of GRLs</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="goodruns.grl.LumiblockRange">
-<em class="property">class </em><tt class="descclassname">goodruns.grl.</tt><tt class="descname">LumiblockRange</tt><a class="reference internal" href="_modules/goodruns/grl.html#LumiblockRange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.LumiblockRange" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">goodruns.grl.</code><code class="descname">LumiblockRange</code><a class="reference internal" href="_modules/goodruns/grl.html#LumiblockRange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.LumiblockRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>A 2-tuple consisting of the lower and upper
-bounds of a lumiblock range</p>
+bounds of a lumiblock range.</p>
 <dl class="method">
 <dt id="goodruns.grl.LumiblockRange.as_set">
-<tt class="descname">as_set</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#LumiblockRange.as_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.LumiblockRange.as_set" title="Permalink to this definition">¶</a></dt>
+<code class="descname">as_set</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#LumiblockRange.as_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.LumiblockRange.as_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert self to set of lumiblocks</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="goodruns.grl.LumiblockRange.intersects">
-<tt class="descname">intersects</tt><big>(</big><em>lbrange</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#LumiblockRange.intersects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.LumiblockRange.intersects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">intersects</code><span class="sig-paren">(</span><em>lbrange</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#LumiblockRange.intersects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.LumiblockRange.intersects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine if self intersects with another lumiblock range</p>
 <p><em>lbrange</em>: LumiblockRange</p>
 </dd></dl>
@@ -324,7 +431,7 @@ bounds of a lumiblock range</p>
 
 <dl class="class">
 <dt id="goodruns.grl.GRL">
-<em class="property">class </em><tt class="descclassname">goodruns.grl.</tt><tt class="descname">GRL</tt><big>(</big><em>grl=None</em>, <em>from_string=False</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">goodruns.grl.</code><code class="descname">GRL</code><span class="sig-paren">(</span><em>grl=None</em>, <em>from_string=False</em>, <em>format=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL" title="Permalink to this definition">¶</a></dt>
 <dd><p>The main GRL class holds a python dictionary
 mapping runs to a list of lumiblock ranges (2-tuples)</p>
 <p><em>grl</em>: [ dict | str | None ]</p>
@@ -334,7 +441,7 @@ mapping runs to a list of lumiblock ranges (2-tuples)</p>
 </dl>
 <dl class="method">
 <dt id="goodruns.grl.GRL.clip">
-<tt class="descname">clip</tt><big>(</big><em>startrun=None</em>, <em>startlb=None</em>, <em>endrun=None</em>, <em>endlb=None</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.clip" title="Permalink to this definition">¶</a></dt>
+<code class="descname">clip</code><span class="sig-paren">(</span><em>startrun=None</em>, <em>startlb=None</em>, <em>endrun=None</em>, <em>endlb=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL.clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.clip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clip the GRL between startrun, startlb and endrun, endlb (inclusive)</p>
 <p><em>startrun</em>: [ int | None ]</p>
 <p><em>startlb</em>: [ int | None ]</p>
@@ -344,44 +451,43 @@ mapping runs to a list of lumiblock ranges (2-tuples)</p>
 
 <dl class="method">
 <dt id="goodruns.grl.GRL.cut">
-<tt class="descname">cut</tt><big>(</big><em>runname='RunNumber'</em>, <em>lbname='lbn'</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.cut"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.cut" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert this GRL into a TCut expression.
-This method is really meant to be a joke and should be of no use.</p>
+<code class="descname">cut</code><span class="sig-paren">(</span><em>runname='RunNumber'</em>, <em>lbname='lbn'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL.cut"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.cut" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert this GRL into a TCut expression.</p>
 <p><em>runname</em>: str</p>
 <p><em>lbname</em>: str</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="goodruns.grl.GRL.from_dict">
-<tt class="descname">from_dict</tt><big>(</big><em>d</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.from_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.from_dict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">from_dict</code><span class="sig-paren">(</span><em>d</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL.from_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.from_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert dict to GRL</p>
 <p><em>d</em>: dict</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="goodruns.grl.GRL.from_string">
-<tt class="descname">from_string</tt><big>(</big><em>string</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.from_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.from_string" title="Permalink to this definition">¶</a></dt>
+<code class="descname">from_string</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL.from_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.from_string" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert runs and lumiblocks from XML string</p>
 <p><em>string</em>: str</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="goodruns.grl.GRL.from_xml">
-<tt class="descname">from_xml</tt><big>(</big><em>tree</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.from_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.from_xml" title="Permalink to this definition">¶</a></dt>
+<code class="descname">from_xml</code><span class="sig-paren">(</span><em>tree</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL.from_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.from_xml" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert runs and lumiblocks from XML</p>
 <p><em>tree</em>: ElementTree</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="goodruns.grl.GRL.has_run">
-<tt class="descname">has_run</tt><big>(</big><em>run</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.has_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.has_run" title="Permalink to this definition">¶</a></dt>
+<code class="descname">has_run</code><span class="sig-paren">(</span><em>run</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL.has_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.has_run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True if run is in GRL, else False</p>
 <p><em>run</em>: int</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="goodruns.grl.GRL.insert">
-<tt class="descname">insert</tt><big>(</big><em>run</em>, <em>lbrange</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.insert" title="Permalink to this definition">¶</a></dt>
+<code class="descname">insert</code><span class="sig-paren">(</span><em>run</em>, <em>lbrange</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL.insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert a lumiblock range into a run</p>
 <p><em>run</em>: int</p>
 <p><em>lbrange</em>: [ LumiblockRange | tuple ]</p>
@@ -389,25 +495,25 @@ This method is really meant to be a joke and should be of no use.</p>
 
 <dl class="method">
 <dt id="goodruns.grl.GRL.items">
-<tt class="descname">items</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.items" title="Permalink to this definition">¶</a></dt>
+<code class="descname">items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL.items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterate over (run, lbranges) in GRL</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="goodruns.grl.GRL.iterlbranges">
-<tt class="descname">iterlbranges</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.iterlbranges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.iterlbranges" title="Permalink to this definition">¶</a></dt>
+<code class="descname">iterlbranges</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL.iterlbranges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.iterlbranges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterate over (run, lbrange) in GRL</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="goodruns.grl.GRL.iterruns">
-<tt class="descname">iterruns</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.iterruns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.iterruns" title="Permalink to this definition">¶</a></dt>
+<code class="descname">iterruns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL.iterruns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.iterruns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterate over runs in GRL</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="goodruns.grl.GRL.remove">
-<tt class="descname">remove</tt><big>(</big><em>run</em>, <em>lbrange</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.remove" title="Permalink to this definition">¶</a></dt>
+<code class="descname">remove</code><span class="sig-paren">(</span><em>run</em>, <em>lbrange</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a lumiblock range from a run</p>
 <p><em>run</em>: int</p>
 <p><em>lbrange</em>: LumiblockRange</p>
@@ -415,13 +521,13 @@ This method is really meant to be a joke and should be of no use.</p>
 
 <dl class="method">
 <dt id="goodruns.grl.GRL.runs">
-<tt class="descname">runs</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.runs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">runs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL.runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.runs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return list of runs in GRL</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="goodruns.grl.GRL.save">
-<tt class="descname">save</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.save" title="Permalink to this definition">¶</a></dt>
+<code class="descname">save</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save GRL to file by name. Determine format from
 extension.</p>
 <p><em>name</em>: str</p>
@@ -429,20 +535,20 @@ extension.</p>
 
 <dl class="method">
 <dt id="goodruns.grl.GRL.str">
-<tt class="descname">str</tt><big>(</big><em>format='xml'</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.str" title="Permalink to this definition">¶</a></dt>
+<code class="descname">str</code><span class="sig-paren">(</span><em>format='xml'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL.str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.str" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return string repr of self in the specified format</p>
 <p><em>format</em>: str</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="goodruns.grl.GRL.to_dict">
-<tt class="descname">to_dict</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.to_dict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert self to dict</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="goodruns.grl.GRL.write">
-<tt class="descname">write</tt><big>(</big><em>filehandle</em>, <em>format='xml'</em><big>)</big><a class="reference internal" href="_modules/goodruns/grl.html#GRL.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.write" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write</code><span class="sig-paren">(</span><em>filehandle</em>, <em>format='xml'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/goodruns/grl.html#GRL.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#goodruns.grl.GRL.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the GRL in the specified format to the file object.</p>
 <p><em>filehandle</em>: file</p>
 <p><em>format</em>: str</p>
@@ -456,18 +562,59 @@ extension.</p>
 
 
           </div>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-  
-    <a href="http://github.com/ndawe/goodruns"><img style="position: fixed; top: 0; right: 0; border: 0;"
-    src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+          <footer>
   
 
-  
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Noel Dawe.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
   </div>
   
 
-  </body>
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.8.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>
